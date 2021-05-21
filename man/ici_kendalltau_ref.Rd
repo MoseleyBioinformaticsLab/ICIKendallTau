@@ -42,6 +42,6 @@ all samples.
 }
 \details{
 For more details, see the ICI-Kendall-tau vignette:
-\href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
+\href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "ICIKendallTau")}}
 }
 \keyword{internal}

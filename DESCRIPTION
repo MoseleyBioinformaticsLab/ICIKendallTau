@@ -1,6 +1,6 @@
 Package: ICIKendallTau
 Title: Calculates information-content-informed Kendall-tau
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: 
     c(person(given = c("Robert", "M"),
            family = "Flight",
@@ -22,6 +22,9 @@ RoxygenNote: 7.1.1
 LinkingTo: 
     Rcpp
 Imports: 
-    Rcpp
+    Rcpp,
+    purrr
 Suggests:
-    furrr
+    furrr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

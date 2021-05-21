@@ -13,7 +13,7 @@
 #' @param diag_not_na should the diagonal entries reflect how many entries in the sample were "good"?
 #' 
 #' @details For more details, see the ICI-Kendall-tau vignette:
-#'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
+#'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "ICIKendallTau")}}
 #' 
 #' @return numeric
 #' @keywords internal
@@ -146,7 +146,7 @@ ici_kendalltau = function(data_matrix,
   n_sample = ncol(exclude_data)
   # set everything to NA and let R take care of it
   
-  if (suppressWarnings(require("furrr", quietly = TRUE))) {
+  if (suppressWarnings(suppressMessages(require("furrr", quietly = TRUE)))) {
     ncore = future::nbrOfWorkers()
     names(ncore) = NULL
     split_fun = furrr::future_map

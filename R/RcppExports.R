@@ -70,7 +70,3 @@ ici_kt_pairs <- function(x, y, perspective = "local", alternative = "two.sided",
     .Call('_ICIKendallTau_ici_kt_pairs', PACKAGE = 'ICIKendallTau', x, y, perspective, alternative, output)
 }
 
-ici_kt_ref <- function(x, y, perspective = "local", output = "simple") {
-    .Call('_ICIKendallTau_ici_kt_ref', PACKAGE = 'ICIKendallTau', x, y, perspective, output)
-}
-

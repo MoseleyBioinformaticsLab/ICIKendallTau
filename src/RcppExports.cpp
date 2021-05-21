@@ -104,20 +104,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ici_kt_ref
-double ici_kt_ref(NumericVector x, NumericVector y, String perspective, String output);
-RcppExport SEXP _ICIKendallTau_ici_kt_ref(SEXP xSEXP, SEXP ySEXP, SEXP perspectiveSEXP, SEXP outputSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< String >::type perspective(perspectiveSEXP);
-    Rcpp::traits::input_parameter< String >::type output(outputSEXP);
-    rcpp_result_gen = Rcpp::wrap(ici_kt_ref(x, y, perspective, output));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ICIKendallTau_sortedIndex", (DL_FUNC) &_ICIKendallTau_sortedIndex, 1},
@@ -128,7 +114,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ICIKendallTau_count_rank_tie", (DL_FUNC) &_ICIKendallTau_count_rank_tie, 1},
     {"_ICIKendallTau_ici_kt", (DL_FUNC) &_ICIKendallTau_ici_kt, 6},
     {"_ICIKendallTau_ici_kt_pairs", (DL_FUNC) &_ICIKendallTau_ici_kt_pairs, 5},
-    {"_ICIKendallTau_ici_kt_ref", (DL_FUNC) &_ICIKendallTau_ici_kt_ref, 4},
     {NULL, NULL, 0}
 };
 

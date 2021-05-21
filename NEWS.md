@@ -1,3 +1,8 @@
+# ICIKendallTau 0.0.3
+
+* Added tests!
+* Removed a bunch of code that wasn't necessary because it was using the incorrect formula's, and we have the correct version in the `ici_kt_pairs` function for reference purposes.
+
 # ICIKendallTau 0.0.2
 
 * Fixed an issue where a warning would be issued if {furrr} was not installed.
