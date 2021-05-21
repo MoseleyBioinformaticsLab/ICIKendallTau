@@ -1,6 +1,6 @@
 Package: ICIKendallTau
 Title: Calculates information-content-informed Kendall-tau
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     c(person(given = c("Robert", "M"),
            family = "Flight",
