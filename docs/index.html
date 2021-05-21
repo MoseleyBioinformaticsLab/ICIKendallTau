@@ -78,6 +78,7 @@
 <a href="#icikendalltau" class="anchor"></a>ICIKendallTau</h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
+<p>You can see the pkgdown site <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau">here</a>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -183,24 +184,25 @@
   times <span class="op">=</span> <span class="fl">5</span>
 <span class="op">)</span>
 <span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt;                           expr       min</span>
-<span class="co">#&gt;  cor(x, y, method = "kendall") 13334.058</span>
-<span class="co">#&gt;         ici_kt(x, y, "global")   220.575</span>
-<span class="co">#&gt;       ici_kt(x2, y2, "global") 13404.109</span>
-<span class="co">#&gt;         lq       mean    median        uq</span>
-<span class="co">#&gt;  13394.849 13465.3574 13485.616 13497.816</span>
-<span class="co">#&gt;    221.431   236.5946   242.075   247.373</span>
-<span class="co">#&gt;  13423.337 13497.3138 13503.280 13569.252</span>
-<span class="co">#&gt;        max neval</span>
-<span class="co">#&gt;  13614.448     5</span>
-<span class="co">#&gt;    251.519     5</span>
-<span class="co">#&gt;  13586.591     5</span></code></pre></div>
+<span class="co">#&gt;                           expr      min        lq</span>
+<span class="co">#&gt;  cor(x, y, method = "kendall") 13318.88 13332.855</span>
+<span class="co">#&gt;         ici_kt(x, y, "global")   227.62   249.418</span>
+<span class="co">#&gt;       ici_kt(x2, y2, "global") 13314.54 13508.229</span>
+<span class="co">#&gt;        mean    median        uq       max neval</span>
+<span class="co">#&gt;  13438.3462 13425.853 13476.882 13637.257     5</span>
+<span class="co">#&gt;    258.0386   250.257   270.155   292.743     5</span>
+<span class="co">#&gt;  13562.7464 13623.956 13651.693 13715.311     5</span></code></pre></div>
 <p>In the case of 40,000 features, the average time on a modern CPU is 13 milliseconds.</p>
 <p>Of course, if you want to use it to calculate Kendall-tau-b without incorporating missingness, it can do that just fine as well.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">k_tau</span> <span class="op">=</span> <span class="fu"><a href="reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">k_tau</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> ,<span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
+</div>
+<div id="code-of-conduct" class="section level2">
+<h2 class="hasAnchor">
+<a href="#code-of-conduct" class="anchor"></a>Code of Conduct</h2>
+<p>Please note that the ICIKendallTau project is released with a <a href="https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
   </div>
@@ -211,6 +213,12 @@
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
 <li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+</ul>
+</div>
+<div class="community">
+<h2>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
 </ul>
 </div>
 <div class="developers">

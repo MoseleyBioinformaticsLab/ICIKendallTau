@@ -6,6 +6,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+You can see the pkgdown site
+[here](https://moseleybioinformaticslab.github.io/ICIKendallTau).
+
 ## Installation
 
 You can install the current version of ICIKendallTau GitHub:
@@ -122,13 +125,13 @@ microbenchmark(
 )
 #> Unit: microseconds
 #>                           expr      min        lq
-#>  cor(x, y, method = "kendall") 13283.48 13296.427
-#>         ici_kt(x, y, "global")   231.20   232.476
-#>       ici_kt(x2, y2, "global") 13363.47 13634.786
-#>       mean    median        uq       max neval
-#>  13388.881 13390.131 13448.734 13525.632     5
-#>    311.412   250.839   259.213   583.332     5
-#>  13736.824 13645.171 13975.187 14065.502     5
+#>  cor(x, y, method = "kendall") 13318.88 13332.855
+#>         ici_kt(x, y, "global")   227.62   249.418
+#>       ici_kt(x2, y2, "global") 13314.54 13508.229
+#>        mean    median        uq       max neval
+#>  13438.3462 13425.853 13476.882 13637.257     5
+#>    258.0386   250.257   270.155   292.743     5
+#>  13562.7464 13623.956 13651.693 13715.311     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 13

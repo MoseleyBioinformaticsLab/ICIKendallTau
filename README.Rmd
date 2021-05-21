@@ -20,6 +20,8 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
+You can see the pkgdown site [here](https://moseleybioinformaticslab.github.io/ICIKendallTau).
+
 ## Installation
 
 You can install the current version of ICIKendallTau GitHub:
