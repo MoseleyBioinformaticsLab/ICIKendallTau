@@ -539,7 +539,7 @@ ici_kendalltau = function(data_matrix,
   n_sample = ncol(exclude_data)
   # set everything to NA and let R take care of it
   
-  if (require("furrr")) {
+  if (suppressWarnings(require("furrr", quietly = TRUE))) {
     ncore = future::nbrOfWorkers()
     names(ncore) = NULL
     split_fun = furrr::future_map
