@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ICIKendallTau</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
       </span>
     </div>
 
@@ -274,12 +274,12 @@
   times <span class="op">=</span> <span class="fl">5</span>
 <span class="op">)</span>
 <span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt;                           expr      min        lq       mean    median</span>
-<span class="co">#&gt;  cor(x, y, method = "kendall") 13723.58 13955.314 14127.2708 13982.177</span>
-<span class="co">#&gt;         ici_kt(x, y, "global")   222.63   229.588   266.7242   232.415</span>
+<span class="co">#&gt;                           expr       min        lq       mean    median</span>
+<span class="co">#&gt;  cor(x, y, method = "kendall") 14384.036 14433.744 15123.5870 14646.722</span>
+<span class="co">#&gt;         ici_kt(x, y, "global")   235.841   237.168   274.7978   264.763</span>
 <span class="co">#&gt;         uq       max neval</span>
-<span class="co">#&gt;  14390.961 14584.323     5</span>
-<span class="co">#&gt;    265.765   383.223     5</span></code></pre></div>
+<span class="co">#&gt;  15456.398 16697.035     5</span>
+<span class="co">#&gt;    270.105   366.112     5</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
