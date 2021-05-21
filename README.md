@@ -121,18 +121,14 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min
-#>  cor(x, y, method = "kendall") 13334.058
-#>         ici_kt(x, y, "global")   220.575
-#>       ici_kt(x2, y2, "global") 13404.109
-#>         lq       mean    median        uq
-#>  13394.849 13465.3574 13485.616 13497.816
-#>    221.431   236.5946   242.075   247.373
-#>  13423.337 13497.3138 13503.280 13569.252
-#>        max neval
-#>  13614.448     5
-#>    251.519     5
-#>  13586.591     5
+#>                           expr      min        lq
+#>  cor(x, y, method = "kendall") 13283.48 13296.427
+#>         ici_kt(x, y, "global")   231.20   232.476
+#>       ici_kt(x2, y2, "global") 13363.47 13634.786
+#>       mean    median        uq       max neval
+#>  13388.881 13390.131 13448.734 13525.632     5
+#>    311.412   250.839   259.213   583.332     5
+#>  13736.824 13645.171 13975.187 14065.502     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 13
@@ -146,3 +142,10 @@ k_tau = ici_kt(x, y, "global")
 all.equal(k_tau[[1]] ,cor(x, y, method = "kendall"))
 #> [1] TRUE
 ```
+
+## Code of Conduct
+
+Please note that the ICIKendallTau project is released with a
+[Contributor Code of
+Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.

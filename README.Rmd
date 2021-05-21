@@ -121,3 +121,7 @@ Of course, if you want to use it to calculate Kendall-tau-b without incorporatin
 k_tau = ici_kt(x, y, "global")
 all.equal(k_tau[[1]] ,cor(x, y, method = "kendall"))
 ```
+
+## Code of Conduct
+  
+Please note that the ICIKendallTau project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
