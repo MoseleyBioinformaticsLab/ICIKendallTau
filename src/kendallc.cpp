@@ -259,6 +259,8 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   NumericVector k_res(2);
   k_res.names() = CharacterVector({"tau", "pvalue"});
   if ((xtie == tot) || (ytie == tot)) {
+    k_res(0) = NA_REAL;
+    k_res(1) = NA_REAL;
     return k_res;
   }
   
