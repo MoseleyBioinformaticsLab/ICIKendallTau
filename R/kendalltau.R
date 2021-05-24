@@ -10,7 +10,8 @@
 #' @param zero_value what is the actual zero value?
 #' @param perspective how to treat missing data in denominator and ties, see details
 #' @param scale_max should everything be scaled compared to the maximum correlation?
-#' @param diag_not_na should the diagonal entries reflect how many entries in the sample were "good"?
+#' @param diag_good should the diagonal entries reflect how many entries in the sample were "good"?
+#' @param progress should progress be displayed.
 #' 
 #' @details For more details, see the ICI-Kendall-tau vignette:
 #'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "ICIKendallTau")}}
@@ -100,13 +101,14 @@ ici_kendalltau_ref = function(data_matrix,
 #' @param zero_value what is the actual zero value?
 #' @param perspective how to treat missing data in denominator and ties, see details
 #' @param scale_max should everything be scaled compared to the maximum correlation?
-#' @param diag_not_na should the diagonal entries reflect how many entries in the sample were "good"?
-#' @param check_timings should we try to estimate run time for full dataset? (default is FALSE)
+#' @param diag_good should the diagonal entries reflect how many entries in the sample were "good"?
+#' @param check_timing should we try to estimate run time for full dataset? (default is FALSE)
 #' 
-#' @details For more details, see the ICI-Kendall-tau vignette:
-#'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
+#' @details For more details, see the ICI-Kendall-tau vignette 
+#' 
+#' \code{vignette("Information-Content-Informed Kendall Tau Correlation", package = "ICIKendallTau")}
 #'   
-#'   When \code{check_timings = TRUE}, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.
+#'   When \code{check_timing = TRUE}, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.
 #' 
 #' @return numeric
 #' @export
@@ -145,8 +147,7 @@ ici_kendalltau = function(data_matrix,
   exclude_data[exclude_loc] = NA
   n_sample = ncol(exclude_data)
   # set everything to NA and let R take care of it
-  
-  if (suppressWarnings(suppressMessages(require("furrr", quietly = TRUE)))) {
+  if ("furrr" %in% utils::installed.packages()) {
     ncore = future::nbrOfWorkers()
     names(ncore) = NULL
     split_fun = furrr::future_map
@@ -156,7 +157,7 @@ ici_kendalltau = function(data_matrix,
   }
   
   
-  pairwise_comparisons = combn(n_sample, 2)
+  pairwise_comparisons = utils::combn(n_sample, 2)
   
   if (!diag_good) {
     extra_comparisons = matrix(rep(seq(1, n_sample), each = 2), nrow = 2, ncol = n_sample, byrow = FALSE)

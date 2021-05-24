@@ -14,6 +14,7 @@ Authors@R:
 Description: Provides functions for calculating information-content-informed
   Kendall-tau. This version of Kendall-tau allows for the inclusion of missing
   values.
+VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -23,8 +24,12 @@ LinkingTo:
     Rcpp
 Imports: 
     Rcpp,
-    purrr
+    purrr,
+    utils
 Suggests:
     furrr,
-    testthat (>= 3.0.0)
+    future,
+    testthat (>= 3.0.0),
+    microbenchmark,
+    knitr
 Config/testthat/edition: 3

@@ -6,6 +6,7 @@ vignette: >
   %\VignetteIndexEntry{Information-Content-Informed Kendall Tau Correlation}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{microbenchmark}
 editor_options: 
   chunk_output_type: console
 ---

@@ -31,7 +31,9 @@ ici_kendalltau_ref(
 
 \item{scale_max}{should everything be scaled compared to the maximum correlation?}
 
-\item{diag_not_na}{should the diagonal entries reflect how many entries in the sample were "good"?}
+\item{diag_good}{should the diagonal entries reflect how many entries in the sample were "good"?}
+
+\item{progress}{should progress be displayed.}
 }
 \value{
 numeric

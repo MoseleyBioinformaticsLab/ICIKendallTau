@@ -31,9 +31,9 @@ ici_kendalltau(
 
 \item{scale_max}{should everything be scaled compared to the maximum correlation?}
 
-\item{diag_not_na}{should the diagonal entries reflect how many entries in the sample were "good"?}
+\item{diag_good}{should the diagonal entries reflect how many entries in the sample were "good"?}
 
-\item{check_timings}{should we try to estimate run time for full dataset? (default is FALSE)}
+\item{check_timing}{should we try to estimate run time for full dataset? (default is FALSE)}
 }
 \value{
 numeric
@@ -43,8 +43,9 @@ Given a data-matrix, computes the information-theoretic Kendall-tau-b between
 all samples.
 }
 \details{
-For more details, see the ICI-Kendall-tau vignette:
-\href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}}
+For more details, see the ICI-Kendall-tau vignette
 
-When \code{check_timings = TRUE}, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.
+\code{vignette("Information-Content-Informed Kendall Tau Correlation", package = "ICIKendallTau")}
+
+When \code{check_timing = TRUE}, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.
 }

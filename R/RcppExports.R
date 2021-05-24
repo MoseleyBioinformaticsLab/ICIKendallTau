@@ -43,13 +43,6 @@ count_rank_tie <- function(ranks) {
 #'   \code{vignette("ici-kendalltau", package = "visualizationQualityControl")}
 #' 
 #' @examples 
-#' data("grp_cor_data")
-#' exp_data = grp_cor_data$data
-#' x = exp_data[, 1]
-#' y = exp_data[, 2]
-#' ici_kt(x, y)
-#' cor(x, y, method = "kendall") 
-#' 
 #' x = sort(rnorm(100))
 #' y = x + 1
 #' y2 = y
