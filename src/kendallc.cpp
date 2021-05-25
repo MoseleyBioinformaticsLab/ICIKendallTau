@@ -135,7 +135,7 @@ inline double signC(double x) {
 //' @param perspective should we consider the "local" or "global" perspective?
 //' @param alternative what is the alternative for the p-value test?
 //' @param continuity logical: if true, a continuity correction is used
-//' @param output used to control reporting of values for debugging.
+//' @param output used to control reporting of values for debugging
 //' 
 //' @details Calculates the information-content-informed Kendall-tau correlation measure.
 //'   This correlation is based on concordant and discordant ranked pairs, like Kendall-tau,
@@ -143,7 +143,8 @@ inline double signC(double x) {
 //'   to lack of detection due to instrumental sensitivity, and therefore encode *some* information.
 //'   
 //'   For more details see the ICI-Kendall-tau vignette:
-//'   \code{vignette("ici-kendalltau", package = "visualizationQualityControl")}
+//'   
+//'   \code{browseVignettes("ICIKendallTau")}
 //' 
 //' @examples 
 //' x = sort(rnorm(100))

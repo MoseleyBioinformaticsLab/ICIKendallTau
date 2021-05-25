@@ -1,3 +1,8 @@
+# ICIKendallTau 0.0.4
+
+* Fixing things that came up with R CMD check in the documentation.
+Should be all good now (I hope).
+
 # ICIKendallTau 0.0.3
 
 * Added tests!

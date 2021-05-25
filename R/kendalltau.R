@@ -106,7 +106,7 @@ ici_kendalltau_ref = function(data_matrix,
 #' 
 #' @details For more details, see the ICI-Kendall-tau vignette 
 #' 
-#' \code{vignette("Information-Content-Informed Kendall Tau Correlation", package = "ICIKendallTau")}
+#' \code{browseVignettes("ICIKendallTau")}
 #'   
 #'   When \code{check_timing = TRUE}, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.
 #' 

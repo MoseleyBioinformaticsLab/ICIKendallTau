@@ -24,7 +24,7 @@ ici_kt(
 
 \item{continuity}{logical: if true, a continuity correction is used}
 
-\item{output}{used to control reporting of values for debugging.}
+\item{output}{used to control reporting of values for debugging}
 }
 \value{
 kendall tau correlation
@@ -39,7 +39,8 @@ but also includes missing values (as NA). Missing values are assumed to be \emph
 to lack of detection due to instrumental sensitivity, and therefore encode \emph{some} information.
 
 For more details see the ICI-Kendall-tau vignette:
-\code{vignette("ici-kendalltau", package = "visualizationQualityControl")}
+
+\code{browseVignettes("ICIKendallTau")}
 }
 \examples{
 x = sort(rnorm(100))
