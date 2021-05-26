@@ -73,7 +73,7 @@ all samples." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ICIKendallTau</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
       </span>
     </div>
 
@@ -173,11 +173,11 @@ all samples.</p>
       <td><p>should everything be scaled compared to the maximum correlation?</p></td>
     </tr>
     <tr>
-      <th>diag_not_na</th>
+      <th>diag_good</th>
       <td><p>should the diagonal entries reflect how many entries in the sample were "good"?</p></td>
     </tr>
     <tr>
-      <th>check_timings</th>
+      <th>check_timing</th>
       <td><p>should we try to estimate run time for full dataset? (default is FALSE)</p></td>
     </tr>
     </table>
@@ -187,9 +187,9 @@ all samples.</p>
     <p>numeric</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>For more details, see the ICI-Kendall-tau vignette:
-<a href='../doc/ici-kendalltau.html'><code>vignette("ici-kendalltau", package = "visualizationQualityControl")</code></a></p>
-<p>When <code>check_timings = TRUE</code>, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.</p>
+    <p>For more details, see the ICI-Kendall-tau vignette</p>
+<p><code><a href='https://rdrr.io/r/utils/browseVignettes.html'>browseVignettes("ICIKendallTau")</a></code></p>
+<p>When <code>check_timing = TRUE</code>, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
