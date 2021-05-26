@@ -188,7 +188,10 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   int n_na_y = sum(is_na(y));
   
   if ((n_na_x == x.size()) || (n_na_y == y.size())) {
-    return 0.0;
+    NumericVector na_res (2);
+    na_res(0) = NA_REAL;
+    na_res(1) = NA_REAL;
+    return na_res;
   }
   
   x2 = x[!is_na(x)];
@@ -207,7 +210,10 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   //Rprintf("n_entry: %i\n", n_entry);
   
   if (n_entry < 2) {
-    return 0.0;
+    NumericVector na_res (2);
+    na_res(0) = NA_REAL;
+    na_res(1) = NA_REAL;
+    return na_res;
   }
   
   IntegerVector perm_y = sortedIndex(y2);
