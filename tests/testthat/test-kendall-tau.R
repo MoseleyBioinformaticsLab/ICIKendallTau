@@ -21,6 +21,21 @@ test_that("difference and reference match - short", {
   expect_equal(ici_kt(x, y, "global"), ICIKendallTau:::ici_kt_pairs(x, y, "global"))
 })
 
+test_that("bad values passed return NA", {
+  x = sort(rnorm(100))
+  y = rep(NA, 100)
+  result = numeric(2)
+  result[1] = NA
+  result[2] = NA
+  names(result) = c("tau", "pvalue")
+  expect_equal(ici_kt(x, y), result)
+  
+  y = x[1:99]
+  expect_error(ici_kt(x, y), "not the same length")
+  
+  expect_equal(ici_kt(x[1], y[1]), result)
+})
+
 test_that("matrix kendall works", {
   x = sort(rnorm(100))
   y = x + 1

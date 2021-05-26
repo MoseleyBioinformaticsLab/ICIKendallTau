@@ -1,3 +1,8 @@
+# ICIKendallTau 0.0.5
+
+* Fixed a bug where instead of returning a two element vector, it only returned a zero length value.
+This probably only happened when one of the entries contained all NA values, or you tried to pass "vectors" with less than two entries.
+
 # ICIKendallTau 0.0.4
 
 * Fixing things that came up with R CMD check in the documentation.

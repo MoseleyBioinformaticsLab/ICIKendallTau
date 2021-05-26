@@ -191,6 +191,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
     NumericVector na_res (2);
     na_res(0) = NA_REAL;
     na_res(1) = NA_REAL;
+    na_res.names() = CharacterVector({"tau", "pvalue"});
     return na_res;
   }
   
@@ -213,6 +214,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
     NumericVector na_res (2);
     na_res(0) = NA_REAL;
     na_res(1) = NA_REAL;
+    na_res.names() = CharacterVector({"tau", "pvalue"});
     return na_res;
   }
   
