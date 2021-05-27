@@ -1,3 +1,7 @@
+# ICIKendallTau 0.0.6
+
+* Fixing a bug where if there are 55,000 elements in the vector, some of the match overflows from 32 bit to 64 bit, and results make no sense.
+
 # ICIKendallTau 0.0.5
 
 * Fixed a bug where instead of returning a two element vector, it only returned a zero length value.

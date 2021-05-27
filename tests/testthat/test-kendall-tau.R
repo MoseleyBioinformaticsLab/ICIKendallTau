@@ -1,3 +1,7 @@
+run_long_kendallt = as.logical(Sys.getenv("run_long_kendallt"))
+if (is.na(run_long_kendallt)) {
+  run_long_kendallt = FALSE
+}
 test_that("basic kendall-tau matches base R", {
   x = seq(1, 10)
   y = seq(1, 10)
@@ -46,3 +50,15 @@ test_that("matrix kendall works", {
                                   perspective = "global", scale_max = FALSE)
   expect_equal(ici_kt(x, y, "global")[[1]], matrix_cor$cor[2, 1])
 })
+
+if (run_long_kendallt) {
+  test_that("big kendall works", {
+    x = sort(rnorm(40000))
+    y = x + 1
+    x[1:4000] = NA
+    
+    t1 = ici_kt(x, y, perspective = "global")
+    t2 = ICIKendallTau:::ici_kt_pairs(x, y, perspective = "global")
+    expect_equal(t1, t2)
+  })
+}

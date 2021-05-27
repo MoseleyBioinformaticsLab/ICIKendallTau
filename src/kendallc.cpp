@@ -207,7 +207,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   y2[is_na(y)] = min_y;
   
   
-  int n_entry = x2.size();
+  long int n_entry = x2.size();
   //Rprintf("n_entry: %i\n", n_entry);
   
   if (n_entry < 2) {
@@ -234,11 +234,11 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   //return x4;
   IntegerVector obs = compare_both(x4, y4);
   //return obs;
-  int sum_obs = sum(obs);
+  long int sum_obs = sum(obs);
   IntegerVector cnt = diff(which_notzero(obs));
-  int dis = kendall_discordant(x4, y4);
+  long int dis = kendall_discordant(x4, y4);
   
-  double ntie = sum((cnt * (cnt - 1)) / 2);
+  long double ntie = sum((cnt * (cnt - 1)) / 2);
   // three values should be read as:
   // xtie, x0, and x1, and then same for y
   NumericVector x_counts = count_rank_tie(x4);
@@ -251,7 +251,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   double y0 = y_counts[1];
   double y1 = y_counts[2];
   
-  int tot = (n_entry * (n_entry - 1)) / 2;
+  long long int tot = (n_entry * (n_entry - 1)) / 2;
   
   //Note that tot = con + dis + (xtie - ntie) + (ytie - ntie) + ntie
   //              = con + dis + xtie + ytie - ntie
@@ -266,25 +266,26 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
     return k_res;
   }
   
-  double con_minus_dis = tot - xtie - ytie + ntie - 2 * dis;
-  double tau = con_minus_dis / sqrt((tot - xtie) * (tot - ytie));
-  double con_plus_dis = tot - xtie - ytie + ntie;
+  long double con_minus_dis = tot - xtie - ytie + ntie - 2 * dis;
+  long double tau = con_minus_dis / sqrt((tot - xtie) * (tot - ytie));
+  long double con_plus_dis = tot - xtie - ytie + ntie;
   if (tau > 1) {
     tau = 1;
   } else if (tau < -1) {
     tau = -1;
   }
   
-  double m = n_entry * (n_entry - 1);
+  long long int m = n_entry * (n_entry - 1);
   //Rprintf("m: %f\n", m);
-  double var = ((m * (2 * n_entry + 5) - x1 - y1) / 18 +
+  long double var = ((m * (2 * n_entry + 5) - x1 - y1) / 18 +
                 (2 * xtie * ytie) / m + x0 * y0 / (9 * m * (n_entry - 2)));
   //Rprintf("var: %f\n", var);
-  double s_adjusted = tau * sqrt(((m / 2) - xtie) * ((m / 2) - ytie));
+  long double s_adjusted = tau * sqrt(((m / 2) - xtie) * ((m / 2) - ytie));
   if (continuity) {
-    double adj_s2 = signC(s_adjusted) * (std::abs(s_adjusted) - 1);
+    long double adj_s2 = signC(s_adjusted) * (std::abs(s_adjusted) - 1);
     s_adjusted = adj_s2;
   }
+  long double z_b_0 = s_adjusted / sqrt(var);
   z_b[0] = s_adjusted / sqrt(var);
   
   if (alternative == "less") {
@@ -302,23 +303,23 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   //Rprintf("n_entry: %f\n", n_entry);
   
   if (output != "simple") {
-    Rprintf("min_x: %f \n", min_x);
-    Rprintf("min_y: %f \n", min_y);
-    
-    Rprintf("n_entry: %d \n", n_entry);
-    Rprintf("tot: %d \n", tot);
-    Rprintf("sum_obs: %d\n", sum_obs);
-    Rprintf("dis: %d \n", dis);
-    Rprintf("con_minus_dis (k_numerator): %f\n", con_minus_dis);
-    Rprintf("con_plus_dis (for checking): %f\n", con_plus_dis);
-    Rprintf("n_tie: %f\n", ntie);
-    Rprintf("m_2: %f \n", m / 2);
-    Rprintf("x_tie: %f \n", xtie);
-    Rprintf("y_tie: %f \n", ytie);
-    Rprintf("s_adjusted: %f \n", s_adjusted);
-    Rprintf("s_adjusted_variance: %f \n", var);
-    Rprintf("k_tau: %f \n", tau);
-    Rprintf("pvalue: %f \n", k_res[1]);
+    std::string report_st = "min_x: " + std::to_string(min_x) + "\n" +
+      "min_y: " + std::to_string(min_y) + "\n" +
+      "n_entry: " + std::to_string(n_entry) + "\n" +
+      "tot: " + std::to_string(tot) + "\n" +
+      "sum_obs: " + std::to_string(sum_obs) + "\n" +
+      "dis: " + std::to_string(dis) + "\n" +
+      "con_minus_dis (k_numerator): " + std::to_string(con_minus_dis) + "\n" +
+      "n_tie: " + std::to_string(ntie) + "\n" +
+      "m: " + std::to_string(m) + "\n" +
+      "x_tie: " + std::to_string(xtie) + "\n" +
+      "y_tie: " + std::to_string(ytie) + "\n" +
+      "s_adjusted: " + std::to_string(s_adjusted) + "\n" +
+      "var: " + std::to_string(var) + "\n" +
+      "z_b: " + std::to_string(z_b_0) + "\n" +
+      "tau: " + std::to_string(tau) + "\n" +
+      "pvalue: " + std::to_string(k_res[1]) + "\n";
+    Rcout << report_st;
   }
   
   return k_res;
