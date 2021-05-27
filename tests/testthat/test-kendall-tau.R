@@ -53,9 +53,9 @@ test_that("matrix kendall works", {
 
 if (run_long_kendallt) {
   test_that("big kendall works", {
-    x = sort(rnorm(40000))
+    x = sort(rnorm(50000))
     y = x + 1
-    x[1:4000] = NA
+    x[1:5000] = NA
     
     t1 = ici_kt(x, y, perspective = "global")
     t2 = ICIKendallTau:::ici_kt_pairs(x, y, perspective = "global")
