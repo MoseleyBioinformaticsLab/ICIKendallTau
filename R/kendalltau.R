@@ -89,7 +89,7 @@ ici_kendalltau_ref = function(data_matrix,
 }
 
 missing_either = function(in_x, in_y){
-  not_in_one = sum(!in_x | !in_y)
+  not_in_one = sum(in_x | in_y)
   not_in_one
 }
 
@@ -103,6 +103,8 @@ missing_either = function(in_x, in_y){
 #' @param exclude_inf should Inf values be treated as NA?
 #' @param exclude_0 should zero values be treated as NA?
 #' @param zero_value what is the actual zero value?
+#' 
+#' @export
 #' 
 #' @return matrix of missing values
 pairwise_missingness = function(data_matrix,
@@ -171,14 +173,14 @@ pairwise_missingness = function(data_matrix,
     #print(seq_range)
     tmp_missing = matrix(0, nrow = ncol(exclude_loc), ncol = ncol(exclude_loc))
     rownames(tmp_missing) = colnames(tmp_missing) = colnames(exclude_loc)
-    tmp_pval = tmp_missing
     
     for (icol in seq(1, ncol(do_comparisons))) {
       iloc = do_comparisons[1, icol]
       jloc = do_comparisons[2, icol]
       missing_res = missing_either(exclude_loc[, iloc], exclude_loc[, jloc])
-      tmp_missing[iloc, jloc] = tmp_missing[jloc, iloc] = missing_res["tau"]
+      tmp_missing[iloc, jloc] = tmp_missing[jloc, iloc] = missing_res
     }
+    tmp_missing
   }
   
   split_missing = split_fun(split_comparisons, do_split, exclude_loc)
@@ -189,7 +191,7 @@ pairwise_missingness = function(data_matrix,
     missing_matrix = missing_matrix + isplit
   }
   missing_matrix = missing_matrix / nrow(exclude_loc)
-  missing_matrix
+  1 - missing_matrix
 }
 
 #' information-content-informed kendall tau
