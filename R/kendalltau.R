@@ -88,6 +88,109 @@ ici_kendalltau_ref = function(data_matrix,
   return(list(cor = out_matrix, raw = cor_matrix, keep = t(!exclude_loc)))
 }
 
+missing_either = function(in_x, in_y){
+  not_in_one = sum(!in_x | !in_y)
+  not_in_one
+}
+
+#' pairwise missingness
+#' 
+#' Calculates the missingness between any two samples using "or", is an
+#' entry missing in either X "or" Y.
+#' 
+#' @param data_matrix samples are rows, features are columns
+#' @param exclude_na should NA values be treated as NA?
+#' @param exclude_inf should Inf values be treated as NA?
+#' @param exclude_0 should zero values be treated as NA?
+#' @param zero_value what is the actual zero value?
+#' 
+#' @return matrix of missing values
+pairwise_missingness = function(data_matrix,
+                                exclude_na = TRUE, 
+                                exclude_inf = TRUE, 
+                                exclude_0 = TRUE, 
+                                zero_value = 0){
+  
+  data_matrix <- t(data_matrix)
+  na_loc <- matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
+  inf_loc <- na_loc
+  zero_loc <- na_loc
+  
+  if (exclude_na) {
+    na_loc <- is.na(data_matrix)
+  }
+  
+  if (exclude_inf) {
+    inf_loc <- is.infinite(data_matrix)
+  }
+  
+  if (exclude_0) {
+    zero_loc <- data_matrix == zero_value
+  }
+  
+  exclude_loc <- na_loc | zero_loc | inf_loc
+  n_sample = ncol(exclude_loc)
+  
+  if ("furrr" %in% utils::installed.packages()) {
+    ncore = future::nbrOfWorkers()
+    names(ncore) = NULL
+    split_fun = furrr::future_map
+  } else {
+    ncore = 1
+    split_fun = purrr::map
+  }
+  
+  
+  pairwise_comparisons = utils::combn(n_sample, 2)
+  
+  extra_comparisons = matrix(rep(seq(1, n_sample), each = 2), nrow = 2, ncol = n_sample, byrow = FALSE)
+  pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
+  
+  n_todo = ncol(pairwise_comparisons)
+  n_each = ceiling(n_todo / ncore)
+  
+  split_comparisons = vector("list", ncore)
+  start_loc = 1
+  
+  for (isplit in seq_along(split_comparisons)) {
+    stop_loc = min(start_loc + n_each, n_todo)
+    
+    split_comparisons[[isplit]] = pairwise_comparisons[, start_loc:stop_loc, drop = FALSE]
+    start_loc = stop_loc + 1
+    
+    if (start_loc > n_todo) {
+      break()
+    }
+  }
+  
+  null_comparisons = purrr::map_lgl(split_comparisons, is.null)
+  split_comparisons = split_comparisons[!null_comparisons]
+  
+  do_split = function(do_comparisons, exclude_loc) {
+    #seq_range = seq(in_range[1], in_range[2])
+    #print(seq_range)
+    tmp_missing = matrix(0, nrow = ncol(exclude_loc), ncol = ncol(exclude_loc))
+    rownames(tmp_missing) = colnames(tmp_missing) = colnames(exclude_loc)
+    tmp_pval = tmp_missing
+    
+    for (icol in seq(1, ncol(do_comparisons))) {
+      iloc = do_comparisons[1, icol]
+      jloc = do_comparisons[2, icol]
+      missing_res = missing_either(exclude_loc[, iloc], exclude_loc[, jloc])
+      tmp_missing[iloc, jloc] = tmp_missing[jloc, iloc] = missing_res["tau"]
+    }
+  }
+  
+  split_missing = split_fun(split_comparisons, do_split, exclude_loc)
+  
+  missing_matrix = matrix(0, nrow = ncol(exclude_loc), ncol = ncol(exclude_loc))
+  rownames(missing_matrix) = colnames(missing_matrix) = colnames(exclude_loc)
+  for (isplit in split_missing) {
+    missing_matrix = missing_matrix + isplit
+  }
+  missing_matrix = missing_matrix / nrow(exclude_loc)
+  missing_matrix
+}
 
 #' information-content-informed kendall tau
 #' 
