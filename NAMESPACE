@@ -2,6 +2,6 @@
 
 export(ici_kendalltau)
 export(ici_kt)
-export(pairwise_missingness)
+export(pairwise_completeness)
 importFrom(Rcpp,sourceCpp)
 useDynLib(ICIKendallTau)

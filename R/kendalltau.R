@@ -93,9 +93,9 @@ missing_either = function(in_x, in_y){
   not_in_one
 }
 
-#' pairwise missingness
+#' pairwise completeness
 #' 
-#' Calculates the missingness between any two samples using "or", is an
+#' Calculates the completeness between any two samples using "or", is an
 #' entry missing in either X "or" Y.
 #' 
 #' @param data_matrix samples are rows, features are columns
@@ -106,8 +106,8 @@ missing_either = function(in_x, in_y){
 #' 
 #' @export
 #' 
-#' @return matrix of missing values
-pairwise_missingness = function(data_matrix,
+#' @return matrix of degree of completeness
+pairwise_completeness = function(data_matrix,
                                 exclude_na = TRUE, 
                                 exclude_inf = TRUE, 
                                 exclude_0 = TRUE, 
