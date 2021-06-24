@@ -303,6 +303,7 @@ ici_kendalltau = function(data_matrix,
     tmp_cor = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
     rownames(tmp_cor) = colnames(tmp_cor) = colnames(exclude_data)
     tmp_pval = tmp_cor
+    tmp_max = tmp_cor
     
     for (icol in seq(1, ncol(do_comparisons))) {
       iloc = do_comparisons[1, icol]
@@ -310,8 +311,9 @@ ici_kendalltau = function(data_matrix,
       ici_res = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
       tmp_cor[iloc, jloc] = tmp_cor[jloc, iloc] = ici_res["tau"]
       tmp_pval[iloc, jloc] = tmp_pval[jloc, iloc] = ici_res["pvalue"]
+      tmp_max[iloc, jloc] = tmp_max[jloc, iloc] = ici_res["tau_max"]
     }
-    list(cor = tmp_cor, pval = tmp_pval)
+    list(cor = tmp_cor, pval = tmp_pval, max = tmp_max)
   }
   # we record how much time is actually spent doing ICI-Kt
   # itself, as some of the other operations will add a bit of time
@@ -324,22 +326,25 @@ ici_kendalltau = function(data_matrix,
   cor_matrix = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
   rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
   pvalue_matrix = cor_matrix
+  taumax_matrix = cor_matrix
   for (isplit in split_cor) {
     cor_matrix = cor_matrix + isplit$cor
     pvalue_matrix = pvalue_matrix + isplit$pval
+    taumax_matrix = taumax_matrix + isplit$max
   }
   
   
   # calculate the max-cor value for use in scaling across multiple comparisons
-  n_observations = nrow(exclude_data)
-  n_na = sort(colSums(exclude_loc))
-  m_value = floor(sum(n_na[1:2]) / 2)
-  n_m = n_observations - m_value
-  max_cor_denominator = choose(n_m, 2) + n_observations * m_value
-  max_cor_numerator = choose(n_m, 2) + n_observations * m_value + choose(m_value, 2)
-  max_cor = max_cor_denominator / max_cor_numerator
+  # n_observations = nrow(exclude_data)
+  # n_na = sort(colSums(exclude_loc))
+  # m_value = floor(sum(n_na[1:2]) / 2)
+  # n_m = n_observations - m_value
+  # max_cor_denominator = choose(n_m, 2) + n_observations * m_value
+  # max_cor_numerator = choose(n_m, 2) + n_observations * m_value + choose(m_value, 2)
+  # max_cor = max_cor_denominator / max_cor_numerator
   
   if (scale_max) {
+    max_cor = max(taumax_matrix, na.rm = TRUE)
     out_matrix = cor_matrix / max_cor
   } else {
     out_matrix = cor_matrix
@@ -350,7 +355,7 @@ ici_kendalltau = function(data_matrix,
     diag(out_matrix) = n_good / max(n_good)
   }
   
-  return(list(cor = out_matrix, raw = cor_matrix, pval = pvalue_matrix, keep = t(!exclude_loc),
+  return(list(cor = out_matrix, raw = cor_matrix, pval = pvalue_matrix, taumax = taumax_matrix, keep = t(!exclude_loc),
               run_time = t_diff))
 }
 
