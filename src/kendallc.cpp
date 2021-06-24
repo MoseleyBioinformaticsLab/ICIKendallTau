@@ -158,7 +158,7 @@ inline double signC(double x) {
 //' @importFrom Rcpp sourceCpp
 //' @export
 //' @useDynLib ICIKendallTau
-//' @return kendall tau correlation
+//' @return kendall tau correlation, p-value, max-correlation
 // [[Rcpp::export]]
 NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "local", String alternative = "two.sided", bool continuity = false, String output = "simple") {
   
@@ -257,18 +257,23 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   //              = con + dis + xtie + ytie - ntie
   //Therefore con - dis = tot - xtie - ytie + ntie - 2 * dis
   //And concordant - discordant is the numerator for kendall-tau.
+  //con + dis = tot - xtie - ytie + ntie
+  //This is the maximum theoretical number of concordant values given
+  //the data.
   
-  NumericVector k_res(2);
-  k_res.names() = CharacterVector({"tau", "pvalue"});
+  NumericVector k_res(3);
+  k_res.names() = CharacterVector({"tau", "pvalue", "tau_max"});
   if ((xtie == tot) || (ytie == tot)) {
     k_res(0) = NA_REAL;
     k_res(1) = NA_REAL;
+    k_res(3) = NA_REAL;
     return k_res;
   }
   
   long double con_minus_dis = tot - xtie - ytie + ntie - 2 * dis;
   long double tau = con_minus_dis / sqrt((tot - xtie) * (tot - ytie));
   long double con_plus_dis = tot - xtie - ytie + ntie;
+  long double tau_max = con_plus_dis / sqrt((tot - xtie) * (tot - ytie));
   if (tau > 1) {
     tau = 1;
   } else if (tau < -1) {
@@ -299,6 +304,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
     k_res[1] = 2 * min(p_res);
   }
   k_res[0] = tau;
+  k_res[2] = tau_max;
   
   //Rprintf("n_entry: %f\n", n_entry);
   
@@ -318,6 +324,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
       "var: " + std::to_string(var) + "\n" +
       "z_b: " + std::to_string(z_b_0) + "\n" +
       "tau: " + std::to_string(tau) + "\n" +
+      "tau_max:" + std::to_string(tau_max) + "\n";
       "pvalue: " + std::to_string(k_res[1]) + "\n";
     Rcout << report_st;
   }
