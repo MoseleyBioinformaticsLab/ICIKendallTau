@@ -345,16 +345,16 @@ NumericVector ici_kt_pairs(NumericVector x, NumericVector y, String perspective 
   double sum_discordant = 0;
   double sum_x_ties = 0;
   double sum_y_ties = 0;
-  double sum_tied_x = 0;
-  double sum_tied_y = 0;
+  //double sum_tied_x = 0;
+  //double sum_tied_y = 0;
   double sum_tied_x_na = 0;
-  double sum_tied_y_na = 0;
+  //double sum_tied_y_na = 0;
   double sum_all_na = 0;
   double k_numerator;
   double k_denominator;
   double k_tau;
-  bool reject_concordant;
-  bool reject_discordant;
+  //bool reject_concordant;
+  //bool reject_discordant;
   
   // for generating the p-value
   //double xties = 0;
@@ -489,8 +489,8 @@ NumericVector ici_kt_pairs(NumericVector x, NumericVector y, String perspective 
     Rprintf("na_value: %f \n", na_value);
     
     Rprintf("n_entry: %f \n", n_entry);
-    Rprintf("x_ties: %f \n", sum_tied_x);
-    Rprintf("x_na_ties: %f \n", sum_tied_x_na);
+    //Rprintf("x_ties: %f \n", sum_tied_x);
+    //Rprintf("x_na_ties: %f \n", sum_tied_x_na);
     Rprintf("sum_x_ties: %f \n", sum_x_ties);
     Rprintf("sum_y_ties: %f \n", sum_y_ties);
     Rprintf("sum_na_ties: %f \n", sum_all_na);
