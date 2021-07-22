@@ -4,9 +4,7 @@
 #' all samples.
 #' 
 #' @param data_matrix samples are rows, features are columns
-#' @param exclude_na should NA values be treated as NA?
-#' @param exclude_inf should Inf values be treated as NA?
-#' @param exclude_0 should zero values be treated as NA?
+#' @param global_na what values should be treated as missing (NA)?
 #' @param zero_value what is the actual zero value?
 #' @param perspective how to treat missing data in denominator and ties, see details
 #' @param scale_max should everything be scaled compared to the maximum correlation?
@@ -20,9 +18,7 @@
 #' @keywords internal
 #' 
 ici_kendalltau_ref = function(data_matrix, 
-                             exclude_na = TRUE, 
-                             exclude_inf = TRUE, 
-                             exclude_0 = TRUE, 
+                             global_na = c(NA, Inf, 0),
                              zero_value = 0, 
                              perspective = "global",
                              scale_max = TRUE,
@@ -32,23 +28,31 @@ ici_kendalltau_ref = function(data_matrix,
   # assume row-wise (because that is what the description states), so need to transpose
   # because `cor` actually does things columnwise.
   data_matrix <- t(data_matrix)
-  na_loc <- matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
-  inf_loc <- na_loc
-  zero_loc <- na_loc
+  exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   
-  if (exclude_na) {
-    na_loc <- is.na(data_matrix)
+  # Actual NA and Inf values are special cases, so we do
+  # this very specifically.
+  if (length(global_na) > 0) {
+    if (any(is.na(global_na))) {
+      exclude_loc[is.na(data_matrix)] = TRUE
+      global_na = global_na[!is.na(global_na)]
+    }
+    
+    if (any(is.infinite(global_na))) {
+      exclude_loc[is.infinite(data_matrix)] = TRUE
+      global_na = global_na[!is.infinite(global_na)]
+    }
+    
   }
   
-  if (exclude_inf) {
-    inf_loc <- is.infinite(data_matrix)
+  # now that we've done the NA and Inf values, we can go
+  # ahead and take care of the rest.
+  if (length(global_na) > 0) {
+    for (ival in global_na) {
+      exclude_loc[data_matrix == ival] = TRUE
+    }
   }
   
-  if (exclude_0) {
-    zero_loc <- data_matrix == zero_value
-  }
-  
-  exclude_loc <- na_loc | zero_loc | inf_loc
   
   exclude_data = data_matrix
   exclude_data[exclude_loc] = NA
@@ -200,10 +204,7 @@ pairwise_completeness = function(data_matrix,
 #' all samples.
 #' 
 #' @param data_matrix samples are rows, features are columns
-#' @param exclude_na should NA values be treated as NA?
-#' @param exclude_inf should Inf values be treated as NA?
-#' @param exclude_0 should zero values be treated as NA?
-#' @param zero_value what is the actual zero value?
+#' @param global_na globally, what should be treated as NA?
 #' @param perspective how to treat missing data in denominator and ties, see details
 #' @param scale_max should everything be scaled compared to the maximum correlation?
 #' @param diag_good should the diagonal entries reflect how many entries in the sample were "good"?
@@ -212,17 +213,18 @@ pairwise_completeness = function(data_matrix,
 #' @details For more details, see the ICI-Kendall-tau vignette 
 #' 
 #' \code{browseVignettes("ICIKendallTau")}
+#' 
+#'   The default for \code{global_na} includes what values in the data to replace with NA for the Kendall-tau calculation. By default these are \code{global_na = c(NA, Inf, 0)}. If you want to replace something other than 0, for example, you might use \code{global_na = c(NA, Inf, -2)}, and all values of -2 will be replaced instead of 0.
 #'   
 #'   When \code{check_timing = TRUE}, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.
+#'   
+#'   Eventually, we plan to provide two more parameters for replacing values, \code{feature_na} for feature specific NA values and \code{sample_na} for sample specific NA values.
 #' 
 #' @return numeric
 #' @export
 #' 
 ici_kendalltau = function(data_matrix, 
-                             exclude_na = TRUE, 
-                             exclude_inf = TRUE, 
-                             exclude_0 = TRUE, 
-                             zero_value = 0, 
+                             global_na = c(NA, Inf, 0),
                              perspective = "global",
                              scale_max = TRUE,
                              diag_good = TRUE,
@@ -230,23 +232,35 @@ ici_kendalltau = function(data_matrix,
   
   # assume row-wise (because that is what the description states), so need to transpose
   data_matrix <- t(data_matrix)
-  na_loc <- matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
-  inf_loc <- na_loc
-  zero_loc <- na_loc
+  exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   
-  if (exclude_na) {
-    na_loc <- is.na(data_matrix)
+  # Actual NA and Inf values are special cases, so we do
+  # this very specifically.
+  if (length(global_na) > 0) {
+    if (any(is.na(global_na))) {
+      exclude_loc[is.na(data_matrix)] = TRUE
+      global_na = global_na[!is.na(global_na)]
+    }
+    
+    if (any(is.infinite(global_na))) {
+      exclude_loc[is.infinite(data_matrix)] = TRUE
+      global_na = global_na[!is.infinite(global_na)]
+    }
+    
   }
   
-  if (exclude_inf) {
-    inf_loc <- is.infinite(data_matrix)
+  # now that we've done the NA and Inf values, we can go
+  # ahead and take care of the rest.
+  if (length(global_na) > 0) {
+    for (ival in global_na) {
+      exclude_loc[data_matrix == ival] = TRUE
+    }
   }
+
+  # eventually we should be able to handle sample specific and 
+  # feature specific values as well
+  # 
   
-  if (exclude_0) {
-    zero_loc <- data_matrix == zero_value
-  }
-  
-  exclude_loc <- na_loc | zero_loc | inf_loc
   
   exclude_data = data_matrix
   exclude_data[exclude_loc] = NA
