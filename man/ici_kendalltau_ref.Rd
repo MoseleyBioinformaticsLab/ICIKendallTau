@@ -6,9 +6,7 @@
 \usage{
 ici_kendalltau_ref(
   data_matrix,
-  exclude_na = TRUE,
-  exclude_inf = TRUE,
-  exclude_0 = TRUE,
+  global_na = c(NA, Inf, 0),
   zero_value = 0,
   perspective = "global",
   scale_max = TRUE,
@@ -19,11 +17,7 @@ ici_kendalltau_ref(
 \arguments{
 \item{data_matrix}{samples are rows, features are columns}
 
-\item{exclude_na}{should NA values be treated as NA?}
-
-\item{exclude_inf}{should Inf values be treated as NA?}
-
-\item{exclude_0}{should zero values be treated as NA?}
+\item{global_na}{what values should be treated as missing (NA)?}
 
 \item{zero_value}{what is the actual zero value?}
 

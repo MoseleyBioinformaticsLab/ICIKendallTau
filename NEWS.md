@@ -1,3 +1,8 @@
+# ICIKendallTau 0.1.2
+
+* Updated the API to use a single variable, `global_na` that defines all the values that should be set to `NA` for the correlation calculation.
+* This is a big API change, so we bumped the version up to 0.1.
+
 # ICIKendallTau 0.0.6
 
 * Fixing a bug where if there are 55,000 elements in the vector, some of the match overflows from 32 bit to 64 bit, and results make no sense.

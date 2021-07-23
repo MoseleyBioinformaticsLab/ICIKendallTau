@@ -73,7 +73,7 @@ all samples." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ICIKendallTau</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -131,10 +131,7 @@ all samples.</p>
 
     <pre class="usage"><span class='fu'>ici_kendalltau</span><span class='op'>(</span>
   <span class='va'>data_matrix</span>,
-  exclude_na <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  exclude_inf <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  exclude_0 <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  zero_value <span class='op'>=</span> <span class='fl'>0</span>,
+  global_na <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='cn'>Inf</span>, <span class='fl'>0</span><span class='op'>)</span>,
   perspective <span class='op'>=</span> <span class='st'>"global"</span>,
   scale_max <span class='op'>=</span> <span class='cn'>TRUE</span>,
   diag_good <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -149,20 +146,8 @@ all samples.</p>
       <td><p>samples are rows, features are columns</p></td>
     </tr>
     <tr>
-      <th>exclude_na</th>
-      <td><p>should NA values be treated as NA?</p></td>
-    </tr>
-    <tr>
-      <th>exclude_inf</th>
-      <td><p>should Inf values be treated as NA?</p></td>
-    </tr>
-    <tr>
-      <th>exclude_0</th>
-      <td><p>should zero values be treated as NA?</p></td>
-    </tr>
-    <tr>
-      <th>zero_value</th>
-      <td><p>what is the actual zero value?</p></td>
+      <th>global_na</th>
+      <td><p>globally, what should be treated as NA?</p></td>
     </tr>
     <tr>
       <th>perspective</th>
@@ -189,7 +174,9 @@ all samples.</p>
 
     <p>For more details, see the ICI-Kendall-tau vignette</p>
 <p><code><a href='https://rdrr.io/r/utils/browseVignettes.html'>browseVignettes("ICIKendallTau")</a></code></p>
+<p>The default for <code>global_na</code> includes what values in the data to replace with NA for the Kendall-tau calculation. By default these are <code>global_na = c(NA, Inf, 0)</code>. If you want to replace something other than 0, for example, you might use <code>global_na = c(NA, Inf, -2)</code>, and all values of -2 will be replaced instead of 0.</p>
 <p>When <code>check_timing = TRUE</code>, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.</p>
+<p>Eventually, we plan to provide two more parameters for replacing values, <code>feature_na</code> for feature specific NA values and <code>sample_na</code> for sample specific NA values.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

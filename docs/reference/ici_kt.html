@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ICIKendallTau</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -167,7 +167,7 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>kendall tau correlation</p>
+    <p>kendall tau correlation, p-value, max-correlation</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Calculates the information-content-informed Kendall-tau correlation measure.
@@ -183,12 +183,12 @@ to lack of detection due to instrumental sensitivity, and therefore encode <em>s
 <span class='va'>y2</span> <span class='op'>=</span> <span class='va'>y</span>
 <span class='va'>y2</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span> <span class='op'>=</span> <span class='cn'>NA</span>
 <span class='fu'>ici_kt</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;          tau       pvalue 
-#&gt; 1.000000e+00 3.480281e-49 </div><div class='input'><span class='fu'>ici_kt</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y2</span>, <span class='st'>"global"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;          tau       pvalue 
-#&gt; 9.954442e-01 2.228308e-48 </div><div class='input'><span class='fu'>ici_kt</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;          tau       pvalue 
-#&gt; 9.954442e-01 2.228308e-48 </div><div class='input'>
+</div><div class='output co'>#&gt;          tau       pvalue      tau_max 
+#&gt; 1.000000e+00 3.480281e-49 1.000000e+00 </div><div class='input'><span class='fu'>ici_kt</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y2</span>, <span class='st'>"global"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;          tau       pvalue      tau_max 
+#&gt; 9.954442e-01 2.228308e-48 9.954442e-01 </div><div class='input'><span class='fu'>ici_kt</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;          tau       pvalue      tau_max 
+#&gt; 9.954442e-01 2.228308e-48 9.954442e-01 </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

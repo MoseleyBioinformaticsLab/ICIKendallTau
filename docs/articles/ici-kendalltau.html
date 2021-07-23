@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ICIKendallTau</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
 
       
 
-      </header><script src="ici-kendalltau_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="ici-kendalltau_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Information-Content-Informed Kendall Tau Correlation</h1>
@@ -274,12 +274,12 @@
   times <span class="op">=</span> <span class="fl">5</span>
 <span class="op">)</span>
 <span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt;                           expr      min        lq       mean    median</span>
-<span class="co">#&gt;  cor(x, y, method = "kendall") 13746.53 14387.294 15058.3806 14437.824</span>
-<span class="co">#&gt;         ici_kt(x, y, "global")   273.81   287.596   330.9342   292.103</span>
+<span class="co">#&gt;                           expr       min        lq       mean    median</span>
+<span class="co">#&gt;  cor(x, y, method = "kendall") 11829.749 12583.215 13290.5344 13492.947</span>
+<span class="co">#&gt;         ici_kt(x, y, "global")   197.159   203.333   257.0434   242.209</span>
 <span class="co">#&gt;         uq       max neval</span>
-<span class="co">#&gt;  15652.676 17067.579     5</span>
-<span class="co">#&gt;    292.124   509.038     5</span></code></pre></div>
+<span class="co">#&gt;  13756.073 14790.688     5</span>
+<span class="co">#&gt;    245.232   397.284     5</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>

@@ -6,10 +6,7 @@
 \usage{
 ici_kendalltau(
   data_matrix,
-  exclude_na = TRUE,
-  exclude_inf = TRUE,
-  exclude_0 = TRUE,
-  zero_value = 0,
+  global_na = c(NA, Inf, 0),
   perspective = "global",
   scale_max = TRUE,
   diag_good = TRUE,
@@ -19,13 +16,7 @@ ici_kendalltau(
 \arguments{
 \item{data_matrix}{samples are rows, features are columns}
 
-\item{exclude_na}{should NA values be treated as NA?}
-
-\item{exclude_inf}{should Inf values be treated as NA?}
-
-\item{exclude_0}{should zero values be treated as NA?}
-
-\item{zero_value}{what is the actual zero value?}
+\item{global_na}{globally, what should be treated as NA?}
 
 \item{perspective}{how to treat missing data in denominator and ties, see details}
 
@@ -47,5 +38,9 @@ For more details, see the ICI-Kendall-tau vignette
 
 \code{browseVignettes("ICIKendallTau")}
 
+The default for \code{global_na} includes what values in the data to replace with NA for the Kendall-tau calculation. By default these are \code{global_na = c(NA, Inf, 0)}. If you want to replace something other than 0, for example, you might use \code{global_na = c(NA, Inf, -2)}, and all values of -2 will be replaced instead of 0.
+
 When \code{check_timing = TRUE}, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.
+
+Eventually, we plan to provide two more parameters for replacing values, \code{feature_na} for feature specific NA values and \code{sample_na} for sample specific NA values.
 }
