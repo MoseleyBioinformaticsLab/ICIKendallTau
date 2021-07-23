@@ -73,7 +73,7 @@ entry missing in either X &quot;or&quot; Y." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ICIKendallTau</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
       </span>
     </div>
 
@@ -129,13 +129,7 @@ entry missing in either X &quot;or&quot; Y." />
 entry missing in either X "or" Y.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pairwise_completeness</span><span class='op'>(</span>
-  <span class='va'>data_matrix</span>,
-  exclude_na <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  exclude_inf <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  exclude_0 <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  zero_value <span class='op'>=</span> <span class='fl'>0</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>pairwise_completeness</span><span class='op'>(</span><span class='va'>data_matrix</span>, global_na <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='cn'>Inf</span>, <span class='fl'>0</span><span class='op'>)</span>, zero_value <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -145,16 +139,8 @@ entry missing in either X "or" Y.</p>
       <td><p>samples are rows, features are columns</p></td>
     </tr>
     <tr>
-      <th>exclude_na</th>
-      <td><p>should NA values be treated as NA?</p></td>
-    </tr>
-    <tr>
-      <th>exclude_inf</th>
-      <td><p>should Inf values be treated as NA?</p></td>
-    </tr>
-    <tr>
-      <th>exclude_0</th>
-      <td><p>should zero values be treated as NA?</p></td>
+      <th>global_na</th>
+      <td><p>globally, what should be treated as NA?</p></td>
     </tr>
     <tr>
       <th>zero_value</th>
