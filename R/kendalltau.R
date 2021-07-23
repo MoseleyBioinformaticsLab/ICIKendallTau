@@ -103,38 +103,42 @@ missing_either = function(in_x, in_y){
 #' entry missing in either X "or" Y.
 #' 
 #' @param data_matrix samples are rows, features are columns
-#' @param exclude_na should NA values be treated as NA?
-#' @param exclude_inf should Inf values be treated as NA?
-#' @param exclude_0 should zero values be treated as NA?
+#' @param global_na globally, what should be treated as NA?
 #' @param zero_value what is the actual zero value?
 #' 
 #' @export
 #' 
 #' @return matrix of degree of completeness
 pairwise_completeness = function(data_matrix,
-                                exclude_na = TRUE, 
-                                exclude_inf = TRUE, 
-                                exclude_0 = TRUE, 
+                                global_na = c(NA, Inf, 0),
                                 zero_value = 0){
   
   data_matrix <- t(data_matrix)
-  na_loc <- matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
-  inf_loc <- na_loc
-  zero_loc <- na_loc
+  exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   
-  if (exclude_na) {
-    na_loc <- is.na(data_matrix)
+  # Actual NA and Inf values are special cases, so we do
+  # this very specifically.
+  if (length(global_na) > 0) {
+    if (any(is.na(global_na))) {
+      exclude_loc[is.na(data_matrix)] = TRUE
+      global_na = global_na[!is.na(global_na)]
+    }
+    
+    if (any(is.infinite(global_na))) {
+      exclude_loc[is.infinite(data_matrix)] = TRUE
+      global_na = global_na[!is.infinite(global_na)]
+    }
+    
   }
   
-  if (exclude_inf) {
-    inf_loc <- is.infinite(data_matrix)
+  # now that we've done the NA and Inf values, we can go
+  # ahead and take care of the rest.
+  if (length(global_na) > 0) {
+    for (ival in global_na) {
+      exclude_loc[data_matrix == ival] = TRUE
+    }
   }
   
-  if (exclude_0) {
-    zero_loc <- data_matrix == zero_value
-  }
-  
-  exclude_loc <- na_loc | zero_loc | inf_loc
   n_sample = ncol(exclude_loc)
   
   if ("furrr" %in% utils::installed.packages()) {
