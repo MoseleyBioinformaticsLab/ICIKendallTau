@@ -1,4 +1,3 @@
-// [[Rcpp::plugins(cpp11)]]
 #include <numeric>
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -208,7 +207,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   y2[is_na(y)] = min_y;
   
   
-  long int n_entry = x2.size();
+  int64_t n_entry = x2.size();
   //Rprintf("n_entry: %i\n", n_entry);
   
   if (n_entry < 2) {
@@ -281,7 +280,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
     tau = -1;
   }
   
-  long long int m = n_entry * (n_entry - 1);
+  int64_t m = n_entry * (n_entry - 1);
   //Rprintf("m: %f\n", m);
   long double var = ((m * (2 * n_entry + 5) - x1 - y1) / 18 +
                 (2 * xtie * ytie) / m + x0 * y0 / (9 * m * (n_entry - 2)));
