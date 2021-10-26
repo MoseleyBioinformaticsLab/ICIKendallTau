@@ -2,8 +2,9 @@ library(ICIKendallTau)
 set.seed(1234)
 x = rnorm(50000)
 y = rnorm(50000)
+ici_kt(x, y, output = "other")
+
 # Expected output when it's working:
-# ici_kt(x, y, output = "other")
 # min_x: -4.226628
 # min_y: -4.608599
 # n_entry: 50000
