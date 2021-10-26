@@ -3,3 +3,13 @@ large.*
 ^large_test$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^CODE_OF_CONDUCT\.md$
+^README\.html$
+^recount_adeno_counts\.rds$
+^doc$
+^Meta$
