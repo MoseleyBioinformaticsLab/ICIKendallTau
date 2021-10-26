@@ -207,7 +207,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   y2[is_na(y)] = min_y;
   
   
-  long int n_entry = x2.size();
+  int64_t n_entry = x2.size();
   //Rprintf("n_entry: %i\n", n_entry);
   
   if (n_entry < 2) {
@@ -234,9 +234,9 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   //return x4;
   IntegerVector obs = compare_both(x4, y4);
   //return obs;
-  long int sum_obs = sum(obs);
+  int64_t sum_obs = sum(obs);
   IntegerVector cnt = diff(which_notzero(obs));
-  long int dis = kendall_discordant(x4, y4);
+  int64_t dis = kendall_discordant(x4, y4);
   
   long double ntie = sum((cnt * (cnt - 1)) / 2);
   // three values should be read as:
@@ -251,7 +251,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   double y0 = y_counts[1];
   double y1 = y_counts[2];
   
-  long long int tot = (n_entry * (n_entry - 1)) / 2;
+  int64_t tot = (n_entry * (n_entry - 1)) / 2;
   
   //Note that tot = con + dis + (xtie - ntie) + (ytie - ntie) + ntie
   //              = con + dis + xtie + ytie - ntie
@@ -280,7 +280,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
     tau = -1;
   }
   
-  long long int m = n_entry * (n_entry - 1);
+  int64_t m = n_entry * (n_entry - 1);
   //Rprintf("m: %f\n", m);
   long double var = ((m * (2 * n_entry + 5) - x1 - y1) / 18 +
                 (2 * xtie * ytie) / m + x0 * y0 / (9 * m * (n_entry - 2)));
