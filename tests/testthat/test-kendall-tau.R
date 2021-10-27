@@ -22,7 +22,7 @@ test_that("difference and reference match - short", {
   y = x + 1
   y[1:20] = NA
   
-  expect_equal(ici_kt(x, y, "global"), ICIKendallTau:::ici_kt_pairs(x, y, "global"))
+  expect_equal(ici_kt(x, y, perspective = "global")[c(1, 2)], ICIKendallTau:::ici_kt_pairs(x, y, "global"))
 })
 
 test_that("bad values passed return NA", {
@@ -46,9 +46,17 @@ test_that("matrix kendall works", {
   y[1:20] = NA
   
   test_mat = rbind(x, y)
-  matrix_cor = ici_kendalltau(test_mat, exclude_na = TRUE, exclude_0 = FALSE,
+  matrix_cor = ici_kendalltau(test_mat, global_na = c(NA),
                                   perspective = "global", scale_max = FALSE)
-  expect_equal(ici_kt(x, y, "global")[[1]], matrix_cor$cor[2, 1])
+  expect_equal(ici_kt(x, y, "global")[[1]], matrix_cor$raw[2, 1])
+})
+
+test_that("large kendall returns correct", {
+  set.seed(1234)
+  x = rnorm(50000)
+  y = rnorm(50000)
+  ici_val = ici_kt(x, y, perspective = "global")
+  expect_snapshot(ici_val)
 })
 
 if (run_long_kendallt) {
@@ -59,6 +67,6 @@ if (run_long_kendallt) {
     
     t1 = ici_kt(x, y, perspective = "global")
     t2 = ICIKendallTau:::ici_kt_pairs(x, y, perspective = "global")
-    expect_equal(t1, t2)
+    expect_equal(t1[c(1, 2)], t2)
   })
 }
