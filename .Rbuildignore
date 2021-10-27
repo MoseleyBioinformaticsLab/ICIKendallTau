@@ -1,5 +1,3 @@
-large.*
-*.rds$
 ^large_test$
 ^.*\.Rproj$
 ^\.Rproj\.user$
