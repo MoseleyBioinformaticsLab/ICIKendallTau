@@ -1,6 +1,6 @@
 Package: ICIKendallTau
 Title: Calculates information-content-informed Kendall-tau
-Version: 0.1.12
+Version: 0.1.13
 Date: 2021-10-27
 Authors@R: c(person(given = c("Robert", "M"), family = "Flight", role =
         c("aut", "cre"), email = "rflight79@gmail.com", comment =
@@ -10,12 +10,13 @@ Authors@R: c(person(given = c("Robert", "M"), family = "Flight", role =
 Description: Provides functions for calculating
         information-content-informed Kendall-tau. This version of
         Kendall-tau allows for the inclusion of missing values.
-VignetteBuilder: rmarkdown
+VignetteBuilder: knitr
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 LinkingTo: Rcpp
 Imports: Rcpp, purrr, utils
-Suggests: furrr, future, testthat (>= 3.0.0), microbenchmark, rmarkdown
+Suggests: furrr, future, testthat (>= 3.0.0), microbenchmark,
+        rmarkdown, knitr
 Config/testthat/edition: 3
