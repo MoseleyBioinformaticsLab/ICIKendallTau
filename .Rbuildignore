@@ -11,3 +11,5 @@
 ^recount_adeno_counts\.rds$
 ^doc$
 ^Meta$
+^\.github$
+^check_long_long_int\.R$
