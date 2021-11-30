@@ -1,3 +1,7 @@
+# ICIKendallTau 0.1.16
+
+- updating documentation and examples
+
 # ICIKendallTau 0.1.4
 
 - Switched `pairwise_completeness` to also use the `global_na` parameter.
