@@ -27,7 +27,7 @@ ici_kendalltau(
 \item{check_timing}{should we try to estimate run time for full dataset? (default is FALSE)}
 }
 \value{
-numeric
+list with cor, raw, pval, taumax
 }
 \description{
 Given a data-matrix, computes the information-theoretic Kendall-tau-b between
@@ -42,5 +42,45 @@ The default for \code{global_na} includes what values in the data to replace wit
 
 When \code{check_timing = TRUE}, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.
 
+Returned is a list containing matrices with:
+\itemize{
+\item cor: scaled correlations
+\item raw: raw kendall-tau correlations
+\item pval: p-values
+\item taumax: the theoretical maximum kendall-tau value possible
+}
+
 Eventually, we plan to provide two more parameters for replacing values, \code{feature_na} for feature specific NA values and \code{sample_na} for sample specific NA values.
+}
+\examples{
+\dontrun{
+# not run
+set.seed(1234)
+s1 = sort(rnorm(1000, mean = 100, sd = 10))
+s2 = s1 + 10 
+
+matrix_1 = cbind(s1, s2)
+
+r_1 = ici_kendalltau(t(matrix_1))
+r_1$cor
+
+#    s1 s2
+# s1  1  1
+# s2  1  1
+names(r_1)
+# "cor", "raw", "pval", "taumax", "keep", "run_time"
+
+s3 = s1
+s3[sample(100, 50)] = NA
+
+s4 = s2
+s4[sample(100, 50)] = NA
+
+matrix_2 = cbind(s3, s4)
+r_2 = ici_kendalltau(t(matrix_2))
+r_2$cor
+#           s3        s4
+# s3 1.0000000 0.9944616
+# s4 0.9944616 1.0000000
+}
 }
