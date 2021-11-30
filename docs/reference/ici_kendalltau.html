@@ -73,7 +73,7 @@ all samples." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ICIKendallTau</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.15</span>
       </span>
     </div>
 
@@ -169,15 +169,54 @@ all samples.</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>numeric</p>
+    <p>list with cor, raw, pval, taumax</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>For more details, see the ICI-Kendall-tau vignette</p>
 <p><code><a href='https://rdrr.io/r/utils/browseVignettes.html'>browseVignettes("ICIKendallTau")</a></code></p>
 <p>The default for <code>global_na</code> includes what values in the data to replace with NA for the Kendall-tau calculation. By default these are <code>global_na = c(NA, Inf, 0)</code>. If you want to replace something other than 0, for example, you might use <code>global_na = c(NA, Inf, -2)</code>, and all values of -2 will be replaced instead of 0.</p>
 <p>When <code>check_timing = TRUE</code>, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.</p>
+<p>Returned is a list containing matrices with:</p><ul>
+<li><p>cor: scaled correlations</p></li>
+<li><p>raw: raw kendall-tau correlations</p></li>
+<li><p>pval: p-values</p></li>
+<li><p>taumax: the theoretical maximum kendall-tau value possible</p></li>
+</ul>
+
 <p>Eventually, we plan to provide two more parameters for replacing values, <code>feature_na</code> for feature specific NA values and <code>sample_na</code> for sample specific NA values.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'># not run</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>1234</span><span class='op'>)</span>
+<span class='va'>s1</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1000</span>, mean <span class='op'>=</span> <span class='fl'>100</span>, sd <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>s2</span> <span class='op'>=</span> <span class='va'>s1</span> <span class='op'>+</span> <span class='fl'>10</span> 
+
+<span class='va'>matrix_1</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>s1</span>, <span class='va'>s2</span><span class='op'>)</span>
+
+<span class='va'>r_1</span> <span class='op'>=</span> <span class='fu'>ici_kendalltau</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>matrix_1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>r_1</span><span class='op'>$</span><span class='va'>cor</span>
+
+<span class='co'>#    s1 s2</span>
+<span class='co'># s1  1  1</span>
+<span class='co'># s2  1  1</span>
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>r_1</span><span class='op'>)</span>
+<span class='co'># "cor", "raw", "pval", "taumax", "keep", "run_time"</span>
+
+<span class='va'>s3</span> <span class='op'>=</span> <span class='va'>s1</span>
+<span class='va'>s3</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>=</span> <span class='cn'>NA</span>
+
+<span class='va'>s4</span> <span class='op'>=</span> <span class='va'>s2</span>
+<span class='va'>s4</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>=</span> <span class='cn'>NA</span>
+
+<span class='va'>matrix_2</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>s3</span>, <span class='va'>s4</span><span class='op'>)</span>
+<span class='va'>r_2</span> <span class='op'>=</span> <span class='fu'>ici_kendalltau</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>matrix_2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>r_2</span><span class='op'>$</span><span class='va'>cor</span>
+<span class='co'>#           s3        s4</span>
+<span class='co'># s3 1.0000000 0.9944616</span>
+<span class='co'># s4 0.9944616 1.0000000</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
