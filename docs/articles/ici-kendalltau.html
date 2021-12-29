@@ -259,12 +259,12 @@
   times <span class="op">=</span> <span class="fl">5</span>
 <span class="op">)</span>
 <span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt;                           expr      min        lq       mean    median</span>
-<span class="co">#&gt;  cor(x, y, method = "kendall") 19455.39 19932.350 20737.4076 19953.481</span>
-<span class="co">#&gt;         ici_kt(x, y, "global")   294.82   300.814   357.3328   310.294</span>
+<span class="co">#&gt;                           expr       min        lq       mean    median</span>
+<span class="co">#&gt;  cor(x, y, method = "kendall") 19490.429 19527.085 20931.7076 19877.641</span>
+<span class="co">#&gt;         ici_kt(x, y, "global")   311.089   316.322   436.3248   323.086</span>
 <span class="co">#&gt;         uq       max neval cld</span>
-<span class="co">#&gt;  20656.586 23689.228     5   b</span>
-<span class="co">#&gt;    355.504   525.232     5  a</span></code></pre></div>
+<span class="co">#&gt;  20931.536 24831.847     5   b</span>
+<span class="co">#&gt;    385.802   845.325     5  a</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
