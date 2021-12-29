@@ -19,4 +19,7 @@ LinkingTo: Rcpp
 Imports: Rcpp, purrr, utils
 Suggests: furrr, future, testthat (>= 3.0.0), microbenchmark,
         rmarkdown, knitr
+URL:
+        https://moseleybioinformaticslab.github.io/ICIKendallTau
+        https://github.com/moseleybioinformaticslab/ICIKendallTau
 Config/testthat/edition: 3
