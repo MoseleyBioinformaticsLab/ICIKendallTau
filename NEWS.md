@@ -1,3 +1,8 @@
+# ICIKendalltau 0.1.17
+
+- switched theme.
+- updated installation instructions to use r-universe.
+
 # ICIKendallTau 0.1.16
 
 - updating documentation and examples

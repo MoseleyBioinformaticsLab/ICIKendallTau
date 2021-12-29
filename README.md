@@ -11,10 +11,19 @@ You can see the pkgdown site
 
 ## Installation
 
-You can install the current version of ICIKendallTau GitHub:
+You can install the current version of ICIKendallTau via GitHub:
 
 ``` r
 remotes::install_github("MoseleyBioinformaticsLab/ICIKendallTau")
+```
+
+You can also install Windows or Mac binaries using our r-universe:
+
+``` r
+options(repos = c(
+    moseleybioinformaticslab = 'https://moseleybioinformaticslab.r-universe.dev',
+    CRAN = "https://cloud.r-project.org"))
+install.packages("ICIKendallTau")
 ```
 
 ## Problem
@@ -92,8 +101,8 @@ matrix_2 = cbind(s3, s4)
 r_2 = ici_kendalltau(t(matrix_2))
 r_2$cor
 #>           s3        s4
-#> s3 1.0000000 0.9948636
-#> s4 0.9948636 1.0000000
+#> s3 1.0000000 0.9944616
+#> s4 0.9944616 1.0000000
 ```
 
 ## Is It Fast?
@@ -124,14 +133,18 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr      min        lq
-#>  cor(x, y, method = "kendall") 13318.88 13332.855
-#>         ici_kt(x, y, "global")   227.62   249.418
-#>       ici_kt(x2, y2, "global") 13314.54 13508.229
-#>        mean    median        uq       max neval
-#>  13438.3462 13425.853 13476.882 13637.257     5
-#>    258.0386   250.257   270.155   292.743     5
-#>  13562.7464 13623.956 13651.693 13715.311     5
+#>                           expr       min
+#>  cor(x, y, method = "kendall") 18412.178
+#>         ici_kt(x, y, "global")   287.508
+#>       ici_kt(x2, y2, "global") 17704.824
+#>         lq       mean    median        uq
+#>  18615.432 19008.9036 18774.934 19323.739
+#>    299.902   361.0594   325.038   334.507
+#>  18128.577 19400.1308 18308.041 19894.610
+#>        max neval cld
+#>  19918.235     5   b
+#>    558.342     5  a 
+#>  22964.602     5   b
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 13

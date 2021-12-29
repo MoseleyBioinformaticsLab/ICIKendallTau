@@ -1,1 +1,5 @@
 URL: https://moseleybioinformaticslab.github.io/ICIKendallTau
+template:
+  bootstrap: 5
+  bootswatch: cyborg
+  theme: breeze-dark

@@ -24,10 +24,19 @@ You can see the pkgdown site [here](https://moseleybioinformaticslab.github.io/I
 
 ## Installation
 
-You can install the current version of ICIKendallTau GitHub:
+You can install the current version of ICIKendallTau via GitHub:
 
 ``` r
 remotes::install_github("MoseleyBioinformaticsLab/ICIKendallTau")
+```
+
+You can also install Windows or Mac binaries using our r-universe:
+
+```r
+options(repos = c(
+    moseleybioinformaticslab = 'https://moseleybioinformaticslab.r-universe.dev',
+    CRAN = "https://cloud.r-project.org"))
+install.packages("ICIKendallTau")
 ```
 
 ## Problem
