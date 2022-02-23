@@ -1,7 +1,7 @@
 Package: ICIKendallTau
 Title: Calculates information-content-informed Kendall-tau
-Version: 0.1.17
-Date: 2021-12-29
+Version: 0.1.18
+Date: 2022-02-22
 Authors@R: c(person(given = c("Robert", "M"), family = "Flight", role =
         c("aut", "cre"), email = "rflight79@gmail.com", comment =
         c(ORCID = "0000-0001-8141-7788")), person(given = c("Hunter",
@@ -19,7 +19,6 @@ LinkingTo: Rcpp
 Imports: Rcpp, purrr, utils
 Suggests: furrr, future, testthat (>= 3.0.0), microbenchmark,
         rmarkdown, knitr
-URL:
-        https://moseleybioinformaticslab.github.io/ICIKendallTau
+URL: https://moseleybioinformaticslab.github.io/ICIKendallTau
         https://github.com/moseleybioinformaticslab/ICIKendallTau
 Config/testthat/edition: 3

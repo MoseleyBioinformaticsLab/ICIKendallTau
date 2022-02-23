@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 # ICIKendallTau
 
 <!-- badges: start -->
+[![ICIKendallTau status badge](https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau)](https://moseleybioinformaticslab.r-universe.dev)
 <!-- badges: end -->
 
 You can see the pkgdown site [here](https://moseleybioinformaticslab.github.io/ICIKendallTau).

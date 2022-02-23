@@ -4,6 +4,9 @@
 # ICIKendallTau
 
 <!-- badges: start -->
+
+[![ICIKendallTau status
+badge](https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau)](https://moseleybioinformaticslab.r-universe.dev)
 <!-- badges: end -->
 
 You can see the pkgdown site
@@ -133,18 +136,14 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min
-#>  cor(x, y, method = "kendall") 18412.178
-#>         ici_kt(x, y, "global")   287.508
-#>       ici_kt(x2, y2, "global") 17704.824
-#>         lq       mean    median        uq
-#>  18615.432 19008.9036 18774.934 19323.739
-#>    299.902   361.0594   325.038   334.507
-#>  18128.577 19400.1308 18308.041 19894.610
-#>        max neval cld
-#>  19918.235     5   b
-#>    558.342     5  a 
-#>  22964.602     5   b
+#>                           expr       min        lq       mean
+#>  cor(x, y, method = "kendall") 19619.802 20277.542 20434.6350
+#>         ici_kt(x, y, "global")   310.463   346.523   405.0156
+#>       ici_kt(x2, y2, "global") 19563.587 19949.583 20738.8768
+#>    median        uq       max neval cld
+#>  20297.02 20778.512 21200.297     5   b
+#>    350.09   371.053   646.949     5  a 
+#>  20195.84 20957.648 23027.727     5   b
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 13
