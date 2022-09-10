@@ -10,6 +10,7 @@ ici_kendalltau(
   perspective = "global",
   scale_max = TRUE,
   diag_good = TRUE,
+  include_only = NULL,
   check_timing = FALSE
 )
 }
@@ -23,6 +24,8 @@ ici_kendalltau(
 \item{scale_max}{should everything be scaled compared to the maximum correlation?}
 
 \item{diag_good}{should the diagonal entries reflect how many entries in the sample were "good"?}
+
+\item{include_only}{only run the correlations that include the members (as a vector) or combinations (as a list or data.frame)}
 
 \item{check_timing}{should we try to estimate run time for full dataset? (default is FALSE)}
 }
@@ -82,5 +85,27 @@ r_2$cor
 #           s3        s4
 # s3 1.0000000 0.9944616
 # s4 0.9944616 1.0000000
+
+# using include_only
+set.seed(1234)
+x = matrix(rnorm(5000), nrow = 100, ncol = 50)
+rownames(x) = paste0("s", seq(1, nrow(x)))
+
+# only calculate correlations of other columns with "s1"
+include_s1 = "s1"
+s1_only = ici_kendalltau(x, include_only = include_s1)
+
+# include s1 and s3 things both
+include_s1s3 = c("s1", "s3")
+s1s3_only = ici_kendalltau(x, include_only = include_s1s3)
+
+# only specify certain pairs either as a list
+include_pairs = list(g1 = "s1", g2 = c("s2", "s3"))
+s1_other = ici_kendalltau(x, include_only = include_pairs)
+
+# or a data.frame
+include_df = as.data.frame(list(g1 = "s1", g2 = c("s2", "s3")))
+s1_df = ici_kendalltau(x, include_only = include_df)
+
 }
 }

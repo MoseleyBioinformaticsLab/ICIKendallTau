@@ -212,6 +212,7 @@ pairwise_completeness = function(data_matrix,
 #' @param perspective how to treat missing data in denominator and ties, see details
 #' @param scale_max should everything be scaled compared to the maximum correlation?
 #' @param diag_good should the diagonal entries reflect how many entries in the sample were "good"?
+#' @param include_only only run the correlations that include the members (as a vector) or combinations (as a list or data.frame)
 #' @param check_timing should we try to estimate run time for full dataset? (default is FALSE)
 #' 
 #' @details For more details, see the ICI-Kendall-tau vignette 
@@ -263,6 +264,28 @@ pairwise_completeness = function(data_matrix,
 #' #           s3        s4
 #' # s3 1.0000000 0.9944616
 #' # s4 0.9944616 1.0000000
+#' 
+#' # using include_only
+#' set.seed(1234)
+#' x = matrix(rnorm(5000), nrow = 100, ncol = 50)
+#' rownames(x) = paste0("s", seq(1, nrow(x)))
+#' 
+#' # only calculate correlations of other columns with "s1"
+#' include_s1 = "s1"
+#' s1_only = ici_kendalltau(x, include_only = include_s1)
+#' 
+#' # include s1 and s3 things both
+#' include_s1s3 = c("s1", "s3")
+#' s1s3_only = ici_kendalltau(x, include_only = include_s1s3)
+#' 
+#' # only specify certain pairs either as a list
+#' include_pairs = list(g1 = "s1", g2 = c("s2", "s3"))
+#' s1_other = ici_kendalltau(x, include_only = include_pairs)
+#' 
+#' # or a data.frame
+#' include_df = as.data.frame(list(g1 = "s1", g2 = c("s2", "s3")))
+#' s1_df = ici_kendalltau(x, include_only = include_df)
+#' 
 #' }
 #' @export
 #' 
@@ -271,6 +294,7 @@ ici_kendalltau = function(data_matrix,
                              perspective = "global",
                              scale_max = TRUE,
                              diag_good = TRUE,
+                             include_only = NULL,
                              check_timing = FALSE){
   
   # assume row-wise (because that is what the description states), so need to transpose
@@ -318,7 +342,6 @@ ici_kendalltau = function(data_matrix,
     split_fun = purrr::map
   }
   
-  
   pairwise_comparisons = utils::combn(n_sample, 2)
   
   if (!diag_good) {
@@ -326,12 +349,37 @@ ici_kendalltau = function(data_matrix,
     pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
   }
   
-  n_todo = ncol(pairwise_comparisons)
+  named_comparisons = data.frame(s1 = colnames(data_matrix)[pairwise_comparisons[1, ]],
+                                 s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
+  
+  if (!is.null(include_only)) {
+    if (is.character(include_only) || is.numeric(include_only)) {
+      #message("a vector!")
+      s1_include = named_comparisons$s1 %in% include_only
+      s2_include = named_comparisons$s2 %in% include_only
+      named_comparisons = named_comparisons[(s1_include | s2_include), ]
+    } else if (is.list(include_only)) {
+      if (length(include_only) == 2) {
+        #message("a list!")
+        l1_include = (named_comparisons$s1 %in% include_only[[1]]) | (named_comparisons$s2 %in% include_only[[1]])
+        l2_include = (named_comparisons$s1 %in% include_only[[2]]) | (named_comparisons$s2 %in% include_only[[2]])
+        named_comparisons = named_comparisons[(l1_include & l2_include), ]
+      } else {
+        stop("include_only must either be a single vector, or a list of 2 vectors!")
+      }
+    }
+  }
+  
+  if (nrow(named_comparisons) == 0) {
+    stop("nrow(named_comparisons) == 0, did you create include_only correctly?")
+  }
+  
+  n_todo = nrow(named_comparisons)
   n_each = ceiling(n_todo / ncore)
   
   if (check_timing) {
-    sample_compare = sample(ncol(pairwise_comparisons), 5)
-    tmp_pairwise = pairwise_comparisons[, sample_compare]
+    sample_compare = sample(nrow(named_comparisons), 5)
+    tmp_pairwise = named_comparisons[, sample_compare]
     
     run_tmp = check_icikt_timing(exclude_data, tmp_pairwise, perspective, n_todo, ncore)
     return(run_tmp)
@@ -343,7 +391,7 @@ ici_kendalltau = function(data_matrix,
   for (isplit in seq_along(split_comparisons)) {
     stop_loc = min(start_loc + n_each, n_todo)
     
-    split_comparisons[[isplit]] = pairwise_comparisons[, start_loc:stop_loc, drop = FALSE]
+    split_comparisons[[isplit]] = named_comparisons[start_loc:stop_loc, , drop = FALSE]
     start_loc = stop_loc + 1
     
     if (start_loc > n_todo) {
@@ -362,9 +410,9 @@ ici_kendalltau = function(data_matrix,
     tmp_pval = tmp_cor
     tmp_max = tmp_cor
     
-    for (icol in seq(1, ncol(do_comparisons))) {
-      iloc = do_comparisons[1, icol]
-      jloc = do_comparisons[2, icol]
+    for (irow in seq(1, nrow(do_comparisons))) {
+      iloc = do_comparisons[irow, 1]
+      jloc = do_comparisons[irow, 2]
       ici_res = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
       tmp_cor[iloc, jloc] = tmp_cor[jloc, iloc] = ici_res["tau"]
       tmp_pval[iloc, jloc] = tmp_pval[jloc, iloc] = ici_res["pvalue"]
