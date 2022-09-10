@@ -8,8 +8,8 @@
 <meta name="description" content="ICIKendallTau">
 <title>Information-Content-Informed Kendall Tau Correlation • ICIKendallTau</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Information-Content-Informed Kendall Tau Correlation">
 <meta property="og:description" content="ICIKendallTau">
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.17</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,9 +70,10 @@
 
 
 <div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Information-Content-Informed Kendall Tau Correlation</h1>
-                        <h4 data-toc-skip class="author">Robert M Flight &amp; Hunter NB Moseley</h4>
+                        <h4 data-toc-skip class="author">Robert M Flight
+&amp; Hunter NB Moseley</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/moseleybioinformaticslab/ICIKendallTau/blob/HEAD/vignettes/ici-kendalltau.Rmd" class="external-link"><code>vignettes/ici-kendalltau.Rmd</code></a></small>
@@ -82,16 +83,22 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau" class="external-link">ICIKendallTau</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau" class="external-link">ICIKendallTau</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="problem">Problem<a class="anchor" aria-label="anchor" href="#problem"></a>
 </h2>
 <ul>
-<li>How to handle missing data (i.e. <code>NA</code>’s) in calculating a correlation between two variables.</li>
-<li>Current calculations of correlation are based on having all pairs of observations for two variables.
+<li>How to handle missing data (i.e. <code>NA</code>’s) in calculating a
+correlation between two variables.</li>
+<li>Current calculations of correlation are based on having all pairs of
+observations for two variables.
 <ul>
-<li>However, whether an observation is made is semi-quantitative information for many analytical measurements with sensitivity limits.</li>
-<li>i.e. in many cases, missing observations are not “missing-at-random”, but “missing-not-at-random” due to falling below the detection limit.</li>
+<li>However, whether an observation is made is semi-quantitative
+information for many analytical measurements with sensitivity
+limits.</li>
+<li>i.e. in many cases, missing observations are not
+“missing-at-random”, but “missing-not-at-random” due to falling below
+the detection limit.</li>
 <li>In these cases, the <code>NA</code> is informative.</li>
 </ul>
 </li>
@@ -100,9 +107,12 @@
 <div class="section level2">
 <h2 id="approach">Approach<a class="anchor" aria-label="anchor" href="#approach"></a>
 </h2>
-<p>A <a href="https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient" class="external-link">Kendall Tau Correlation coefficient</a> calculates correlation based on the number of concordant and discordant pairs:</p>
+<p>A <a href="https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient" class="external-link">Kendall
+Tau Correlation coefficient</a> calculates correlation based on the
+number of concordant and discordant pairs:</p>
 <ul>
-<li><span class="math inline">\(\tau = \frac{ | pairs_{concordant} | - | pairs_{discordant} |}{\binom{n}{2}}\)</span></li>
+<li><span class="math inline">\(\tau = \frac{ | pairs_{concordant} | - |
+pairs_{discordant} |}{\binom{n}{2}}\)</span></li>
 <li>A pair are two x-y data points.</li>
 <li>A concordant pair has the following classical definition:
 <ul>
@@ -125,7 +135,8 @@
 </ul>
 </li>
 </ul>
-<p><em>But these definitions can be expanded to handle missing observations:</em></p>
+<p><em>But these definitions can be expanded to handle missing
+observations:</em></p>
 <ul>
 <li>Information content informed concordant pairs:
 <ul>
@@ -148,9 +159,11 @@
 <span class="math inline">\(!x_i \&amp; x_j\)</span> and <span class="math inline">\(y_i &lt; y_j\)</span>
 </li>
 <li>
-<span class="math inline">\(x_i \&amp; !x_j\)</span> and <span class="math inline">\(y_i \&amp; !y_j\)</span> (not used in local perspective version)</li>
+<span class="math inline">\(x_i \&amp; !x_j\)</span> and <span class="math inline">\(y_i \&amp; !y_j\)</span> (not used in local
+perspective version)</li>
 <li>
-<span class="math inline">\(x_i \&amp; x_j\)</span> and <span class="math inline">\(!y_i \&amp; y_j\)</span> (not used in local perspective version)</li>
+<span class="math inline">\(x_i \&amp; x_j\)</span> and <span class="math inline">\(!y_i \&amp; y_j\)</span> (not used in local
+perspective version)</li>
 </ul>
 </li>
 <li>Information content informed discordant pairs:
@@ -174,17 +187,27 @@
 <span class="math inline">\(!x_i \&amp; x_j\)</span> and <span class="math inline">\(y_i &gt; y_j\)</span>
 </li>
 <li>
-<span class="math inline">\(x_i \&amp; !x_j\)</span> and <span class="math inline">\(!y_i \&amp; y_j\)</span> (not used in local perspective version)</li>
+<span class="math inline">\(x_i \&amp; !x_j\)</span> and <span class="math inline">\(!y_i \&amp; y_j\)</span> (not used in local
+perspective version)</li>
 <li>
-<span class="math inline">\(!x_i \&amp; x_j\)</span> and <span class="math inline">\(y_i \&amp; !y_j\)</span> (not used in local perspective version)</li>
+<span class="math inline">\(!x_i \&amp; x_j\)</span> and <span class="math inline">\(y_i \&amp; !y_j\)</span> (not used in local
+perspective version)</li>
 </ul>
 </li>
-<li>Also data points with both missing x and y values will naturally reduce the strength of the correlation value, since they can be neither concordant nor discordant with another (NA, NA) pair, but will impact the denominator.</li>
-<li>Alternatively, (NA,NA) points can be removed to calculate a correlation that is specific to the two variables and does not consider missing data from a global dataset perspective that spans a set of variables.
+<li>Also data points with both missing x and y values will naturally
+reduce the strength of the correlation value, since they can be neither
+concordant nor discordant with another (NA, NA) pair, but will impact
+the denominator.</li>
+<li>Alternatively, (NA,NA) points can be removed to calculate a
+correlation that is specific to the two variables and does not consider
+missing data from a global dataset perspective that spans a set of
+variables.
 <ul>
-<li>If this local perspective is used, then two data points that are both missing data, should not be compared.
+<li>If this local perspective is used, then two data points that are
+both missing data, should not be compared.
 <ul>
-<li>This is equivalent to removing the last two concordant and discordant pair tests.</li>
+<li>This is equivalent to removing the last two concordant and
+discordant pair tests.</li>
 </ul>
 </li>
 </ul>
@@ -194,30 +217,51 @@
 <div class="section level2">
 <h2 id="handling-tied-values">Handling Tied Values<a class="anchor" aria-label="anchor" href="#handling-tied-values"></a>
 </h2>
-<p>The base Kendall tau correlation must be adjusted to handle tied values, ie. the <a href="https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient#Accounting_for_ties" class="external-link">tau-b</a> version of the equation.</p>
-<p><span class="math display">\[\tau = \frac{ | pairs_{concordant}  | -  | pairs_{discordant}  |}{\sqrt{ ( n_0 - n_{xtie}  )  ( n_0 - n_{ytie}  )}} \]</span> where:</p>
+<p>The base Kendall tau correlation must be adjusted to handle tied
+values, ie. the <a href="https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient#Accounting_for_ties" class="external-link">tau-b</a>
+version of the equation.</p>
+<p><span class="math display">\[\tau = \frac{ | pairs_{concordant}  |
+-  | pairs_{discordant}  |}{\sqrt{ ( n_0 - n_{xtie}  )  ( n_0 -
+n_{ytie}  )}} \]</span> where:</p>
 <ul>
-<li><span class="math inline">\(n_0 = \frac{n \left ( n - 1 \right )}{2}\)</span></li>
-<li><span class="math inline">\(n_{xtie} = \sum_{i}^{} \frac{t_{xi} \left ( t_{xi} - 1 \right )}{2}\)</span></li>
-<li><span class="math inline">\(n_{ytie} = \sum_{i}^{} \frac{t_{yi} \left ( t_{yi} - 1 \right )}{2}\)</span></li>
+<li><span class="math inline">\(n_0 = \frac{n \left ( n - 1 \right
+)}{2}\)</span></li>
+<li><span class="math inline">\(n_{xtie} = \sum_{i}^{} \frac{t_{xi}
+\left ( t_{xi} - 1 \right )}{2}\)</span></li>
+<li><span class="math inline">\(n_{ytie} = \sum_{i}^{} \frac{t_{yi}
+\left ( t_{yi} - 1 \right )}{2}\)</span></li>
 <li>
-<span class="math inline">\(t_{xi}\)</span> - the size of the ith group of tied x values.</li>
+<span class="math inline">\(t_{xi}\)</span> - the size of the ith
+group of tied x values.</li>
 <li>
-<span class="math inline">\(t_{yi}\)</span> - the size of the ith group of tied y values.</li>
-<li>From the local perspective, the number of NAs in x and y can be treated as a group of tied values in calculation of <span class="math inline">\(n_{xtie}\)</span> and <span class="math inline">\(n_{ytie}\)</span>, respectively.</li>
+<span class="math inline">\(t_{yi}\)</span> - the size of the ith
+group of tied y values.</li>
+<li>From the local perspective, the number of NAs in x and y can be
+treated as a group of tied values in calculation of <span class="math inline">\(n_{xtie}\)</span> and <span class="math inline">\(n_{ytie}\)</span>, respectively.</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="scaling-by-the-correlation-with-the-highest-information-content">Scaling by the correlation with the highest information content<a class="anchor" aria-label="anchor" href="#scaling-by-the-correlation-with-the-highest-information-content"></a>
 </h2>
-<p>When generating a correlation matrix (heatmap) for large analytical datasets, the number of observations in common can become quite low between any two variables. It becomes advantageous to scale by the pair of variables with the highest information content. One objective scaling factor is the highest possible absolute correlation at the maximum information content observed across a dataset, and dividing by this maximum possible absolute correlation would scale the whole dataset appropriately.</p>
-<p><span class="math display">\[maxcorr = \frac{\binom{n-m}{2} + n * m}{\binom{n-m}{2} + n * m + \binom{m}{2}}\]</span> Where:</p>
+<p>When generating a correlation matrix (heatmap) for large analytical
+datasets, the number of observations in common can become quite low
+between any two variables. It becomes advantageous to scale by the pair
+of variables with the highest information content. One objective scaling
+factor is the highest possible absolute correlation at the maximum
+information content observed across a dataset, and dividing by this
+maximum possible absolute correlation would scale the whole dataset
+appropriately.</p>
+<p><span class="math display">\[maxcorr = \frac{\binom{n-m}{2} + n *
+m}{\binom{n-m}{2} + n * m + \binom{m}{2}}\]</span> Where:</p>
 <ul>
-<li>Choose the two variables with <em>the least number</em> of missing values across the dataset.</li>
+<li>Choose the two variables with <em>the least number</em> of missing
+values across the dataset.</li>
 <li>n is the length of the variables.</li>
-<li>m is the count of missing values across the two variables divided by two rounded down.
+<li>m is the count of missing values across the two variables divided by
+two rounded down.
 <ul>
-<li>This formula is based on perfect correlation with a given number of (NA,NA) pairs added.</li>
+<li>This formula is based on perfect correlation with a given number of
+(NA,NA) pairs added.</li>
 </ul>
 </li>
 </ul>
@@ -228,10 +272,13 @@
 <p>The functions that implement this include:</p>
 <ul>
 <li>
-<code>ici_kt</code>: the workhorse, actually calculating a correlation between X and Y vectors.
+<code>ici_kt</code>: the workhorse, actually calculating a
+correlation between X and Y vectors.
 <ul>
-<li>The option <code>perspective</code> will control how the <code>NA</code> values influence ties.</li>
-<li>When comparing multiple samples, you likely want to use <code>perspective = "global"</code>.</li>
+<li>The option <code>perspective</code> will control how the
+<code>NA</code> values influence ties.</li>
+<li>When comparing multiple samples, you likely want to use
+<code>perspective = "global"</code>.</li>
 </ul>
 </li>
 <li>
@@ -252,32 +299,39 @@
 <div class="section level2">
 <h2 id="implementation">Implementation<a class="anchor" aria-label="anchor" href="#implementation"></a>
 </h2>
-<p>It turns out, if we think about it really hard, all that is truly necessary is to replace missing values in each vector with a value smaller than the minimum value in each one. For the <strong>local</strong> version, we first remove common missing values from each vector. Our C++ implementation explicitly does this so that we can have speed, instead of wrapping the {stats::cor} function. We also use the double merge-sort algorithm, translating {scipy:: ::stats::kendalltau} function into C++ using {Rcpp}.</p>
+<p>It turns out, if we think about it really hard, all that is truly
+necessary is to replace missing values in each vector with a value
+smaller than the minimum value in each one. For the
+<strong>local</strong> version, we first remove common missing values
+from each vector. Our C++ implementation explicitly does this so that we
+can have speed, instead of wrapping the {stats::cor} function. We also
+use the double merge-sort algorithm, translating {scipy::
+::stats::kendalltau} function into C++ using {Rcpp}.</p>
 </div>
 <div class="section level2">
 <h2 id="speed">Speed<a class="anchor" aria-label="anchor" href="#speed"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
-<span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
-
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span>,
-  times <span class="op">=</span> <span class="fl">5</span>
-<span class="op">)</span>
-<span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt;                           expr       min        lq       mean    median</span>
-<span class="co">#&gt;  cor(x, y, method = "kendall") 19649.160 20113.530 20713.5014 20178.183</span>
-<span class="co">#&gt;         ici_kt(x, y, "global")   300.514   313.182   391.8752   361.332</span>
-<span class="co">#&gt;         uq      max neval cld</span>
-<span class="co">#&gt;  20644.797 22981.84     5   b</span>
-<span class="co">#&gt;    362.858   621.49     5  a</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span>,</span>
+<span>  times <span class="op">=</span> <span class="fl">5</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Unit: microseconds</span></span>
+<span><span class="co">#&gt;                           expr       min        lq       mean    median</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 11639.128 12351.110 13113.4890 13253.325</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   192.643   208.436   251.0214   215.607</span></span>
+<span><span class="co">#&gt;         uq       max neval</span></span>
+<span><span class="co">#&gt;  13441.689 14882.193     5</span></span>
+<span><span class="co">#&gt;    240.953   397.468     5</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -292,7 +346,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>

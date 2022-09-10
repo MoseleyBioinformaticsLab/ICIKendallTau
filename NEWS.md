@@ -1,4 +1,8 @@
-# ICIKendalltau 0.1.17
+# ICIKendallTau 0.2.1
+
+- Added new argument `include_only` to `ici_kendalltau` that allows the user to define which of the pairwise correlations to actually do.
+
+# ICIKendallTau 0.1.17
 
 - switched theme.
 - updated installation instructions to use r-universe.

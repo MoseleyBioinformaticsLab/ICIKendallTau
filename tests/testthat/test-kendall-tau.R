@@ -70,3 +70,26 @@ if (run_long_kendallt) {
     expect_equal(t1[c(1, 2)], t2)
   })
 }
+
+test_that("include_only works as intended", {
+  set.seed(1234)
+  x = matrix(rnorm(5000), nrow = 100, ncol = 50)
+  rownames(x) = paste0("s", seq(1, nrow(x)))
+  
+  include_test = "s1"
+  small_include = ici_kendalltau(x, include_only = include_test)
+  expect_equal(sum(small_include$cor == 0), 9702)
+  
+  include_test = c("s1", "s3")
+  small_include2 = ici_kendalltau(x, include_only = include_test)
+  expect_equal(sum(small_include2$cor == 0), 9506)
+  
+  include_test = list(s1 = "s1", s2 = c("s2", "s3"))
+  small_include3 = ici_kendalltau(x, include_only = include_test)
+  expect_equal(sum(small_include3$cor == 0), 9896)
+  
+  # transform to a data.frame and make sure it runs the same
+  include_df = as.data.frame(include_test)
+  small_include4 = ici_kendalltau(x, include_only = include_df)
+  expect_equal(small_include4$cor, small_include3$cor)
+})
