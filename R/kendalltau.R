@@ -342,6 +342,8 @@ ici_kendalltau = function(data_matrix,
     split_fun = purrr::map
   }
   
+  # generate the array of comparisons, 2 x ...,
+  # where each column is a comparison between two columns of data
   pairwise_comparisons = utils::combn(n_sample, 2)
   
   if (!diag_good) {
@@ -349,18 +351,29 @@ ici_kendalltau = function(data_matrix,
     pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
   }
   
+  # create a data.frame of the comparisons by the names of the columns instead,
+  # this enables indexed comparisons and named comparisons, because
+  # we can have row / column names in R
+  # This is now n_comparisons x 2
   named_comparisons = data.frame(s1 = colnames(data_matrix)[pairwise_comparisons[1, ]],
                                  s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
   
   if (!is.null(include_only)) {
     if (is.character(include_only) || is.numeric(include_only)) {
       #message("a vector!")
+      # Check each of the comparison vectors against the include_only variable
+      # This returns TRUE where they match
+      # Use OR to make sure we return everything that should be returned
       s1_include = named_comparisons$s1 %in% include_only
       s2_include = named_comparisons$s2 %in% include_only
       named_comparisons = named_comparisons[(s1_include | s2_include), ]
     } else if (is.list(include_only)) {
       if (length(include_only) == 2) {
         #message("a list!")
+        # In this case the include_only is a list of things, so we have to check both
+        # of the sets against each of the lists. Again, this returns TRUE where
+        # they match. Because we want the things where they
+        # are both TRUE (assuming l1[1] goes with l2[1]), we use the AND at the end.
         l1_include = (named_comparisons$s1 %in% include_only[[1]]) | (named_comparisons$s2 %in% include_only[[1]])
         l2_include = (named_comparisons$s1 %in% include_only[[2]]) | (named_comparisons$s2 %in% include_only[[2]])
         named_comparisons = named_comparisons[(l1_include & l2_include), ]
