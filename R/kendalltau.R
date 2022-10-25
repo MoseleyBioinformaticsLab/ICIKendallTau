@@ -328,11 +328,13 @@ ici_kendalltau = function(data_matrix,
   # feature specific values as well
   # 
   
-  
+  # after we've figured out what should be excluded, we actually set it to NA
+  # and let the icikt code worry about it
   exclude_data = data_matrix
   exclude_data[exclude_loc] = NA
   n_sample = ncol(exclude_data)
-  # set everything to NA and let R take care of it
+  
+  # figure out if we are using furrr to process these
   if ("furrr" %in% utils::installed.packages()) {
     ncore = future::nbrOfWorkers()
     names(ncore) = NULL
@@ -398,6 +400,11 @@ ici_kendalltau = function(data_matrix,
     return(run_tmp)
   }
   
+  # in my experience, the list of actual comparisons to do does not get split
+  # up well across compute cores (cores, machines, etc), and we end up waiting
+  # on stuff to complete.
+  # Therefore, this code actually does the splitting up of comparisons across
+  # the number of cores (ncore) in a list. 
   split_comparisons = vector("list", ncore)
   start_loc = 1
   
@@ -412,9 +419,16 @@ ici_kendalltau = function(data_matrix,
     }
   }
   
+  # Because we start with the number of cores, there is the possibility that we 
+  # might get one of the list elements having no comparisons in it, this creates
+  # a NULL (is.null) list entry.
+  # This code just checks if any of those split comparisons are empty, and 
+  # discards any of them that are.
   null_comparisons = purrr::map_lgl(split_comparisons, is.null)
   split_comparisons = split_comparisons[!null_comparisons]
   
+  # finally, this is the function for doing each set of icikt comparisons,
+  # possibly across cores.
   do_split = function(do_comparisons, exclude_data, perspective) {
     #seq_range = seq(in_range[1], in_range[2])
     #print(seq_range)
@@ -437,10 +451,14 @@ ici_kendalltau = function(data_matrix,
   # itself, as some of the other operations will add a bit of time
   # 
   t1 = Sys.time()
+  # note here, this takes our list of comparisons, and then calls the do_split
+  # function above on each of them.
   split_cor = split_fun(split_comparisons, do_split, exclude_data, perspective)
   t2 = Sys.time()
   t_diff = as.numeric(difftime(t2, t1, units = "secs"))
 
+  # and then we set up the final matrices we report, and go through each
+  # of the splits of comparisons and extract them into the final matrices.
   cor_matrix = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
   rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
   pvalue_matrix = cor_matrix
