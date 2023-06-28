@@ -31,20 +31,20 @@ install.packages("ICIKendallTau")
 
 ## Problem
 
--   How to handle missing data (i.e. `NA`’s) in calculating a
-    correlation between two variables.
--   Current calculations of correlation are based on having all pairs of
-    observations for two variables.
-    -   However, whether an observation is present or missing is
-        semi-quantitative information for many analytical measurements
-        with sensitivity limits.
-    -   i.e. in many cases, missing observations are not
-        “missing-at-random”, but “missing-not-at-random” due to falling
-        below the detection limit.
-    -   In these cases, NA is informative.
-    -   Therefore, in **most** analytical measurements (gene expression,
-        proteomics, metabolomics), missing measurements should be
-        included, and contribute to the correlation.
+- How to handle missing data (i.e. `NA`’s) in calculating a correlation
+  between two variables.
+- Current calculations of correlation are based on having all pairs of
+  observations for two variables.
+  - However, whether an observation is present or missing is
+    semi-quantitative information for many analytical measurements with
+    sensitivity limits.
+  - i.e. in many cases, missing observations are not
+    “missing-at-random”, but “missing-not-at-random” due to falling
+    below the detection limit.
+  - In these cases, NA is informative.
+  - Therefore, in **most** analytical measurements (gene expression,
+    proteomics, metabolomics), missing measurements should be included,
+    and contribute to the correlation.
 
 If you want to read more on **how** we solve this problem, see the
 package vignette.
@@ -53,18 +53,18 @@ package vignette.
 
 The functions that implement this include:
 
--   `ici_kt`: the C++ workhorse, actually calculating a correlation
-    between an X and Y.
-    -   The option `perspective` will control how the `NA` values
-        influence ties.
-    -   When comparing samples, you likely want to use
-        `perspective = "global"`.
--   `ici_kendallt`: Handles comparisons for a large matrix.
-    -   Rows are samples, columns are features.
-    -   Implicitly parallel, but have to call:
-        -   library(furrr)
-        -   plan(multiprocess)
-    -   Otherwise will only use a single core.
+- `ici_kt`: the C++ workhorse, actually calculating a correlation
+  between an X and Y.
+  - The option `perspective` will control how the `NA` values influence
+    ties.
+  - When comparing samples, you likely want to use
+    `perspective = "global"`.
+- `ici_kendallt`: Handles comparisons for a large matrix.
+  - Rows are samples, columns are features.
+  - Implicitly parallel, but have to call:
+    - library(furrr)
+    - plan(multiprocess)
+  - Otherwise will only use a single core.
 
 ## Examples
 
@@ -136,17 +136,13 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min        lq       mean
-#>  cor(x, y, method = "kendall") 19619.802 20277.542 20434.6350
-#>         ici_kt(x, y, "global")   310.463   346.523   405.0156
-#>       ici_kt(x2, y2, "global") 19563.587 19949.583 20738.8768
-#>    median        uq       max neval cld
-#>  20297.02 20778.512 21200.297     5   b
-#>    350.09   371.053   646.949     5  a 
-#>  20195.84 20957.648 23027.727     5   b
+#>                           expr       min       lq       mean    median        uq       max neval
+#>  cor(x, y, method = "kendall") 13020.418 13157.24 13809.2274 13454.169 14646.721 14767.588     5
+#>         ici_kt(x, y, "global")   249.927   267.77   342.1564   277.817   316.864   598.404     5
+#>       ici_kt(x2, y2, "global") 13897.080 14991.53 15716.1440 15102.753 16393.162 18196.192     5
 ```
 
-In the case of 40,000 features, the average time on a modern CPU is 13
+In the case of 40,000 features, the average time on a modern CPU is 14
 milliseconds.
 
 Of course, if you want to use it to calculate Kendall-tau-b without

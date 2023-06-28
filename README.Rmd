@@ -125,7 +125,7 @@ microbenchmark(
 )
 ```
 
-In the case of 40,000 features, the average time on a modern CPU is 13 milliseconds.
+In the case of 40,000 features, the average time on a modern CPU is 14 milliseconds.
 
 Of course, if you want to use it to calculate Kendall-tau-b without incorporating missingness, it can do that just fine as well.
 
