@@ -25,19 +25,22 @@ test_that("difference and reference match - short", {
   expect_equal(ici_kt(x, y, perspective = "global")[c(1, 2)], ICIKendallTau:::ici_kt_pairs(x, y, "global"))
 })
 
-test_that("bad values passed return NA", {
+test_that("bad values passed error or return NA", {
   x = sort(rnorm(100))
   y = rep(NA, 100)
-  result = numeric(2)
+  result = numeric(3)
   result[1] = NA
   result[2] = NA
-  names(result) = c("tau", "pvalue")
+  result[3] = NA
+  names(result) = c("tau", "pvalue", "tau_max")
   expect_equal(ici_kt(x, y), result)
   
   y = x[1:99]
   expect_error(ici_kt(x, y), "not the same length")
   
-  expect_equal(ici_kt(x[1], y[1]), result)
+  expect_warning(ici_kt(x[2], y[2]), "vectors only have a single value")
+  y2 = rep(1, 100)
+  expect_warning(ici_kt(x, y2), "have only a single unique value")
 })
 
 test_that("matrix kendall works", {

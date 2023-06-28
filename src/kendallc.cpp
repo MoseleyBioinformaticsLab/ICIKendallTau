@@ -163,10 +163,10 @@ inline double signC(double x) {
 NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "local", String alternative = "two.sided", bool continuity = false, String output = "simple") {
   
   if (x.length() != y.length()) {
-    throw std::range_error("X and Y are not the same length!");
-    exit(-1);
+    stop("'X' and 'Y' are not the same length!");
   }
-  
+  NumericVector k_res(3);
+  k_res.names() = CharacterVector({"tau", "pvalue", "tau_max"});
   
   NumericVector z_b (1);
   NumericVector p_value (1);
@@ -188,35 +188,45 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   int n_na_y = sum(is_na(y));
   
   if ((n_na_x == x.size()) || (n_na_y == y.size())) {
-    NumericVector na_res (2);
-    na_res(0) = NA_REAL;
-    na_res(1) = NA_REAL;
-    na_res.names() = CharacterVector({"tau", "pvalue"});
-    return na_res;
+    k_res(0) = NA_REAL;
+    k_res(1) = NA_REAL;
+    k_res(2) = NA_REAL;
+    return k_res;
   }
-  
-  x2 = x[!is_na(x)];
-  y2 = y[!is_na(y)];
-  
-  double min_x = min(x2) - 0.1;
-  double min_y = min(y2) - 0.1;
   
   x2 = clone(x);
   y2 = clone(y);
+  
+  double min_x = min(na_omit(x2)) - 0.1;
+  double min_y = min(na_omit(y2)) - 0.1;
+  //Rprintf("min_x: %f\n", min_x);
+  
   x2[is_na(x)] = min_x;
   y2[is_na(y)] = min_y;
-  
   
   int64_t n_entry = x2.size();
   //Rprintf("n_entry: %i\n", n_entry);
   
   if (n_entry < 2) {
-    NumericVector na_res (2);
-    na_res(0) = NA_REAL;
-    na_res(1) = NA_REAL;
-    na_res.names() = CharacterVector({"tau", "pvalue"});
-    return na_res;
+    warning("Warning: The vectors only have a single value, NA returned!");
+    k_res(0) = NA_REAL;
+    k_res(1) = NA_REAL;
+    k_res(2) = NA_REAL;
+    return k_res;
   }
+  
+  
+  NumericVector uniq_x = unique(x2);
+  NumericVector uniq_y = unique(y2);
+  
+  if ((uniq_x.length() == 1) || (uniq_y.length() == 1)) {
+    warning("Warning: Either 'X' or 'Y' have only a single unique value, NA returned!");
+    k_res(0) = NA_REAL;
+    k_res(1) = NA_REAL;
+    k_res(2) = NA_REAL;
+    return k_res;
+  }
+  
   
   IntegerVector perm_y = sortedIndex(y2);
   x2 = x2[perm_y];
@@ -261,9 +271,9 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   //This is the maximum theoretical number of concordant values given
   //the data.
   
-  NumericVector k_res(3);
-  k_res.names() = CharacterVector({"tau", "pvalue", "tau_max"});
+  
   if ((xtie == tot) || (ytie == tot)) {
+    warning("Warning: Ties equal the total, NA returned!");
     k_res(0) = NA_REAL;
     k_res(1) = NA_REAL;
     k_res(3) = NA_REAL;
