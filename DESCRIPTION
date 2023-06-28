@@ -1,6 +1,6 @@
 Package: ICIKendallTau
 Title: Calculates information-content-informed Kendall-tau
-Version: 0.2.7
+Version: 0.2.8
 Date: 2023-06-28
 Authors@R: c(person(given = c("Robert", "M"), family = "Flight", role =
         c("aut", "cre"), email = "rflight79@gmail.com", comment =

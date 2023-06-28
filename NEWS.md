@@ -1,3 +1,8 @@
+# ICIKendalltau 0.2.8
+
+- Made all error outputs the same length as the default output but containing `NA`.
+- Check for the case when one of the variables in `ici_kt` has all identical arguments, warns the user and returns `NA`.
+
 # ICIKendallTau 0.2.1
 
 - Added new argument `include_only` to `ici_kendalltau` that allows the user to define which of the pairwise correlations to actually do.
