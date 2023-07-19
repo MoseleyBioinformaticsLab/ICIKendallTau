@@ -10,6 +10,19 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// pairwiseComparisons
+DataFrame pairwiseComparisons(CharacterVector entries, int n_cores, bool include_self);
+RcppExport SEXP _ICIKendallTau_pairwiseComparisons(SEXP entriesSEXP, SEXP n_coresSEXP, SEXP include_selfSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type entries(entriesSEXP);
+    Rcpp::traits::input_parameter< int >::type n_cores(n_coresSEXP);
+    Rcpp::traits::input_parameter< bool >::type include_self(include_selfSEXP);
+    rcpp_result_gen = Rcpp::wrap(pairwiseComparisons(entries, n_cores, include_self));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sortedIndex
 IntegerVector sortedIndex(NumericVector x);
 RcppExport SEXP _ICIKendallTau_sortedIndex(SEXP xSEXP) {
@@ -111,6 +124,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_ICIKendallTau_pairwiseComparisons", (DL_FUNC) &_ICIKendallTau_pairwiseComparisons, 3},
     {"_ICIKendallTau_sortedIndex", (DL_FUNC) &_ICIKendallTau_sortedIndex, 1},
     {"_ICIKendallTau_compare_self", (DL_FUNC) &_ICIKendallTau_compare_self, 1},
     {"_ICIKendallTau_compare_both", (DL_FUNC) &_ICIKendallTau_compare_both, 2},
