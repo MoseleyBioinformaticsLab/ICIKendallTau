@@ -6,7 +6,7 @@ using namespace Rcpp;
 DataFrame pairwiseComparisons(CharacterVector entries, int n_cores, bool include_self = false){
   int64_t n_entries = entries.length();
   int64_t n_todo = (n_entries * (n_entries - 1)) / 2;
-  Rprintf("n_todo: %i\n", n_todo);
+  //Rprintf("n_todo: %i\n", n_todo);
   
   if (include_self) {
     n_todo = n_todo + n_entries;
@@ -14,9 +14,9 @@ DataFrame pairwiseComparisons(CharacterVector entries, int n_cores, bool include
   //Rprintf("n_todo: %i\n", n_todo);
   
   long double n_each = (long double)n_todo / n_cores;
-  Rprintf("n_each: %f\n", n_each);
+  //Rprintf("n_each: %f\n", n_each);
   long double n_each2 = ceil(n_each);
-  Rprintf("n_each 2: %f\n", n_each2);
+  //Rprintf("n_each 2: %f\n", n_each2);
   
   CharacterMatrix compare_matrix(n_todo, 3);
   

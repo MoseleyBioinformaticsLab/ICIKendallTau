@@ -11,7 +11,8 @@ ici_kendalltau(
   scale_max = TRUE,
   diag_good = TRUE,
   include_only = NULL,
-  check_timing = FALSE
+  check_timing = FALSE,
+  return_matrix = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ ici_kendalltau(
 \item{include_only}{only run the correlations that include the members (as a vector) or combinations (as a list or data.frame)}
 
 \item{check_timing}{should we try to estimate run time for full dataset? (default is FALSE)}
+
+\item{return_matrix}{should the data.frame or matrix result be returned?}
 }
 \value{
 list with cor, raw, pval, taumax
