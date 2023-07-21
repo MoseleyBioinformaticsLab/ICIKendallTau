@@ -36,3 +36,27 @@ rownames(tmp_vals) = paste0("f", seq_len(nrow(tmp_vals)))
 
 out_cor = ici_kendalltau(tmp_vals, return_matrix = FALSE)
 out_cor$run_time / 3600
+
+# testing another approache
+getData <- function(i){
+  x <- data.frame(x=rnorm(100000), y=rnorm(100000), z=rnorm(100000))
+  x
+}
+
+large_list = purrr::map(seq_len(20), getData)
+
+unlist_it = function(in_list){
+  list2DF(
+    lapply(setNames(seq_along(in_list[[1]]), names(in_list[[1]])), \(i){
+      unlist(lapply(in_list, `[[`, i), FALSE, FALSE)
+    })
+  )               
+}
+
+out_df = unlist_it(large_list)
+
+microbenchmark::microbenchmark(
+  plist = purrr::list_rbind(large_list),
+  ut = unlist_it(large_list),
+  times = 100
+)
