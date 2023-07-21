@@ -432,8 +432,8 @@ ici_kendalltau = function(data_matrix,
       jloc = do_comparisons[irow, 2]
       ici_res = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
       do_comparisons$raw[irow] = ici_res["tau"]
-      do_comparisons$pvalue = ici_res["pvalue"]
-      do_comparisons$taumax = ici_res["tau_max"]
+      do_comparisons$pvalue[irow] = ici_res["pvalue"]
+      do_comparisons$taumax[irow] = ici_res["tau_max"]
     }
     do_comparisons
   }
