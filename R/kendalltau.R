@@ -427,14 +427,21 @@ ici_kendalltau = function(data_matrix,
     #seq_range = seq(in_range[1], in_range[2])
     #print(seq_range)
     
-    for (irow in seq(1, nrow(do_comparisons))) {
+    raw = vector("numeric", nrow(do_comparisons))
+    pvalue = raw
+    taumax = raw
+    
+    for (irow in seq_len(nrow(do_comparisons))) {
       iloc = do_comparisons[irow, 1]
       jloc = do_comparisons[irow, 2]
       ici_res = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
-      do_comparisons$raw[irow] = ici_res["tau"]
-      do_comparisons$pvalue[irow] = ici_res["pvalue"]
-      do_comparisons$taumax[irow] = ici_res["tau_max"]
+      raw[irow] = ici_res["tau"]
+      pvalue[irow] = ici_res["pvalue"]
+      taumax[irow] = ici_res["tau_max"]
     }
+    do_comparisons$raw = raw
+    do_comparisons$pvalue = pvalue
+    do_comparisons$taumax = taumax
     do_comparisons
   }
   # we record how much time is actually spent doing ICI-Kt
