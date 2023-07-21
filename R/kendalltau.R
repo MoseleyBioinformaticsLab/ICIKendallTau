@@ -454,7 +454,7 @@ ici_kendalltau = function(data_matrix,
   t2 = Sys.time()
   t_diff = as.numeric(difftime(t2, t1, units = "secs"))
 
-  all_cor = do.call(rbind, split_cor)
+  all_cor = purrr::list_rbind(split_cor)
   rownames(all_cor) = NULL
   # and then we set up the final matrices we report, and go through each
   # of the splits of comparisons and extract them into the final matrices.
