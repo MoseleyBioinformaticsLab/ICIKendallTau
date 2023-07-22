@@ -303,6 +303,8 @@ ici_kendalltau = function(data_matrix,
   data_matrix = t(data_matrix)
   exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   
+  message("Processing missing values ...\n")
+  
   # Actual NA and Inf values are special cases, so we do
   # this very specifically.
   if (length(global_na) > 0) {
@@ -347,6 +349,7 @@ ici_kendalltau = function(data_matrix,
   
   # generate the array of comparisons, 2 x ...,
   # where each column is a comparison between two columns of data
+  message("Figuring out comparisons to do ...")
   pairwise_comparisons = utils::combn(n_sample, 2)
   
   if (!diag_good) {
@@ -405,6 +408,7 @@ ici_kendalltau = function(data_matrix,
   # Therefore, this code actually does the splitting up of comparisons across
   # the number of cores (ncore) in a list. 
   
+  message("Splitting up across compute ...")
   n_each = ceiling(n_todo / ncore)
   
   which_core = rep(seq(1, ncore), each = n_each)
@@ -447,6 +451,7 @@ ici_kendalltau = function(data_matrix,
   # we record how much time is actually spent doing ICI-Kt
   # itself, as some of the other operations will add a bit of time
   # 
+  message("Running correlations ...")
   t1 = Sys.time()
   # note here, this takes our list of comparisons, and then calls the do_split
   # function above on each of them.
@@ -455,6 +460,7 @@ ici_kendalltau = function(data_matrix,
   t_diff = as.numeric(difftime(t2, t1, units = "secs"))
 
   # put all the results back together again into one data.frame
+  message("Recombining results ...")
   all_cor = purrr::list_rbind(split_cor)
   rownames(all_cor) = NULL
   
@@ -491,6 +497,7 @@ ici_kendalltau = function(data_matrix,
   # if the user asks for the matrix back, we give the matrices, otherwise we
   # leave them in the data.frame
   if (return_matrix) {
+    message("Generating the output matrix ...")
     cor_matrix = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
     rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
     raw_matrix = cor_matrix
