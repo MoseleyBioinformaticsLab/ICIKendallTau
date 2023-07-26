@@ -341,29 +341,28 @@ ici_kendalltau = function(data_matrix,
   if ("furrr" %in% utils::installed.packages()) {
     ncore = future::nbrOfWorkers()
     names(ncore) = NULL
-    split_fun = furrr::future_map
+    split_fun = furrr::future_map2
   } else {
     ncore = 1
-    split_fun = purrr::map
+    split_fun = purrr::map2
   }
   
   # generate the array of comparisons, 2 x ...,
   # where each column is a comparison between two columns of data
   message("Figuring out comparisons to do ...")
-  pairwise_comparisons = utils::combn(n_sample, 2)
+  pairwise_comparisons = t(utils::combn(colnames(data_matrix), 2))
   
   if (!diag_good) {
-    extra_comparisons = matrix(rep(seq(1, n_sample), each = 2), nrow = 2, ncol = n_sample, byrow = FALSE)
-    pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
+    extra_comparisons = matrix(rep(colnames(data_matrix), each = 2), nrow = n_sample, ncol = 2, byrow = TRUE)
+    pairwise_comparisons = rbind(pairwise_comparisons, extra_comparisons)
   }
   
   # create a data.frame of the comparisons by the names of the columns instead,
   # this enables indexed comparisons and named comparisons, because
   # we can have row / column names in R
   # This is now n_comparisons x 2
-  named_comparisons = data.frame(s1 = colnames(data_matrix)[pairwise_comparisons[1, ]],
-                                 s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
-  
+  named_comparisons = as.data.frame(pairwise_comparisons)
+  colnames(named_comparisons) = c("s1", "s2")
   if (!is.null(include_only)) {
     if (is.character(include_only) || is.numeric(include_only)) {
       #message("a vector!")
@@ -413,40 +412,32 @@ ici_kendalltau = function(data_matrix,
   
   which_core = rep(seq(1, ncore), each = n_each)
   which_core = which_core[1:nrow(named_comparisons)]
+  rownames(named_comparisons) = NULL
+  split_comparisons = split(named_comparisons, which_core)
   
-  which_core = sample(which_core, length(which_core))
-  
-  named_comparisons$core = which_core
-  named_comparisons$raw = NA
-  named_comparisons$pvalue = NA
-  named_comparisons$taumax = NA
-  
-  
-  split_comparisons = split(named_comparisons, named_comparisons$core)
-  
-  
+  split_results = purrr::map(split_comparisons, \(x){
+    float::float(nrow(x) * 3, nrow = 3, ncol = nrow(x))
+  })
   # finally, this is the function for doing each set of icikt comparisons,
   # possibly across cores.
-  do_split = function(do_comparisons, exclude_data, perspective) {
+  do_split = function(do_comparisons, do_results, exclude_data, perspective) {
     #seq_range = seq(in_range[1], in_range[2])
     #print(seq_range)
-    
-    raw = vector("numeric", nrow(do_comparisons))
-    pvalue = raw
-    taumax = raw
-    
+    tmp1 = float::float(ncol(do_results))
+    tmp2 = float::float(ncol(do_results))
+    tmp3 = float::float(ncol(do_results))
     for (irow in seq_len(nrow(do_comparisons))) {
       iloc = do_comparisons[irow, 1]
       jloc = do_comparisons[irow, 2]
       ici_res = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
-      raw[irow] = ici_res["tau"]
-      pvalue[irow] = ici_res["pvalue"]
-      taumax[irow] = ici_res["tau_max"]
+      tmp1[irow] = float::as.float(ici_res[1])
+      tmp2[irow] = float::as.float(ici_res[2])
+      tmp3[irow] = float::as.float(ici_res[3])
     }
-    do_comparisons$raw = raw
-    do_comparisons$pvalue = pvalue
-    do_comparisons$taumax = taumax
-    do_comparisons
+    do_results[1, ] = tmp1
+    do_results[2, ] = tmp2
+    do_results[3, ] = tmp3
+    do_results
   }
   # we record how much time is actually spent doing ICI-Kt
   # itself, as some of the other operations will add a bit of time
@@ -455,7 +446,7 @@ ici_kendalltau = function(data_matrix,
   t1 = Sys.time()
   # note here, this takes our list of comparisons, and then calls the do_split
   # function above on each of them.
-  split_cor = split_fun(split_comparisons, do_split, exclude_data, perspective)
+  split_cor = split_fun(split_comparisons, split_results, do_split, exclude_data, perspective)
   t2 = Sys.time()
   t_diff = as.numeric(difftime(t2, t1, units = "secs"))
 
