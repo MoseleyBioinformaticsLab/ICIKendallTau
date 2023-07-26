@@ -341,10 +341,10 @@ ici_kendalltau = function(data_matrix,
   if ("furrr" %in% utils::installed.packages()) {
     ncore = future::nbrOfWorkers()
     names(ncore) = NULL
-    split_fun = furrr::future_map2
+    split_fun = furrr::future_map
   } else {
     ncore = 1
-    split_fun = purrr::map2
+    split_fun = purrr::map
   }
   
   # generate the array of comparisons, 2 x ...,
@@ -415,29 +415,24 @@ ici_kendalltau = function(data_matrix,
   rownames(named_comparisons) = NULL
   split_comparisons = split(named_comparisons, which_core)
   
-  split_results = purrr::map(split_comparisons, \(x){
-    float::float(nrow(x) * 3, nrow = 3, ncol = nrow(x))
-  })
   # finally, this is the function for doing each set of icikt comparisons,
   # possibly across cores.
-  do_split = function(do_comparisons, do_results, exclude_data, perspective) {
+  do_split = function(do_comparisons, exclude_data, perspective) {
     #seq_range = seq(in_range[1], in_range[2])
     #print(seq_range)
-    tmp1 = float::float(ncol(do_results))
-    tmp2 = float::float(ncol(do_results))
-    tmp3 = float::float(ncol(do_results))
+    
+    raw = vector("numeric", nrow(do_comparisons))
+    pvalue = raw
+    taumax = raw
     for (irow in seq_len(nrow(do_comparisons))) {
       iloc = do_comparisons[irow, 1]
       jloc = do_comparisons[irow, 2]
       ici_res = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
-      tmp1[irow] = float::as.float(ici_res[1])
-      tmp2[irow] = float::as.float(ici_res[2])
-      tmp3[irow] = float::as.float(ici_res[3])
+      raw[irow] = ici_res["tau"]
+      pvalue[irow] = ici_res["pvalue"]
+      taumax[irow] = ici_res["tau_max"]
     }
-    do_results[1, ] = tmp1
-    do_results[2, ] = tmp2
-    do_results[3, ] = tmp3
-    do_results
+    cbind(float::as.float(raw), float::as.float(pvalue), float::as.float(taumax))
   }
   # we record how much time is actually spent doing ICI-Kt
   # itself, as some of the other operations will add a bit of time
@@ -446,14 +441,16 @@ ici_kendalltau = function(data_matrix,
   t1 = Sys.time()
   # note here, this takes our list of comparisons, and then calls the do_split
   # function above on each of them.
-  split_cor = split_fun(split_comparisons, split_results, do_split, exclude_data, perspective)
+  split_cor = split_fun(split_comparisons, do_split, exclude_data, perspective)
   t2 = Sys.time()
   t_diff = as.numeric(difftime(t2, t1, units = "secs"))
 
   # put all the results back together again into one data.frame
   message("Recombining results ...")
-  all_cor = purrr::list_rbind(split_cor)
-  rownames(all_cor) = NULL
+  all_compare = purrr::list_rbind(split_comparisons)
+  all_results = do.call(rbind, split_cor)
+  colnames(all_results) = c("raw", "pvalue", "taumax")
+  all_cor = cbind(all_compare, as.data.frame(all_results))
   
   # calculate the max-cor value for use in scaling across multiple comparisons
   # n_observations = nrow(exclude_data)
@@ -476,7 +473,6 @@ ici_kendalltau = function(data_matrix,
     names(n_good) = colnames(data_matrix)
     extra_cor = data.frame(s1 = names(n_good),
                            s2 = names(n_good),
-                           core = 0,
                            raw = n_good / max(n_good),
                            pvalue = 0,
                            taumax = 1,
