@@ -432,7 +432,8 @@ ici_kendalltau = function(data_matrix,
       pvalue[irow] = ici_res["pvalue"]
       taumax[irow] = ici_res["tau_max"]
     }
-    cbind(float::as.float(raw), float::as.float(pvalue), float::as.float(taumax))
+    out_values = float:::cbind.float32(float::as.float(raw), float::as.float(pvalue), float::as.float(taumax))
+    out_values
   }
   # we record how much time is actually spent doing ICI-Kt
   # itself, as some of the other operations will add a bit of time
