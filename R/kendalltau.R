@@ -417,9 +417,9 @@ ici_kendalltau = function(data_matrix,
   which_core = sample(which_core, length(which_core))
   
   named_comparisons$core = which_core
-  named_comparisons$raw = NA
-  named_comparisons$pvalue = NA
-  named_comparisons$taumax = NA
+  named_comparisons$raw = Inf
+  named_comparisons$pvalue = Inf
+  named_comparisons$taumax = Inf
   
   
   split_comparisons = split(named_comparisons, named_comparisons$core)
@@ -446,6 +446,7 @@ ici_kendalltau = function(data_matrix,
     do_comparisons$raw = raw
     do_comparisons$pvalue = pvalue
     do_comparisons$taumax = taumax
+    #return(ls())
     do_comparisons
   }
   # we record how much time is actually spent doing ICI-Kt
