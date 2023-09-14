@@ -301,6 +301,10 @@ ici_kendalltau = function(data_matrix,
   data_matrix <- t(data_matrix)
   exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   
+  if (is.null(colnames(data_matrix))) {
+    stop("rownames of data_matrix cannot be NULL!")
+  }
+  
   # Actual NA and Inf values are special cases, so we do
   # this very specifically.
   if (length(global_na) > 0) {
