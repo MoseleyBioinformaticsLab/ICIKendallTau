@@ -4,14 +4,21 @@
 \alias{pairwise_completeness}
 \title{pairwise completeness}
 \usage{
-pairwise_completeness(data_matrix, global_na = c(NA, Inf, 0), zero_value = 0)
+pairwise_completeness(
+  data_matrix,
+  global_na = c(NA, Inf, 0),
+  include_only = NULL,
+  return_matrix = TRUE
+)
 }
 \arguments{
 \item{data_matrix}{samples are rows, features are columns}
 
 \item{global_na}{globally, what should be treated as NA?}
 
-\item{zero_value}{what is the actual zero value?}
+\item{include_only}{is there certain comparisons to do?}
+
+\item{return_matrix}{should the matrix or data.frame be returned?}
 }
 \value{
 matrix of degree of completeness

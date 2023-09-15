@@ -27,7 +27,7 @@ ici_kendalltau_ref = function(data_matrix,
   
   # assume row-wise (because that is what the description states), so need to transpose
   # because `cor` actually does things columnwise.
-  data_matrix <- t(data_matrix)
+  data_matrix = t(data_matrix)
   exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   
   # Actual NA and Inf values are special cases, so we do
@@ -104,17 +104,26 @@ missing_either = function(in_x, in_y){
 #' 
 #' @param data_matrix samples are rows, features are columns
 #' @param global_na globally, what should be treated as NA?
-#' @param zero_value what is the actual zero value?
+#' @param include_only is there certain comparisons to do?
+#' @param return_matrix should the matrix or data.frame be returned?
 #' 
 #' @export
 #' 
 #' @return matrix of degree of completeness
 pairwise_completeness = function(data_matrix,
                                 global_na = c(NA, Inf, 0),
-                                zero_value = 0){
+                                include_only = NULL,
+                                return_matrix = TRUE){
   
-  data_matrix <- t(data_matrix)
+  data_matrix = t(data_matrix)
+  
+  if (is.null(colnames(data_matrix))) {
+    stop("rownames of data_matrix cannot be NULL!")
+  }
+  
   exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
+  rownames(exclude_loc) = rownames(data_matrix)
+  colnames(exclude_loc) = colnames(data_matrix)
   
   # Actual NA and Inf values are special cases, so we do
   # this very specifically.
@@ -156,50 +165,84 @@ pairwise_completeness = function(data_matrix,
   extra_comparisons = matrix(rep(seq(1, n_sample), each = 2), nrow = 2, ncol = n_sample, byrow = FALSE)
   pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
   
-  n_todo = ncol(pairwise_comparisons)
-  n_each = ceiling(n_todo / ncore)
+  named_comparisons = data.frame(s1 = colnames(data_matrix)[pairwise_comparisons[1, ]],
+                                 s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
   
-  split_comparisons = vector("list", ncore)
-  start_loc = 1
-  
-  for (isplit in seq_along(split_comparisons)) {
-    stop_loc = min(start_loc + n_each, n_todo)
-    
-    split_comparisons[[isplit]] = pairwise_comparisons[, start_loc:stop_loc, drop = FALSE]
-    start_loc = stop_loc + 1
-    
-    if (start_loc > n_todo) {
-      break()
+  if (!is.null(include_only)) {
+    if (is.character(include_only) || is.numeric(include_only)) {
+      #message("a vector!")
+      # Check each of the comparison vectors against the include_only variable
+      # This returns TRUE where they match
+      # Use OR to make sure we return everything that should be returned
+      s1_include = named_comparisons$s1 %in% include_only
+      s2_include = named_comparisons$s2 %in% include_only
+      named_comparisons = named_comparisons[(s1_include | s2_include), ]
+    } else if (is.list(include_only)) {
+      if (length(include_only) == 2) {
+        #message("a list!")
+        # In this case the include_only is a list of things, so we have to check both
+        # of the sets against each of the lists. Again, this returns TRUE where
+        # they match. Because we want the things where they
+        # are both TRUE (assuming l1[1] goes with l2[1]), we use the AND at the end.
+        l1_include = (named_comparisons$s1 %in% include_only[[1]]) | (named_comparisons$s2 %in% include_only[[1]])
+        l2_include = (named_comparisons$s1 %in% include_only[[2]]) | (named_comparisons$s2 %in% include_only[[2]])
+        named_comparisons = named_comparisons[(l1_include & l2_include), ]
+      } else {
+        stop("include_only must either be a single vector, or a list of 2 vectors!")
+      }
     }
   }
   
-  null_comparisons = purrr::map_lgl(split_comparisons, is.null)
-  split_comparisons = split_comparisons[!null_comparisons]
+  if (nrow(named_comparisons) == 0) {
+    stop("nrow(named_comparisons) == 0, did you create include_only correctly?")
+  }
   
+  n_todo = nrow(named_comparisons)
+  n_each = ceiling(n_todo / ncore)
+  
+  which_core = rep(seq(1, ncore), each = n_each)
+  which_core = which_core[1:nrow(named_comparisons)]
+  
+  named_comparisons$core = which_core
+  named_comparisons$missingness = Inf
+  named_comparisons$completeness = Inf
+  
+  split_comparisons = split(named_comparisons, named_comparisons$core)
   do_split = function(do_comparisons, exclude_loc) {
     #seq_range = seq(in_range[1], in_range[2])
     #print(seq_range)
-    tmp_missing = matrix(0, nrow = ncol(exclude_loc), ncol = ncol(exclude_loc))
-    rownames(tmp_missing) = colnames(tmp_missing) = colnames(exclude_loc)
-    
-    for (icol in seq(1, ncol(do_comparisons))) {
-      iloc = do_comparisons[1, icol]
-      jloc = do_comparisons[2, icol]
-      missing_res = missing_either(exclude_loc[, iloc], exclude_loc[, jloc])
-      tmp_missing[iloc, jloc] = tmp_missing[jloc, iloc] = missing_res
+    missingness = vector("numeric", nrow(do_comparisons))
+    completeness = vector("numeric", nrow(do_comparisons))
+    for (irow in seq(1, nrow(do_comparisons))) {
+      iloc = do_comparisons[irow, 1]
+      jloc = do_comparisons[irow, 2]
+      missingness[irow] = missing_either(exclude_loc[, iloc], exclude_loc[, jloc])
     }
-    tmp_missing
+    completeness = 1 - (missingness / nrow(exclude_loc))
+    do_comparisons$missingness = missingness
+    do_comparisons$completeness = completeness
+    do_comparisons
   }
   
   split_missing = split_fun(split_comparisons, do_split, exclude_loc)
   
-  missing_matrix = matrix(0, nrow = ncol(exclude_loc), ncol = ncol(exclude_loc))
-  rownames(missing_matrix) = colnames(missing_matrix) = colnames(exclude_loc)
-  for (isplit in split_missing) {
-    missing_matrix = missing_matrix + isplit
+  all_missing = purrr::list_rbind(split_missing)
+  rownames(all_missing) = NULL
+  
+  if (return_matrix) {
+    completeness_matrix = matrix(0, nrow = ncol(exclude_loc), ncol = ncol(exclude_loc))
+    rownames(completeness_matrix) = colnames(completeness_matrix) = colnames(exclude_loc)
+    
+    for (irow in seq_len(nrow(all_missing))) {
+      rowloc = all_missing$s1[irow]
+      colloc = all_missing$s2[irow]
+      completeness_matrix[rowloc, colloc] = completeness_matrix[colloc, rowloc] = all_missing$completness[irow]
+    }
+    return(completeness_matrix)
+  } else {
+    return(all_missing)
   }
-  missing_matrix = missing_matrix / nrow(exclude_loc)
-  1 - missing_matrix
+
 }
 
 #' information-content-informed kendall tau
@@ -417,8 +460,6 @@ ici_kendalltau = function(data_matrix,
   
   which_core = rep(seq(1, ncore), each = n_each)
   which_core = which_core[1:nrow(named_comparisons)]
-  
-  which_core = sample(which_core, length(which_core))
   
   named_comparisons$core = which_core
   named_comparisons$raw = Inf

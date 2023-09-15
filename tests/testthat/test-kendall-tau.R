@@ -96,3 +96,16 @@ test_that("include_only works as intended", {
   small_include4 = ici_kendalltau(x, include_only = include_df)
   expect_equal(small_include4$cor, small_include3$cor)
 })
+
+test_that("completeness works correctly",{
+  set.seed(1234)
+  x = matrix(rnorm(5000), nrow = 100, ncol = 50)
+  rownames(x) = paste0("s", seq(1, nrow(x)))
+  
+  x[sample(5000, 40)] = NA
+  x_cor = ici_kendalltau(x, perspective = "global", return_matrix = FALSE)
+  x_comp = pairwise_completeness(x, return_matrix = FALSE)
+  expect_equal(nrow(x_cor$cor), nrow(x_comp))
+  
+  expect_snapshot(x_comp[4:6, ])
+})
