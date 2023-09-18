@@ -342,6 +342,7 @@ ici_kendalltau = function(data_matrix,
                              check_timing = FALSE,
                              return_matrix = TRUE){
   
+  do_log_memory = get("memory", envir = icikt_logger)
   # assume row-wise (because that is what the description states), so need to transpose
   data_matrix = t(data_matrix)
   exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
@@ -350,7 +351,7 @@ ici_kendalltau = function(data_matrix,
     stop("rownames of data_matrix cannot be NULL!")
   }
   
-  message("Processing missing values ...\n")
+  log_message("Processing missing values ...\n")
   
   # Actual NA and Inf values are special cases, so we do
   # this very specifically.
@@ -396,7 +397,7 @@ ici_kendalltau = function(data_matrix,
   
   # generate the array of comparisons, 2 x ...,
   # where each column is a comparison between two columns of data
-  message("Figuring out comparisons to do ...")
+  log_message("Figuring out comparisons to do ...")
   pairwise_comparisons = utils::combn(n_sample, 2)
   
   if (!diag_good) {
@@ -455,7 +456,7 @@ ici_kendalltau = function(data_matrix,
   # Therefore, this code actually does the splitting up of comparisons across
   # the number of cores (ncore) in a list. 
   
-  message("Splitting up across compute ...")
+  log_message("Splitting up across compute ...")
   n_each = ceiling(n_todo / ncore)
   
   which_core = rep(seq(1, ncore), each = n_each)
@@ -472,7 +473,7 @@ ici_kendalltau = function(data_matrix,
   
   # finally, this is the function for doing each set of icikt comparisons,
   # possibly across cores.
-  do_split = function(do_comparisons, exclude_data, perspective) {
+  do_split = function(do_comparisons, exclude_data, perspective, do_log_memory) {
     #seq_range = seq(in_range[1], in_range[2])
     #print(seq_range)
     
@@ -487,6 +488,9 @@ ici_kendalltau = function(data_matrix,
       raw[irow] = ici_res["tau"]
       pvalue[irow] = ici_res["pvalue"]
       taumax[irow] = ici_res["tau_max"]
+      if (do_log_memory && ((irow %% 100) == 0)) {
+        log_memory()
+      }
     }
     do_comparisons$raw = raw
     do_comparisons$pvalue = pvalue
@@ -497,16 +501,16 @@ ici_kendalltau = function(data_matrix,
   # we record how much time is actually spent doing ICI-Kt
   # itself, as some of the other operations will add a bit of time
   # 
-  message("Running correlations ...")
+  log_message("Running correlations ...")
   t1 = Sys.time()
   # note here, this takes our list of comparisons, and then calls the do_split
   # function above on each of them.
-  split_cor = split_fun(split_comparisons, do_split, exclude_data, perspective)
+  split_cor = split_fun(split_comparisons, do_split, exclude_data, perspective, do_log_memory)
   t2 = Sys.time()
   t_diff = as.numeric(difftime(t2, t1, units = "secs"))
 
   # put all the results back together again into one data.frame
-  message("Recombining results ...")
+  log_message("Recombining results ...")
   all_cor = purrr::list_rbind(split_cor)
   rownames(all_cor) = NULL
   
@@ -543,7 +547,7 @@ ici_kendalltau = function(data_matrix,
   # if the user asks for the matrix back, we give the matrices, otherwise we
   # leave them in the data.frame
   if (return_matrix) {
-    message("Generating the output matrix ...")
+    log_message("Generating the output matrix ...")
     cor_matrix = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
     rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
     raw_matrix = cor_matrix
