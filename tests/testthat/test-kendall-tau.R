@@ -96,3 +96,53 @@ test_that("include_only works as intended", {
   small_include4 = ici_kendalltau(x, include_only = include_df)
   expect_equal(small_include4$cor, small_include3$cor)
 })
+
+test_that("fast_kt works properly", {
+  set.seed(1234)
+  x = matrix(rnorm(400), nrow = 100, ncol = 4)
+  colnames(x) = paste0("s", seq(1, ncol(x)))
+  
+  fast_vals = kt_fast(x)
+  base_vals = cor(x, method = "kendall")
+  expect_equal(fast_vals$tau, base_vals)
+  
+  expect_error(kt_fast(x, use = "na.or.complete"), "is not a supported")
+  
+  x_na = x
+  x_na[, 1] = NA
+  na_complete_1 = kt_fast(x_na, use = "complete.obs")
+  expect_true(all(is.na(na_complete_1$tau)))
+  
+  x_na2 = x
+  x_na2[10, 1] = NA
+  
+  na_pairs_everything = kt_fast(x_na2[, 1], x_na2[, 2])
+  expect_equal(na_pairs_everything, c("tau" = NA, "pvalue" = NA))
+  expect_snapshot(na_pairs_everything)
+  na_pairs_complete = kt_fast(x_na2[, 1], x_na2[, 2], use = "complete.obs")
+  expect_snapshot(na_pairs_complete)
+  expect_gt(fast_vals$tau[1, 1], na_pairs_complete["tau"])
+  
+  na_pairs_pairwise = kt_fast(x_na2[, 1], x_na2[, 2], use = "pairwise.complete.obs")
+  expect_equal(na_pairs_pairwise, na_pairs_complete)
+  
+  na_matrix_everything = kt_fast(x_na2, use = "everything")
+  expect_equal(na_matrix_everything$tau[1, 1], as.double(NA))
+  expect_equal(na_matrix_everything$pvalue[1, 1], as.double(NA))
+  expect_equal(na_matrix_everything$tau[3, 2], fast_vals$tau[3, 2])
+  expect_equal(na_matrix_everything$pvalue[3, 2], fast_vals$pvalue[3, 2])
+
+  
+  na_matrix_complete = kt_fast(x_na2, use = "complete.obs")
+  expect_snapshot(na_matrix_complete)
+  expect_lt(na_matrix_complete$tau[1, 2], fast_vals$tau[1, 2])
+  
+  na_matrix_pairwise = kt_fast(x_na2, use = "pairwise.complete.obs")
+  expect_snapshot(na_matrix_pairwise)
+  expect_equal(na_matrix_pairwise$tau[, 1], na_matrix_complete$tau[, 1])
+  expect_equal(na_matrix_pairwise$tau[2, 3], na_matrix_everything$tau[2, 3])
+  expect_equal(na_matrix_pairwise$tau[2, 1], na_pairs_complete[["tau"]])
+  
+  df_vals = kt_fast(as.data.frame(x))
+  expect_equal(df_vals, fast_vals)
+})

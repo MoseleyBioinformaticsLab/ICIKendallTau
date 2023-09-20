@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -324,11 +324,11 @@ use the double merge-sort algorithm, translating {scipy::
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
 <span><span class="co">#&gt;                           expr       min        lq       mean    median</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 11670.719 12640.756 13176.2340 13156.150</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   229.458   254.839   283.2234   256.687</span></span>
-<span><span class="co">#&gt;         uq       max neval</span></span>
-<span><span class="co">#&gt;  13370.720 15042.825     5</span></span>
-<span><span class="co">#&gt;    271.238   403.895     5</span></span></code></pre></div>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 18637.617 18752.860 19886.3726 19757.098</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   373.718   384.331   447.4892   402.748</span></span>
+<span><span class="co">#&gt;        uq       max neval</span></span>
+<span><span class="co">#&gt;  19792.41 22491.880     5</span></span>
+<span><span class="co">#&gt;    430.23   646.419     5</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>

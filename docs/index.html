@@ -30,7 +30,7 @@
     
     <a class="navbar-brand me-2" href="index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -187,16 +187,26 @@
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
-<span><span class="co">#&gt;                           expr       min       lq       mean    median        uq       max neval</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 13020.418 13157.24 13809.2274 13454.169 14646.721 14767.588     5</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   249.927   267.77   342.1564   277.817   316.864   598.404     5</span></span>
-<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 13897.080 14991.53 15716.1440 15102.753 16393.162 18196.192     5</span></span></code></pre></div>
+<span><span class="co">#&gt;                           expr      min        lq       mean    median</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 18558.69 18681.412 19152.0542 18779.652</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   365.38   374.834   446.7822   395.693</span></span>
+<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 21398.15 21479.065 22949.1066 21877.923</span></span>
+<span><span class="co">#&gt;         uq       max neval</span></span>
+<span><span class="co">#&gt;  19067.742 20672.774     5</span></span>
+<span><span class="co">#&gt;    421.672   676.332     5</span></span>
+<span><span class="co">#&gt;  23802.068 26188.331     5</span></span></code></pre></div>
 <p>In the case of 40,000 features, the average time on a modern CPU is 14 milliseconds.</p>
 <p>Of course, if you want to use it to calculate Kendall-tau-b without incorporating missingness, it can do that just fine as well.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k_tau</span> <span class="op">=</span> <span class="fu"><a href="reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">k_tau</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> ,<span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p>We also provide the <code>kt_fast</code> function, if you want something that treats <code>NA</code> values similarly to <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">stats::cor</a></code>.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">k_tau_fast</span> <span class="op">=</span> <span class="fu"><a href="reference/kt_fast.html">kt_fast</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span><span class="va">k_tau_fast</span></span>
+<span><span class="co">#&gt;          tau       pvalue </span></span>
+<span><span class="co">#&gt; -0.003411411  0.871672260</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
