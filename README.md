@@ -136,10 +136,14 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min       lq       mean    median        uq       max neval
-#>  cor(x, y, method = "kendall") 13020.418 13157.24 13809.2274 13454.169 14646.721 14767.588     5
-#>         ici_kt(x, y, "global")   249.927   267.77   342.1564   277.817   316.864   598.404     5
-#>       ici_kt(x2, y2, "global") 13897.080 14991.53 15716.1440 15102.753 16393.162 18196.192     5
+#>                           expr      min        lq       mean    median
+#>  cor(x, y, method = "kendall") 18558.69 18681.412 19152.0542 18779.652
+#>         ici_kt(x, y, "global")   365.38   374.834   446.7822   395.693
+#>       ici_kt(x2, y2, "global") 21398.15 21479.065 22949.1066 21877.923
+#>         uq       max neval
+#>  19067.742 20672.774     5
+#>    421.672   676.332     5
+#>  23802.068 26188.331     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -152,6 +156,16 @@ incorporating missingness, it can do that just fine as well.
 k_tau = ici_kt(x, y, "global")
 all.equal(k_tau[[1]] ,cor(x, y, method = "kendall"))
 #> [1] TRUE
+```
+
+We also provide the `kt_fast` function, if you want something that
+treats `NA` values similarly to `stats::cor`.
+
+``` r
+k_tau_fast = kt_fast(x, y)
+k_tau_fast
+#>          tau       pvalue 
+#> -0.003411411  0.871672260
 ```
 
 ## Code of Conduct
