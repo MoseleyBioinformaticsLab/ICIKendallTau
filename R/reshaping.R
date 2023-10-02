@@ -13,7 +13,7 @@
 #' @return data.frame
 cor_matrix_2_long_df = function(in_matrix)
 {
-  # in_matrix = pcor_vals
+  
   if (nrow(in_matrix) != ncol(in_matrix)) {
     stop("Matrix isn't square, can't do it!")
   } 
