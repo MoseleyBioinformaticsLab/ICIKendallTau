@@ -23,5 +23,5 @@ useful if you are getting errors, but can't really see them, then you can add
 
 Default log file has the pattern:
 
-YYYY.MM.DD.HH.MM.SS_ScanCentricPeakCharacterization_run.log
+YYYY.MM.DD.HH.MM.SS_ICIKendallTau_run.log
 }
