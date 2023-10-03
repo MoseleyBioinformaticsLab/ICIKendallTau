@@ -32,4 +32,7 @@ test_that("reshaping works properly", {
   cor_df_error = cor_df_short
   cor_df_error$raw = cor_df_error$cor
   expect_error(long_df_2_cor_matrix(cor_df_error[, c("s1", "s2", "raw")]), "must contain the names")
+  
+  cor_df_error$cor = cor_df_error$raw
+  expect_identical(long_df_2_cor_matrix(cor_df_error), long_df_2_cor_matrix(cor_df_short))
  })

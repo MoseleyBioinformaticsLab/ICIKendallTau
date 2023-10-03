@@ -38,7 +38,7 @@ cor_matrix_2_long_df = function(in_matrix)
 #' @return matrix
 long_df_2_cor_matrix = function(long_df, is_square = TRUE)
 {
-  check_names = all(names(long_df) %in% c("s1", "s2", "cor"))
+  check_names = all(c("s1", "s2", "cor") %in% names(long_df))
   if (!check_names) {
     stop("The data.frame must contain the names 's1', 's2', and 'cor'.")
   }
