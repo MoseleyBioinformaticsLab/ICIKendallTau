@@ -233,11 +233,9 @@ pairwise_completeness = function(data_matrix,
     completeness_matrix = matrix(0, nrow = ncol(exclude_loc), ncol = ncol(exclude_loc))
     rownames(completeness_matrix) = colnames(completeness_matrix) = colnames(exclude_loc)
     
-    for (irow in seq_len(nrow(all_missing))) {
-      rowloc = all_missing$s1[irow]
-      colloc = all_missing$s2[irow]
-      completeness_matrix[rowloc, colloc] = completeness_matrix[colloc, rowloc] = all_missing$completness[irow]
-    }
+    completeness_matrix[cbind(all_missing$s1, all_missing$s2)] = all_missing$completeness
+    completeness_matrix[cbind(all_missing$s2, all_missing$s1)] = all_missing$completeness
+    
     return(completeness_matrix)
   } else {
     return(all_missing)
@@ -554,14 +552,22 @@ ici_kendalltau = function(data_matrix,
     pvalue_matrix = cor_matrix
     taumax_matrix = cor_matrix
     
-    for (irow in seq_len(nrow(all_cor))) {
-      rowloc = all_cor$s1[irow]
-      colloc = all_cor$s2[irow]
-      raw_matrix[rowloc, colloc] = raw_matrix[colloc, rowloc] = all_cor$raw[irow]
-      cor_matrix[rowloc, colloc] = cor_matrix[colloc, rowloc] = all_cor$cor[irow]
-      pvalue_matrix[rowloc, colloc] = pvalue_matrix[colloc, rowloc] = all_cor$pvalue[irow]
-      taumax_matrix[rowloc, colloc] = taumax_matrix[colloc, rowloc] = all_cor$taumax[irow]
-    }
+    one_way_index = cbind(all_cor$s1, all_cor$s2)
+    back_way_index = cbind(all_cor$s2, all_cor$s1)
+    
+    raw_matrix[one_way_index] = all_cor$raw
+    raw_matrix[back_way_index] = all_cor$raw
+    
+    cor_matrix[one_way_index] = all_cor$cor
+    cor_matrix[back_way_index] = all_cor$cor
+    
+    pvalue_matrix[one_way_index] = all_cor$pvalue
+    pvalue_matrix[back_way_index] = all_cor$pvalue
+    
+    taumax_matrix[one_way_index] = all_cor$taumax
+    taumax_matrix[back_way_index] = all_cor$taumax
+    
+    
     return(list(cor = cor_matrix, raw = raw_matrix, pval = pvalue_matrix, taumax = taumax_matrix, keep = t(!exclude_loc), run_time = t_diff))
   } else {
     return(list(cor = all_cor, run_time = t_diff))
