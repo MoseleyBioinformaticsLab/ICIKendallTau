@@ -1,4 +1,12 @@
+<<<<<<< Updated upstream
 devtools::load_all()
+=======
+<<<<<<< Updated upstream
+devtools::load_all()
+=======
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 data_matrix = readRDS("large_test/yeast_data.rds")
 
 global_na = c(NA, Inf, 0)
@@ -13,6 +21,10 @@ data_matrix = data_matrix[1:200, ]
 
 # checking timing
 set.seed(1234)
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 library(ICIKendallTau)
 library(furrr)
 plan(multicore)
@@ -23,6 +35,22 @@ rownames(tmp_vals) = paste0("f", seq_len(nrow(tmp_vals)))
 library(tictoc)
 tic()
 out_cor = ici_kendalltau(tmp_vals)
+<<<<<<< Updated upstream
+=======
+=======
+devtools::load_all()
+library(furrr)
+library(tictoc)
+plan(multicore)
+tmp_vals = matrix(rnorm(2000 * 100), 2000, 100)
+colnames(tmp_vals) = paste0("s", seq_len(ncol(tmp_vals)))
+rownames(tmp_vals) = paste0("f", seq_len(nrow(tmp_vals)))
+
+
+tic()
+out_cor = ici_kendalltau(tmp_vals, return_matrix = FALSE)
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 toc()
 out_cor$run_time
 
