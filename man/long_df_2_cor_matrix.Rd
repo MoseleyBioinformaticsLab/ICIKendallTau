@@ -4,7 +4,7 @@
 \alias{long_df_2_cor_matrix}
 \title{convert data.frame to matrix}
 \usage{
-long_df_2_cor_matrix(long_df)
+long_df_2_cor_matrix(long_df, is_square = TRUE)
 }
 \arguments{
 \item{long_df}{the long data.frame}
@@ -13,5 +13,5 @@ long_df_2_cor_matrix(long_df)
 matrix
 }
 \description{
-Given a long data.frame, converts it to a square correlation matrix
+Given a long data.frame, converts it to a possibly square correlation matrix
 }

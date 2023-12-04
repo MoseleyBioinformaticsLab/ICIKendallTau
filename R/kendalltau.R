@@ -620,7 +620,8 @@ check_icikt_timing = function(exclude_data, tmp_pairwise, perspective, n_todo, n
 #' 
 #' @param x a numeric vector, matrix, or data frame.
 #' @param y NULL (default) or a vector.
-#' @param use an optional character string giving a method for computing covariances in the presence of missing values. This must be (an abbreviation of) one of the strings "everything", "all.obs", "complete.obs", or "pairwise.complete.obs".
+#' @param use an optional character string giving a method for computing correlations in the presence of missing values. This must be (an abbreviation of) one of the strings "everything", "all.obs", "complete.obs", or "pairwise.complete.obs".
+#' @param return_matrix Should the matrices of values be returned, or a long data.frame
 #' 
 #' @details Although the interface is *mostly* identical to the built-in `stats::cor` method, 
 #'   there are some differences. 
@@ -634,8 +635,9 @@ check_icikt_timing = function(exclude_data, tmp_pairwise, perspective, n_todo, n
 #' 
 #' @return a named vector or list of matrices.
 #' @export
-kt_fast = function(x, y = NULL, use = "everything")
+kt_fast = function(x, y = NULL, use = "everything", return_matrix = TRUE)
 {
+  do_log_memory = get("memory", envir = icikt_logger)
   # checking types
   na_method = match.arg(use, c("all.obs", "complete.obs", "pairwise.complete.obs", 
                              "everything", "na.or.complete"))
@@ -701,6 +703,7 @@ kt_fast = function(x, y = NULL, use = "everything")
     split_fun = purrr::map
   }
   
+  log_message("Figuring out comparisons to do ...")
   # generate the array of comparisons, 2 x ...,
   # where each column is a comparison between two columns of data
   pairwise_comparisons = utils::combn(n_sample, 2)
@@ -714,35 +717,40 @@ kt_fast = function(x, y = NULL, use = "everything")
   named_comparisons = data.frame(s1 = colnames(x)[pairwise_comparisons[1, ]],
                                  s2 = colnames(x)[pairwise_comparisons[2, ]])
   
-  n_todo = ncol(pairwise_comparisons)
+  n_todo = nrow(named_comparisons)
+  log_message("Splitting up across compute ...")
   n_each = ceiling(n_todo / ncore)
   
   which_core = rep(seq(1, ncore), each = n_each)
   which_core = which_core[1:nrow(named_comparisons)]
   
   named_comparisons$core = which_core
-  split_comparisons = split(named_comparisons, named_comparisons$core)
+  named_comparisons$tau = Inf
+  named_comparisons$pvalue = Inf
   
   na_vals = is.na(x)
-  
+  do_calculation = TRUE
   if (na_method %in% "complete.obs") {
     no_na_rows = rowSums(na_vals) == 0
     if (sum(no_na_rows) == 0) {
-      results_matrix = matrix(as.double(NA), nrow = ncol(x), ncol = ncol(x))
-      rownames(results_matrix) = colnames(results_matrix) = colnames(x)
-      return(list(tau = results_matrix,
-                  pvalue = results_matrix))
+      named_comparisons$tau = NA
+      named_comparisons$pvalue = NA
+      split_cor = split(named_comparisons, named_comparisons$core)
+      do_calculation = FALSE
     } else {
       x = x[no_na_rows, , drop = FALSE]
     }
   }
   
-  do_split = function(do_comparisons, x, na_method) {
+  
+  split_comparisons = split(named_comparisons, named_comparisons$core)
+  
+  
+  do_split = function(do_comparisons, x, na_method, do_log_memory) {
     #seq_range = seq(in_range[1], in_range[2])
     #print(seq_range)
-    tmp_tau = matrix(NA, nrow = ncol(x), ncol = ncol(x))
-    rownames(tmp_tau) = colnames(tmp_tau) = colnames(x)
-    tmp_pvalue = tmp_tau
+    tau = vector("numeric", nrow(do_comparisons))
+    pvalue = tau
     
     for (irow in seq(1, nrow(do_comparisons))) {
       return_na = FALSE
@@ -765,38 +773,61 @@ kt_fast = function(x, y = NULL, use = "everything")
       }
       
       if (return_na) {
-        tmp_tau[iloc, jloc] = tmp_tau[jloc, iloc] = as.double(NA)
-        tmp_pvalue[iloc, jloc] = tmp_pvalue[jloc, iloc] = as.double(NA)
+        tau[irow] = as.double(NA)
+        pvalue[irow] = as.double(NA)
         
       } else {
         ici_res = ici_kt(tmp_x, tmp_y)
-        tmp_tau[iloc, jloc] = tmp_tau[jloc, iloc] = ici_res["tau"]
-        tmp_pvalue[iloc, jloc] = tmp_pvalue[jloc, iloc] = ici_res["pvalue"]
+        tau[irow] = ici_res["tau"]
+        pvalue[irow] = ici_res["pvalue"]
         
+      }
+      if (do_log_memory && ((irow %% 100) == 0)) {
+        log_memory()
       }
       
     }
-    list(tau = tmp_tau, pvalue = tmp_pvalue)
+    do_comparisons$tau = tau
+    do_comparisons$pvalue = pvalue
+    do_comparisons
   }
   # we record how much time is actually spent doing ICI-Kt
   # itself, as some of the other operations will add a bit of time
   # 
-  t1 = Sys.time()
-  # note here, this takes our list of comparisons, and then calls the do_split
-  # function above on each of them.
-  split_cor = split_fun(split_comparisons, do_split, x, na_method)
-  t2 = Sys.time()
-  t_diff = as.numeric(difftime(t2, t1, units = "secs"))
-  
-  # and then we set up the final matrices we report, and go through each
-  # of the splits of comparisons and extract them into the final matrices.
-  tau_matrix = matrix(0, nrow = ncol(x), ncol = ncol(x))
-  rownames(tau_matrix) = colnames(tau_matrix) = colnames(x)
-  pvalue_matrix = tau_matrix
-  for (isplit in split_cor) {
-    tau_matrix = tau_matrix + isplit$tau
-    pvalue_matrix = pvalue_matrix + isplit$pvalue
-  
+  if (do_calculation) {
+    t1 = Sys.time()
+    # note here, this takes our list of comparisons, and then calls the do_split
+    # function above on each of them.
+    split_cor = split_fun(split_comparisons, do_split, x, na_method, do_log_memory)
+    t2 = Sys.time()
+    t_diff = as.numeric(difftime(t2, t1, units = "secs"))
+  } else {
+    t_diff = 0
   }
-  return(list(tau = tau_matrix, pvalue = pvalue_matrix))
+  
+  all_cor = purrr::list_rbind(split_cor)
+  if (return_matrix) {
+    log_message("Generating the output matrix ...")
+    cor_matrix = matrix(0, nrow = ncol(x), ncol = ncol(x))
+    rownames(cor_matrix) = colnames(cor_matrix) = colnames(x)
+    tau_matrix = cor_matrix
+    pvalue_matrix = cor_matrix
+    
+    one_way_index = cbind(all_cor$s1, all_cor$s2)
+    back_way_index = cbind(all_cor$s2, all_cor$s1)
+    
+    tau_matrix[one_way_index] = all_cor$tau
+    tau_matrix[back_way_index] = all_cor$tau
+    
+    tau_matrix[one_way_index] = all_cor$tau
+    tau_matrix[back_way_index] = all_cor$tau
+    
+    pvalue_matrix[one_way_index] = all_cor$pvalue
+    pvalue_matrix[back_way_index] = all_cor$pvalue
+    
+    return(list(tau = tau_matrix, pvalue = pvalue_matrix, run_time = t_diff))
+  } else {
+    return(list(tau = all_cor, run_time = t_diff))
+  }
+  
 }

@@ -131,9 +131,9 @@ test_that("fast_kt works properly", {
   
   na_pairs_everything = kt_fast(x_na2[, 1], x_na2[, 2])
   expect_equal(na_pairs_everything, c("tau" = NA, "pvalue" = NA))
-  expect_snapshot(na_pairs_everything)
+  expect_snapshot(na_pairs_everything[c("tau", "pvalue")])
   na_pairs_complete = kt_fast(x_na2[, 1], x_na2[, 2], use = "complete.obs")
-  expect_snapshot(na_pairs_complete)
+  expect_snapshot(na_pairs_complete[c("tau", "pvalue")])
   expect_gt(fast_vals$tau[1, 1], na_pairs_complete["tau"])
   
   na_pairs_pairwise = kt_fast(x_na2[, 1], x_na2[, 2], use = "pairwise.complete.obs")
@@ -147,15 +147,18 @@ test_that("fast_kt works properly", {
 
   
   na_matrix_complete = kt_fast(x_na2, use = "complete.obs")
-  expect_snapshot(na_matrix_complete)
+  expect_snapshot(na_matrix_complete[c("tau", "pvalue")])
   expect_lt(na_matrix_complete$tau[1, 2], fast_vals$tau[1, 2])
   
   na_matrix_pairwise = kt_fast(x_na2, use = "pairwise.complete.obs")
-  expect_snapshot(na_matrix_pairwise)
+  expect_snapshot(na_matrix_pairwise[c("tau", "pvalue")])
   expect_equal(na_matrix_pairwise$tau[, 1], na_matrix_complete$tau[, 1])
   expect_equal(na_matrix_pairwise$tau[2, 3], na_matrix_everything$tau[2, 3])
   expect_equal(na_matrix_pairwise$tau[2, 1], na_pairs_complete[["tau"]])
   
   df_vals = kt_fast(as.data.frame(x))
-  expect_equal(df_vals, fast_vals)
+  expect_equal(df_vals[c("tau", "pvalue")], fast_vals[c("tau", "pvalue")])
+  
+  df_out = kt_fast(x, return_matrix = FALSE)
+  expect_equal(df_out$tau[4, "tau"], fast_vals$tau["s2", "s3"])
 })
