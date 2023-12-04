@@ -3,6 +3,10 @@
 - Handling parallel execution differently to avoid really large matrix issues on each core.
 - Introduces the `return_matrix` parameter to `ici_kendalltau` that allows to return the results in the form of a `data.frame` instead of lists of matrices.
 
+# ICIKendallTau 0.2.10
+
+- Provide the `kt_fast` function that handles missing or `NA` values similarly to the `stats::cor` function, but uses our `ici_kt` fast function underneath.
+
 # ICIKendalltau 0.2.8
 
 - Made all error outputs the same length as the default output but containing `NA`.

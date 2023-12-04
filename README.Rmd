@@ -134,6 +134,13 @@ k_tau = ici_kt(x, y, "global")
 all.equal(k_tau[[1]] ,cor(x, y, method = "kendall"))
 ```
 
+We also provide the `kt_fast` function, if you want something that treats `NA` values similarly to `stats::cor`.
+
+```{r kt_fast}
+k_tau_fast = kt_fast(x, y)
+k_tau_fast
+```
+
 ## Code of Conduct
   
 Please note that the ICIKendallTau project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
