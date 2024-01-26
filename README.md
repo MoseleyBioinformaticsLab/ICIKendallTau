@@ -136,14 +136,14 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr      min        lq       mean    median
-#>  cor(x, y, method = "kendall") 18558.69 18681.412 19152.0542 18779.652
-#>         ici_kt(x, y, "global")   365.38   374.834   446.7822   395.693
-#>       ici_kt(x2, y2, "global") 21398.15 21479.065 22949.1066 21877.923
-#>         uq       max neval
-#>  19067.742 20672.774     5
-#>    421.672   676.332     5
-#>  23802.068 26188.331     5
+#>                           expr       min        lq       mean    median        uq       max
+#>  cor(x, y, method = "kendall") 13379.183 13401.532 13493.0316 13401.829 13595.070 13687.544
+#>         ici_kt(x, y, "global")   271.586   279.007   369.9088   314.779   357.086   627.086
+#>       ici_kt(x2, y2, "global") 15983.902 16484.666 16952.9788 16667.885 17124.932 18503.509
+#>  neval
+#>      5
+#>      5
+#>      5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -166,6 +166,43 @@ k_tau_fast = kt_fast(x, y)
 k_tau_fast
 #>          tau       pvalue 
 #> -0.003411411  0.871672260
+```
+
+## Parallelism
+
+If you have {future} and the {furrr} packages installed, then it is also
+possible to split up the a set of matrix comparisons across compute
+resources for any multiprocessing engine registered with {future}.
+
+``` r
+library(furrr)
+future::plan(multicore, workers = 4)
+r_3 = ici_kendalltau(t(matrix_2))
+```
+
+## Many Many Comparisons
+
+In the case of hundreds of thousands of comparisons to be done, the
+result matrices can become very, very large, and require lots of memory
+for storage. They are also inefficient, as both the lower and upper
+triangular components are stored. An alternative storage format is as a
+`data.frame`, where there is a single row for each comparison performed.
+This is actually how the results are stored internally, and then they
+are converted to a matrix form if requested (the default).s To keep the
+`data.frame` output, add the argument `return_matrix=FALSE` to the call
+of `ici_kendalltau`.
+
+``` r
+r_4 = ici_kendalltau(t(matrix_2), return_matrix = FALSE)
+r_4
+#> $cor
+#>   s1 s2 core       raw pvalue   taumax       cor
+#> 1 s3 s4    1 0.9924359      0 0.997963 0.9944616
+#> 2 s3 s3    0 1.0000000      0 1.000000 1.0000000
+#> 3 s4 s4    0 1.0000000      0 1.000000 1.0000000
+#> 
+#> $run_time
+#> [1] 0.02034521
 ```
 
 ## Code of Conduct

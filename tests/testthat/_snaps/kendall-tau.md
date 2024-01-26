@@ -16,7 +16,7 @@
       5 s1 s6    1           2         0.96
       6 s1 s7    1           1         0.98
 
-# fast_kt works properly
+# kt_fast works properly
 
     Code
       na_pairs_everything[c("tau", "pvalue")]

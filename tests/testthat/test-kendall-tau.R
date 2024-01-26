@@ -110,7 +110,7 @@ test_that("completeness works correctly",{
   expect_snapshot(x_comp[4:6, ])
 })
 
-test_that("fast_kt works properly", {
+test_that("kt_fast works properly", {
   set.seed(1234)
   x = matrix(rnorm(400), nrow = 100, ncol = 4)
   colnames(x) = paste0("s", seq(1, ncol(x)))
@@ -161,4 +161,22 @@ test_that("fast_kt works properly", {
   
   df_out = kt_fast(x, return_matrix = FALSE)
   expect_equal(df_out$tau[4, "tau"], fast_vals$tau["s2", "s3"])
+})
+
+test_that("big data kendall works", {
+  x = sort(rnorm(100))
+  y = x + 1
+  y[1:20] = NA
+  
+  test_mat = rbind(x, y)
+  matrix_cor = ici_kendalltau(test_mat, global_na = c(NA),
+                              perspective = "global", scale_max = FALSE)
+  long_cor = ici_kendalltau(test_mat, global_na = c(NA),
+                              perspective = "global", scale_max = FALSE,
+                              return_matrix = FALSE)
+  
+  expect_equal(nrow(long_cor$cor), 3)
+  expect_equal(long_cor$cor$raw[1], matrix_cor$raw[2, 1])
+  expect_equal(long_cor$cor$raw[3], matrix_cor$raw[2, 2])
+  expect_equal(ici_kt(x, y, "global")[[1]], matrix_cor$raw[2, 1])
 })

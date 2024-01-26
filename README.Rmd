@@ -141,6 +141,32 @@ k_tau_fast = kt_fast(x, y)
 k_tau_fast
 ```
 
+## Parallelism
+
+If you have {future} and the {furrr} packages installed, then it is also possible to split up the a set of matrix comparisons across compute resources for any multiprocessing engine registered with {future}.
+
+```{r}
+#| label: future
+#| eval: false
+library(furrr)
+future::plan(multicore, workers = 4)
+r_3 = ici_kendalltau(t(matrix_2))
+```
+
+## Many Many Comparisons
+
+In the case of hundreds of thousands of comparisons to be done, the result matrices can become very, very large, and require lots of memory for storage.
+They are also inefficient, as both the lower and upper triangular components are stored.
+An alternative storage format is as a `data.frame`, where there is a single row for each comparison performed.
+This is actually how the results are stored internally, and then they are converted to a matrix form if requested (the default).s
+To keep the `data.frame` output, add the argument `return_matrix=FALSE` to the call of `ici_kendalltau`.
+
+```{r}
+#| label: matrix
+r_4 = ici_kendalltau(t(matrix_2), return_matrix = FALSE)
+r_4
+```
+
 ## Code of Conduct
   
 Please note that the ICIKendallTau project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
