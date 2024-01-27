@@ -134,6 +134,29 @@ microbenchmark(
 all.equal(ici_kt(x, y, "global")[[1]], cor(x, y, method = "kendall"))
 ```
 
+## Running Many
+
+Just like R's `cor` function, we can also calculate correlations between many variables.
+In contrast to R's function, `ici_kendalltau` calculates between rows of a matrix.
+
+Let's make some fake data and try it out.
+
+```{r}
+#| label: matrix-example
+set.seed(1234)
+
+s1 = sort(rnorm(1000, mean = 100, sd = 10))
+s2 = s1 + 10
+s2[sample(length(s1), 100)] = s1[1:100]
+s3 = s1
+s3[c(1:10, sample(length(s1), 5))] = NA
+
+matrix_1 = cbind(s1, s2, s3)
+
+r_1 = ici_kendalltau(t(matrix_1))
+r_1$cor
+```
+
 ## Parallelism
 
 If you have {future} and the {furrr} packages installed, then it is also possible to split up the a set of matrix comparisons across compute resources for any multiprocessing engine registered with {future}.
@@ -143,7 +166,7 @@ If you have {future} and the {furrr} packages installed, then it is also possibl
 #| eval: false
 library(furrr)
 future::plan(multicore, workers = 4)
-r_3 = ici_kendalltau(t(matrix_2))
+r_2 = ici_kendalltau(t(matrix_1))
 ```
 
 ## Many Many Comparisons
@@ -156,6 +179,6 @@ To keep the `data.frame` output, add the argument `return_matrix=FALSE` to the c
 
 ```{r}
 #| label: matrix
-r_4 = ici_kendalltau(t(matrix_2), return_matrix = FALSE)
-r_4
+r_3 = ici_kendalltau(t(matrix_1), return_matrix = FALSE)
+r_3$cor
 ```

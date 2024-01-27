@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.21</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -324,14 +324,74 @@ use the double merge-sort algorithm, translating {scipy::
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
 <span><span class="co">#&gt;                           expr       min        lq       mean    median</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 18637.617 18752.860 19886.3726 19757.098</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   373.718   384.331   447.4892   402.748</span></span>
-<span><span class="co">#&gt;        uq       max neval</span></span>
-<span><span class="co">#&gt;  19792.41 22491.880     5</span></span>
-<span><span class="co">#&gt;    430.23   646.419     5</span></span></code></pre></div>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 12095.660 12738.316 13295.7824 13155.880</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   244.055   246.677   302.6702   275.807</span></span>
+<span><span class="co">#&gt;         uq       max neval</span></span>
+<span><span class="co">#&gt;  13565.978 14923.078     5</span></span>
+<span><span class="co">#&gt;    303.536   443.276     5</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="running-many">Running Many<a class="anchor" aria-label="anchor" href="#running-many"></a>
+</h2>
+<p>Just like R’s <code>cor</code> function, we can also calculate
+correlations between many variables. In contrast to R’s function,
+<code>ici_kendalltau</code> calculates between rows of a matrix.</p>
+<p>Let’s make some fake data and try it out.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">s1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span>, mean <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">s2</span> <span class="op">=</span> <span class="va">s1</span> <span class="op">+</span> <span class="fl">10</span></span>
+<span><span class="va">s2</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">s1</span><span class="op">)</span>, <span class="fl">100</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="va">s1</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span></span>
+<span><span class="va">s3</span> <span class="op">=</span> <span class="va">s1</span></span>
+<span><span class="va">s3</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">s1</span><span class="op">)</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="cn">NA</span></span>
+<span></span>
+<span><span class="va">matrix_1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">s1</span>, <span class="va">s2</span>, <span class="va">s3</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">r_1</span> <span class="op">=</span> <span class="fu"><a href="../reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">matrix_1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">r_1</span><span class="op">$</span><span class="va">cor</span></span>
+<span><span class="co">#&gt;           s1        s2        s3</span></span>
+<span><span class="co">#&gt; s1 1.0000000 0.8049209 0.9907488</span></span>
+<span><span class="co">#&gt; s2 0.8049209 1.0000000 0.7956652</span></span>
+<span><span class="co">#&gt; s3 0.9907488 0.7956652 0.9850000</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="parallelism">Parallelism<a class="anchor" aria-label="anchor" href="#parallelism"></a>
+</h2>
+<p>If you have {future} and the {furrr} packages installed, then it is
+also possible to split up the a set of matrix comparisons across compute
+resources for any multiprocessing engine registered with {future}.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DavisVaughan/furrr" class="external-link">furrr</a></span><span class="op">)</span></span>
+<span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multicore</span>, workers <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="va">r_2</span> <span class="op">=</span> <span class="fu"><a href="../reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">matrix_1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="many-many-comparisons">Many Many Comparisons<a class="anchor" aria-label="anchor" href="#many-many-comparisons"></a>
+</h2>
+<p>In the case of hundreds of thousands of comparisons to be done, the
+result matrices can become very, very large, and require lots of memory
+for storage. They are also inefficient, as both the lower and upper
+triangular components are stored. An alternative storage format is as a
+<code>data.frame</code>, where there is a single row for each comparison
+performed. This is actually how the results are stored internally, and
+then they are converted to a matrix form if requested (the default).s To
+keep the <code>data.frame</code> output, add the argument
+<code>return_matrix=FALSE</code> to the call of
+<code>ici_kendalltau</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">r_3</span> <span class="op">=</span> <span class="fu"><a href="../reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">matrix_1</span><span class="op">)</span>, return_matrix <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">r_3</span><span class="op">$</span><span class="va">cor</span></span>
+<span><span class="co">#&gt;   s1 s2 core       raw pvalue    taumax       cor</span></span>
+<span><span class="co">#&gt; 1 s1 s2    1 0.8049209      0 1.0000000 0.8049209</span></span>
+<span><span class="co">#&gt; 2 s1 s3    1 0.9907488      0 0.9998949 0.9907488</span></span>
+<span><span class="co">#&gt; 3 s2 s3    1 0.7956652      0 0.9998949 0.7956652</span></span>
+<span><span class="co">#&gt; 4 s1 s1    0 1.0000000      0 1.0000000 1.0000000</span></span>
+<span><span class="co">#&gt; 5 s2 s2    0 1.0000000      0 1.0000000 1.0000000</span></span>
+<span><span class="co">#&gt; 6 s3 s3    0 0.9850000      0 1.0000000 0.9850000</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

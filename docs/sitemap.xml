@@ -28,6 +28,15 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/cor_matrix_2_long_df.html</loc>
+  </url>
+  <url>
+    <loc>/reference/disable_logging.html</loc>
+  </url>
+  <url>
+    <loc>/reference/enable_logging.html</loc>
+  </url>
+  <url>
     <loc>/reference/ici_kendalltau.html</loc>
   </url>
   <url>
@@ -43,6 +52,15 @@
     <loc>/reference/kt_fast.html</loc>
   </url>
   <url>
+    <loc>/reference/log_memory.html</loc>
+  </url>
+  <url>
+    <loc>/reference/log_message.html</loc>
+  </url>
+  <url>
+    <loc>/reference/long_df_2_cor_matrix.html</loc>
+  </url>
+  <url>
     <loc>/reference/pairwise_completeness.html</loc>
   </url>
   <url>
@@ -50,5 +68,8 @@
   </url>
   <url>
     <loc>/reference/ref_kendallt.html</loc>
+  </url>
+  <url>
+    <loc>/reference/show_progress.html</loc>
   </url>
 </urlset>
