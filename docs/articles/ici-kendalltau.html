@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.21</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -324,11 +324,11 @@ use the double merge-sort algorithm, translating {scipy::
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
 <span><span class="co">#&gt;                           expr       min        lq       mean    median</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 12095.660 12738.316 13295.7824 13155.880</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   244.055   246.677   302.6702   275.807</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 13491.985 13985.445 14525.5088 14381.588</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   301.179   315.922   370.4616   331.543</span></span>
 <span><span class="co">#&gt;         uq       max neval</span></span>
-<span><span class="co">#&gt;  13565.978 14923.078     5</span></span>
-<span><span class="co">#&gt;    303.536   443.276     5</span></span></code></pre></div>
+<span><span class="co">#&gt;  14596.294 16172.232     5</span></span>
+<span><span class="co">#&gt;    380.869   522.795     5</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
@@ -337,9 +337,8 @@ use the double merge-sort algorithm, translating {scipy::
 <h2 id="running-many">Running Many<a class="anchor" aria-label="anchor" href="#running-many"></a>
 </h2>
 <p>Just like R’s <code>cor</code> function, we can also calculate
-correlations between many variables. In contrast to R’s function,
-<code>ici_kendalltau</code> calculates between rows of a matrix.</p>
-<p>Let’s make some fake data and try it out.</p>
+correlations between many variables. Let’s make some fake data and try
+it out.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span></span>
@@ -351,7 +350,7 @@ correlations between many variables. In contrast to R’s function,
 <span></span>
 <span><span class="va">matrix_1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">s1</span>, <span class="va">s2</span>, <span class="va">s3</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">r_1</span> <span class="op">=</span> <span class="fu"><a href="../reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">matrix_1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">r_1</span> <span class="op">=</span> <span class="fu"><a href="../reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="va">matrix_1</span><span class="op">)</span></span>
 <span><span class="va">r_1</span><span class="op">$</span><span class="va">cor</span></span>
 <span><span class="co">#&gt;           s1        s2        s3</span></span>
 <span><span class="co">#&gt; s1 1.0000000 0.8049209 0.9907488</span></span>
@@ -367,7 +366,7 @@ resources for any multiprocessing engine registered with {future}.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DavisVaughan/furrr" class="external-link">furrr</a></span><span class="op">)</span></span>
 <span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multicore</span>, workers <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span><span class="va">r_2</span> <span class="op">=</span> <span class="fu"><a href="../reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">matrix_1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">r_2</span> <span class="op">=</span> <span class="fu"><a href="../reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="va">matrix_1</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="many-many-comparisons">Many Many Comparisons<a class="anchor" aria-label="anchor" href="#many-many-comparisons"></a>
@@ -383,7 +382,7 @@ keep the <code>data.frame</code> output, add the argument
 <code>return_matrix=FALSE</code> to the call of
 <code>ici_kendalltau</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">r_3</span> <span class="op">=</span> <span class="fu"><a href="../reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">matrix_1</span><span class="op">)</span>, return_matrix <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">r_3</span> <span class="op">=</span> <span class="fu"><a href="../reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="va">matrix_1</span>, return_matrix <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">r_3</span><span class="op">$</span><span class="va">cor</span></span>
 <span><span class="co">#&gt;   s1 s2 core       raw pvalue    taumax       cor</span></span>
 <span><span class="co">#&gt; 1 s1 s2    1 0.8049209      0 1.0000000 0.8049209</span></span>
@@ -392,6 +391,24 @@ keep the <code>data.frame</code> output, add the argument
 <span><span class="co">#&gt; 4 s1 s1    0 1.0000000      0 1.0000000 1.0000000</span></span>
 <span><span class="co">#&gt; 5 s2 s2    0 1.0000000      0 1.0000000 1.0000000</span></span>
 <span><span class="co">#&gt; 6 s3 s3    0 0.9850000      0 1.0000000 0.9850000</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="logging">Logging<a class="anchor" aria-label="anchor" href="#logging"></a>
+</h2>
+<p>It is possible to log the steps being done and how much memory is
+being used (on Linux at least) as correlations are calculated. This can
+be useful when running very large sets of correlations and making sure
+too much memory isn’t being used, for example.</p>
+<p>To enable logging, the {logger} package must be installed. If a
+<code>log_file</code> is not supplied, one will be created with the
+current date and time.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/enable_logging.html">enable_logging</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/enable_logging.html">enable_logging</a></span><span class="op">(</span><span class="st">"/tmp/my_ici_run.log"</span><span class="op">)</span></span></code></pre></div>
+<p>By default, <code>ici_kendalltau</code> also shows progress messages,
+if you want to turn them off, you can do:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/show_progress.html">show_progress</a></span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
