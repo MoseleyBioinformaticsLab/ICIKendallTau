@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -284,7 +284,7 @@ correlation between X and Y vectors.
 <li>
 <code>ici_kendallt</code>: Handles comparisons for a matrix.
 <ul>
-<li>Rows are samples, columns are features.</li>
+<li>Rows are features, columns are samples.</li>
 <li>Implicitly parallel, but have to call:
 <ul>
 <li><code><a href="https://github.com/DavisVaughan/furrr" class="external-link">library(furrr)</a></code></li>
@@ -324,11 +324,11 @@ use the double merge-sort algorithm, translating {scipy::
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
 <span><span class="co">#&gt;                           expr       min        lq       mean    median</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 13491.985 13985.445 14525.5088 14381.588</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   301.179   315.922   370.4616   331.543</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 12781.169 13088.783 13795.1100 13290.629</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   261.498   304.518   335.7076   305.834</span></span>
 <span><span class="co">#&gt;         uq       max neval</span></span>
-<span><span class="co">#&gt;  14596.294 16172.232     5</span></span>
-<span><span class="co">#&gt;    380.869   522.795     5</span></span></code></pre></div>
+<span><span class="co">#&gt;  14382.628 15432.341     5</span></span>
+<span><span class="co">#&gt;    327.014   479.674     5</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>

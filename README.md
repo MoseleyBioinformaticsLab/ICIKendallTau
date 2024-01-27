@@ -60,10 +60,10 @@ The functions that implement this include:
   - When comparing samples, you likely want to use
     `perspective = "global"`.
 - `ici_kendallt`: Handles comparisons for a large matrix.
-  - Rows are samples, columns are features.
+  - Rows are features, columns are samples.
   - Implicitly parallel, but have to call:
-    - library(furrr)
-    - plan(multiprocess)
+    - `library(furrr)`
+    - `plan(multiprocess)`
   - Otherwise will only use a single core.
 
 ## Examples
@@ -136,10 +136,10 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr      min        lq      mean    median        uq       max
-#>  cor(x, y, method = "kendall") 13568.01 13818.243 14017.885 14090.436 14174.800 14437.933
-#>         ici_kt(x, y, "global")   261.84   272.733   304.271   287.571   335.669   363.542
-#>       ici_kt(x2, y2, "global") 14631.30 15614.509 16419.494 16340.620 17646.365 17864.673
+#>                           expr       min        lq       mean    median        uq       max
+#>  cor(x, y, method = "kendall") 11506.697 11670.094 12169.6628 12006.418 12482.883 13182.222
+#>         ici_kt(x, y, "global")   243.866   250.125   294.6542   275.104   320.058   384.118
+#>       ici_kt(x2, y2, "global") 13467.011 13739.312 14658.5050 14945.446 14987.140 16153.616
 #>  neval
 #>      5
 #>      5
@@ -202,7 +202,7 @@ r_4
 #> 3 s4 s4    0 1.0000000      0 1.000000 1.0000000
 #> 
 #> $run_time
-#> [1] 0.0196352
+#> [1] 0.01606894
 ```
 
 ## Code of Conduct

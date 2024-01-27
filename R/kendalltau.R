@@ -338,7 +338,6 @@ ici_kendalltau = function(data_matrix,
                              return_matrix = TRUE){
   
   do_log_memory = get("memory", envir = icikt_logger)
-  # assume row-wise (because that is what the description states), so need to transpose
   exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   
   if (is.data.frame(data_matrix)) {

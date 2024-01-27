@@ -30,7 +30,7 @@
     
     <a class="navbar-brand me-2" href="index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,11 +120,11 @@
 <li>
 <code>ici_kendallt</code>: Handles comparisons for a large matrix.
 <ul>
-<li>Rows are samples, columns are features.</li>
+<li>Rows are features, columns are samples.</li>
 <li>Implicitly parallel, but have to call:
 <ul>
-<li>library(furrr)</li>
-<li>plan(multiprocess)</li>
+<li><code><a href="https://github.com/DavisVaughan/furrr" class="external-link">library(furrr)</a></code></li>
+<li><code>plan(multiprocess)</code></li>
 </ul>
 </li>
 <li>Otherwise will only use a single core.</li>
@@ -187,10 +187,10 @@
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
-<span><span class="co">#&gt;                           expr      min        lq      mean    median        uq       max</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 13568.01 13818.243 14017.885 14090.436 14174.800 14437.933</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   261.84   272.733   304.271   287.571   335.669   363.542</span></span>
-<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 14631.30 15614.509 16419.494 16340.620 17646.365 17864.673</span></span>
+<span><span class="co">#&gt;                           expr       min        lq       mean    median        uq       max</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 11506.697 11670.094 12169.6628 12006.418 12482.883 13182.222</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   243.866   250.125   294.6542   275.104   320.058   384.118</span></span>
+<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 13467.011 13739.312 14658.5050 14945.446 14987.140 16153.616</span></span>
 <span><span class="co">#&gt;  neval</span></span>
 <span><span class="co">#&gt;      5</span></span>
 <span><span class="co">#&gt;      5</span></span>
@@ -231,7 +231,7 @@
 <span><span class="co">#&gt; 3 s4 s4    0 1.0000000      0 1.000000 1.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $run_time</span></span>
-<span><span class="co">#&gt; [1] 0.0196352</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.01606894</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>

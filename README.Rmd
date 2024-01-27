@@ -59,10 +59,10 @@ The functions that implement this include:
   * The option `perspective` will control how the `NA` values influence ties.
   * When comparing samples, you likely want to use `perspective = "global"`.
 * `ici_kendallt`: Handles comparisons for a large matrix.
-  * Rows are samples, columns are features.
+  * Rows are features, columns are samples.
   * Implicitly parallel, but have to call:
-    * library(furrr)
-    * plan(multiprocess)
+    * `library(furrr)`
+    * `plan(multiprocess)`
   * Otherwise will only use a single core.
   
 ## Examples
