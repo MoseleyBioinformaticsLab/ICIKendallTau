@@ -12,9 +12,9 @@
       x_comp[4:6, ]
     Output
         s1 s2 core missingness completeness
-      4 s1 s5    1           0         1.00
+      4 s1 s5    1           1         0.98
       5 s1 s6    1           2         0.96
-      6 s1 s7    1           1         0.98
+      6 s1 s7    1           2         0.96
 
 # kt_fast works properly
 

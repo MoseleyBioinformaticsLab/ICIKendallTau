@@ -7,7 +7,7 @@
 cor_matrix_2_long_df(in_matrix)
 }
 \arguments{
-\item{cor_matrix}{the correlation matrix}
+\item{in_matrix}{the correlation matrix}
 }
 \value{
 data.frame

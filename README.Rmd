@@ -80,7 +80,7 @@ s2 = s1 + 10
 
 matrix_1 = cbind(s1, s2)
 
-r_1 = ici_kendalltau(t(matrix_1))
+r_1 = ici_kendalltau(matrix_1)
 r_1$cor
 ```
 
@@ -95,7 +95,7 @@ s4 = s2
 s4[sample(100, 50)] = NA
 
 matrix_2 = cbind(s3, s4)
-r_2 = ici_kendalltau(t(matrix_2))
+r_2 = ici_kendalltau(matrix_2)
 r_2$cor
 ```
 
@@ -150,7 +150,7 @@ If you have {future} and the {furrr} packages installed, then it is also possibl
 #| eval: false
 library(furrr)
 future::plan(multicore, workers = 4)
-r_3 = ici_kendalltau(t(matrix_2))
+r_3 = ici_kendalltau(matrix_2)
 ```
 
 ## Many Many Comparisons
@@ -163,7 +163,7 @@ To keep the `data.frame` output, add the argument `return_matrix=FALSE` to the c
 
 ```{r}
 #| label: matrix
-r_4 = ici_kendalltau(t(matrix_2), return_matrix = FALSE)
+r_4 = ici_kendalltau(matrix_2, return_matrix = FALSE)
 r_4
 ```
 

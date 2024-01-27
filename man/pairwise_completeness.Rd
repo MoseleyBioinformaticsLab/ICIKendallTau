@@ -12,7 +12,7 @@ pairwise_completeness(
 )
 }
 \arguments{
-\item{data_matrix}{samples are rows, features are columns}
+\item{data_matrix}{samples are columns, features are rows}
 
 \item{global_na}{globally, what should be treated as NA?}
 

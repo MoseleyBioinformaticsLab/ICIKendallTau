@@ -3,7 +3,7 @@
 #' Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
 #' all samples.
 #' 
-#' @param data_matrix samples are rows, features are columns
+#' @param data_matrix samples are columns, features are rows
 #' @param global_na what values should be treated as missing (NA)?
 #' @param zero_value what is the actual zero value?
 #' @param perspective how to treat missing data in denominator and ties, see details
@@ -25,9 +25,7 @@ ici_kendalltau_ref = function(data_matrix,
                              diag_good = TRUE,
                              progress = FALSE){
   
-  # assume row-wise (because that is what the description states), so need to transpose
-  # because `cor` actually does things columnwise.
-  data_matrix = t(data_matrix)
+  
   exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   
   # Actual NA and Inf values are special cases, so we do
@@ -102,7 +100,7 @@ missing_either = function(in_x, in_y){
 #' Calculates the completeness between any two samples using "or", is an
 #' entry missing in either X "or" Y.
 #' 
-#' @param data_matrix samples are rows, features are columns
+#' @param data_matrix samples are columns, features are rows
 #' @param global_na globally, what should be treated as NA?
 #' @param include_only is there certain comparisons to do?
 #' @param return_matrix should the matrix or data.frame be returned?
@@ -115,7 +113,6 @@ pairwise_completeness = function(data_matrix,
                                 include_only = NULL,
                                 return_matrix = TRUE){
   
-  data_matrix = t(data_matrix)
   
   if (is.null(colnames(data_matrix))) {
     stop("rownames of data_matrix cannot be NULL!")
@@ -248,7 +245,7 @@ pairwise_completeness = function(data_matrix,
 #' Given a data-matrix, computes the information-theoretic Kendall-tau-b between
 #' all samples.
 #' 
-#' @param data_matrix samples are rows, features are columns
+#' @param data_matrix samples are columns, features are rows
 #' @param global_na globally, what should be treated as NA?
 #' @param perspective how to treat missing data in denominator and ties, see details
 #' @param scale_max should everything be scaled compared to the maximum correlation?
@@ -285,7 +282,7 @@ pairwise_completeness = function(data_matrix,
 #' 
 #' matrix_1 = cbind(s1, s2)
 #' 
-#' r_1 = ici_kendalltau(t(matrix_1))
+#' r_1 = ici_kendalltau(matrix_1)
 #' r_1$cor
 #' 
 #' #    s1 s2
@@ -301,7 +298,7 @@ pairwise_completeness = function(data_matrix,
 #' s4[sample(100, 50)] = NA
 #' 
 #' matrix_2 = cbind(s3, s4)
-#' r_2 = ici_kendalltau(t(matrix_2))
+#' r_2 = ici_kendalltau(matrix_2)
 #' r_2$cor
 #' #           s3        s4
 #' # s3 1.0000000 0.9944616
@@ -309,8 +306,8 @@ pairwise_completeness = function(data_matrix,
 #' 
 #' # using include_only
 #' set.seed(1234)
-#' x = matrix(rnorm(5000), nrow = 100, ncol = 50)
-#' rownames(x) = paste0("s", seq(1, nrow(x)))
+#' x = t(matrix(rnorm(5000), nrow = 100, ncol = 50))
+#' colnames(x) = paste0("s", seq(1, nrow(x)))
 #' 
 #' # only calculate correlations of other columns with "s1"
 #' include_s1 = "s1"
@@ -342,11 +339,14 @@ ici_kendalltau = function(data_matrix,
   
   do_log_memory = get("memory", envir = icikt_logger)
   # assume row-wise (because that is what the description states), so need to transpose
-  data_matrix = t(data_matrix)
   exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   
+  if (is.data.frame(data_matrix)) {
+    data_matrix = as.matrix(data_matrix)
+  }
+  
   if (is.null(colnames(data_matrix))) {
-    stop("rownames of data_matrix cannot be NULL!")
+    stop("colnames of data_matrix cannot be NULL!")
   }
   
   log_message("Processing missing values ...\n")

@@ -1,3 +1,7 @@
+# ICIKendallTau 1.0.0
+
+- Calculates correlation between columns of the matrix, **not** the rows.
+
 # ICIKendallTau 0.3.20
 
 - `kt_fast` now uses the same data.frame format for output as `ici_kendalltau`, but returns a matrix by default. The data.frame is useful when large amounts of comparisons are run.

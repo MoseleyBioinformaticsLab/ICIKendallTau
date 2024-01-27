@@ -16,7 +16,7 @@ ici_kendalltau(
 )
 }
 \arguments{
-\item{data_matrix}{samples are rows, features are columns}
+\item{data_matrix}{samples are columns, features are rows}
 
 \item{global_na}{globally, what should be treated as NA?}
 
@@ -67,7 +67,7 @@ s2 = s1 + 10
 
 matrix_1 = cbind(s1, s2)
 
-r_1 = ici_kendalltau(t(matrix_1))
+r_1 = ici_kendalltau(matrix_1)
 r_1$cor
 
 #    s1 s2
@@ -83,7 +83,7 @@ s4 = s2
 s4[sample(100, 50)] = NA
 
 matrix_2 = cbind(s3, s4)
-r_2 = ici_kendalltau(t(matrix_2))
+r_2 = ici_kendalltau(matrix_2)
 r_2$cor
 #           s3        s4
 # s3 1.0000000 0.9944616
@@ -91,8 +91,8 @@ r_2$cor
 
 # using include_only
 set.seed(1234)
-x = matrix(rnorm(5000), nrow = 100, ncol = 50)
-rownames(x) = paste0("s", seq(1, nrow(x)))
+x = t(matrix(rnorm(5000), nrow = 100, ncol = 50))
+colnames(x) = paste0("s", seq(1, nrow(x)))
 
 # only calculate correlations of other columns with "s1"
 include_s1 = "s1"

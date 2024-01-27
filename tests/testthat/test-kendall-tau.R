@@ -48,7 +48,7 @@ test_that("matrix kendall works", {
   y = x + 1
   y[1:20] = NA
   
-  test_mat = rbind(x, y)
+  test_mat = cbind(x, y)
   matrix_cor = ici_kendalltau(test_mat, global_na = c(NA),
                                   perspective = "global", scale_max = FALSE)
   expect_equal(ici_kt(x, y, "global")[[1]], matrix_cor$raw[2, 1])
@@ -76,8 +76,8 @@ if (run_long_kendallt) {
 
 test_that("include_only works as intended", {
   set.seed(1234)
-  x = matrix(rnorm(5000), nrow = 100, ncol = 50)
-  rownames(x) = paste0("s", seq(1, nrow(x)))
+  x = matrix(rnorm(5000), nrow = 50, ncol = 100)
+  colnames(x) = paste0("s", seq(1, ncol(x)))
   
   include_test = "s1"
   small_include = ici_kendalltau(x, include_only = include_test)
@@ -99,8 +99,8 @@ test_that("include_only works as intended", {
 
 test_that("completeness works correctly",{
   set.seed(1234)
-  x = matrix(rnorm(5000), nrow = 100, ncol = 50)
-  rownames(x) = paste0("s", seq(1, nrow(x)))
+  x = matrix(rnorm(5000), nrow = 50, ncol = 100, byrow = TRUE)
+  colnames(x) = paste0("s", seq(1, ncol(x)))
   
   x[sample(5000, 40)] = NA
   x_cor = ici_kendalltau(x, perspective = "global", return_matrix = FALSE)
@@ -168,7 +168,7 @@ test_that("big data kendall works", {
   y = x + 1
   y[1:20] = NA
   
-  test_mat = rbind(x, y)
+  test_mat = cbind(x, y)
   matrix_cor = ici_kendalltau(test_mat, global_na = c(NA),
                               perspective = "global", scale_max = FALSE)
   long_cor = ici_kendalltau(test_mat, global_na = c(NA),

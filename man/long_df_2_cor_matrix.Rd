@@ -8,6 +8,8 @@ long_df_2_cor_matrix(long_df, is_square = TRUE)
 }
 \arguments{
 \item{long_df}{the long data.frame}
+
+\item{is_square}{should it be a square matrix?}
 }
 \value{
 matrix
