@@ -14,3 +14,5 @@
 ^\.github$
 ^check_long_long_int\.R$
 ^draft_vignettes\.Rmd$
+^.*\.log$
+^other_stuff$

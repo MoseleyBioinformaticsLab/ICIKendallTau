@@ -15,7 +15,7 @@ ici_kendalltau_ref(
 )
 }
 \arguments{
-\item{data_matrix}{samples are rows, features are columns}
+\item{data_matrix}{samples are columns, features are rows}
 
 \item{global_na}{what values should be treated as missing (NA)?}
 

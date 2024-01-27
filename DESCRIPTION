@@ -1,6 +1,6 @@
 Package: ICIKendallTau
 Title: Calculates information-content-informed Kendall-tau
-Version: 0.3.22
+Version: 1.0.1
 Date: 2024-01-26
 Authors@R: c(person(given = c("Robert", "M"), family = "Flight", role =
         c("aut", "cre"), email = "rflight79@gmail.com", comment =
@@ -16,9 +16,9 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 LinkingTo: Rcpp
-Imports: Rcpp, purrr, utils
+Imports: Rcpp, purrr, utils, stringr
 Suggests: furrr, future, testthat (>= 3.0.0), microbenchmark,
-        rmarkdown, knitr, dplyr
+        rmarkdown, knitr, dplyr, logger
 URL: https://moseleybioinformaticslab.github.io/ICIKendallTau
         https://github.com/moseleybioinformaticslab/ICIKendallTau
 Config/testthat/edition: 3

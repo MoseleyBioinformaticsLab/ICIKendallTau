@@ -83,7 +83,7 @@ s2 = s1 + 10
 
 matrix_1 = cbind(s1, s2)
 
-r_1 = ici_kendalltau(t(matrix_1))
+r_1 = ici_kendalltau(matrix_1)
 r_1$cor
 #>    s1 s2
 #> s1  1  1
@@ -101,7 +101,7 @@ s4 = s2
 s4[sample(100, 50)] = NA
 
 matrix_2 = cbind(s3, s4)
-r_2 = ici_kendalltau(t(matrix_2))
+r_2 = ici_kendalltau(matrix_2)
 r_2$cor
 #>           s3        s4
 #> s3 1.0000000 0.9944616
@@ -136,10 +136,10 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min        lq       mean    median        uq       max
-#>  cor(x, y, method = "kendall") 13379.183 13401.532 13493.0316 13401.829 13595.070 13687.544
-#>         ici_kt(x, y, "global")   271.586   279.007   369.9088   314.779   357.086   627.086
-#>       ici_kt(x2, y2, "global") 15983.902 16484.666 16952.9788 16667.885 17124.932 18503.509
+#>                           expr      min        lq      mean    median        uq       max
+#>  cor(x, y, method = "kendall") 13568.01 13818.243 14017.885 14090.436 14174.800 14437.933
+#>         ici_kt(x, y, "global")   261.84   272.733   304.271   287.571   335.669   363.542
+#>       ici_kt(x2, y2, "global") 14631.30 15614.509 16419.494 16340.620 17646.365 17864.673
 #>  neval
 #>      5
 #>      5
@@ -177,7 +177,7 @@ resources for any multiprocessing engine registered with {future}.
 ``` r
 library(furrr)
 future::plan(multicore, workers = 4)
-r_3 = ici_kendalltau(t(matrix_2))
+r_3 = ici_kendalltau(matrix_2)
 ```
 
 ## Many Many Comparisons
@@ -193,7 +193,7 @@ are converted to a matrix form if requested (the default).s To keep the
 of `ici_kendalltau`.
 
 ``` r
-r_4 = ici_kendalltau(t(matrix_2), return_matrix = FALSE)
+r_4 = ici_kendalltau(matrix_2, return_matrix = FALSE)
 r_4
 #> $cor
 #>   s1 s2 core       raw pvalue   taumax       cor
@@ -202,7 +202,7 @@ r_4
 #> 3 s4 s4    0 1.0000000      0 1.000000 1.0000000
 #> 
 #> $run_time
-#> [1] 0.02034521
+#> [1] 0.0196352
 ```
 
 ## Code of Conduct

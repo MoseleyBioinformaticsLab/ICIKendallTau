@@ -1,8 +1,10 @@
+utils::globalVariables(c("stack", "ind", "values"))
+
 #' convert matrix to data.frame
 #' 
 #' Given a square correlation matrix, converts it to a long data.frame, with three columns.
 #' 
-#' @param cor_matrix the correlation matrix
+#' @param in_matrix the correlation matrix
 #' 
 #' @details The data.frame contains three columns:
 #' * s1: the first entry of comparison
@@ -32,6 +34,7 @@ cor_matrix_2_long_df = function(in_matrix)
 #' Given a long data.frame, converts it to a possibly square correlation matrix
 #' 
 #' @param long_df the long data.frame
+#' @param is_square should it be a square matrix?
 #' 
 #' 
 #' @export
