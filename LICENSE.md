@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2021 Robert M Flight & Hunter NB Moseley
+Copyright (c) Robert M Flight & Hunter NB Moseley
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
