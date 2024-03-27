@@ -2,7 +2,7 @@
 % Please edit documentation in R/kendalltau.R
 \name{pairwise_completeness}
 \alias{pairwise_completeness}
-\title{pairwise completeness}
+\title{Pairwise completeness}
 \usage{
 pairwise_completeness(
   data_matrix,

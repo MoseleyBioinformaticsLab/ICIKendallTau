@@ -1,4 +1,4 @@
-#' information-content-informed kendall tau
+#' Information-content-informed kendall tau
 #' 
 #' Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
 #' all samples.
@@ -95,7 +95,7 @@ missing_either = function(in_x, in_y){
   not_in_one
 }
 
-#' pairwise completeness
+#' Pairwise completeness
 #' 
 #' Calculates the completeness between any two samples using "or", is an
 #' entry missing in either X "or" Y.
@@ -113,15 +113,13 @@ pairwise_completeness = function(data_matrix,
                                 include_only = NULL,
                                 return_matrix = TRUE){
   
-  
-  if (is.null(colnames(data_matrix))) {
-    stop("rownames of data_matrix cannot be NULL!")
-  }
+  check_if_colnames_null(data_matrix)
   
   exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   rownames(exclude_loc) = rownames(data_matrix)
   colnames(exclude_loc) = colnames(data_matrix)
-  
+ 
+  # Review note: consider turning this into a function? 
   # Actual NA and Inf values are special cases, so we do
   # this very specifically.
   if (length(global_na) > 0) {
@@ -147,6 +145,9 @@ pairwise_completeness = function(data_matrix,
   
   n_sample = ncol(exclude_loc)
   
+  # Review: consider changing to requireNamespace("furrr", quietly = TRUE)
+  # Review: consider turning this into a function that returns some 
+  # computation object, "comp$ncore", and "comp$split_fun"
   if ("furrr" %in% utils::installed.packages()) {
     ncore = future::nbrOfWorkers()
     names(ncore) = NULL
@@ -166,7 +167,9 @@ pairwise_completeness = function(data_matrix,
                                  s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
   
   if (!is.null(include_only)) {
-    if (is.character(include_only) || is.numeric(include_only)) {
+    # Review: consider an explaining variable
+    is_character_or_numeric <- is.character(include_only) || is.numeric(include_only)
+    if (is_character_or_numeric) {
       #message("a vector!")
       # Check each of the comparison vectors against the include_only variable
       # This returns TRUE where they match
@@ -185,6 +188,7 @@ pairwise_completeness = function(data_matrix,
         l2_include = (named_comparisons$s1 %in% include_only[[2]]) | (named_comparisons$s2 %in% include_only[[2]])
         named_comparisons = named_comparisons[(l1_include & l2_include), ]
       } else {
+        # Review: move this guard clause up higher in this section
         stop("include_only must either be a single vector, or a list of 2 vectors!")
       }
     }
@@ -240,7 +244,7 @@ pairwise_completeness = function(data_matrix,
 
 }
 
-#' information-content-informed kendall tau
+#' Information-content-informed kendall tau
 #' 
 #' Given a data-matrix, computes the information-theoretic Kendall-tau-b between
 #' all samples.
@@ -344,6 +348,7 @@ ici_kendalltau = function(data_matrix,
     data_matrix = as.matrix(data_matrix)
   }
   
+  # replace error message with check function
   if (is.null(colnames(data_matrix))) {
     stop("colnames of data_matrix cannot be NULL!")
   }
@@ -409,6 +414,8 @@ ici_kendalltau = function(data_matrix,
   named_comparisons = data.frame(s1 = colnames(data_matrix)[pairwise_comparisons[1, ]],
                                  s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
   
+  # Review notes: check if this is the same logic as above
+  # and perhaps change this to a function?
   if (!is.null(include_only)) {
     if (is.character(include_only) || is.numeric(include_only)) {
       #message("a vector!")
@@ -520,6 +527,10 @@ ici_kendalltau = function(data_matrix,
   # max_cor_numerator = choose(n_m, 2) + n_observations * m_value + choose(m_value, 2)
   # max_cor = max_cor_denominator / max_cor_numerator
   
+  # Review - use ifelse?
+  # all_cor$cor <- ifelse(test = scale_max,
+  #                       yes = all_cor$raw / max(all_cor$taumax, na.rm = TRUE),
+  #                       no = all_cor$raw)
   if (scale_max) {
     max_cor = max(all_cor$taumax, na.rm = TRUE)
     all_cor$cor = all_cor$raw / max_cor
