@@ -198,7 +198,7 @@ pairwise_completeness = function(data_matrix,
   n_each = ceiling(n_todo / ncore)
   
   which_core = rep(seq(1, ncore), each = n_each)
-  which_core = which_core[1:nrow(named_comparisons)]
+  which_core = which_core[seq_len(nrow(named_comparisons))]
   
   named_comparisons$core = which_core
   named_comparisons$missingness = Inf
@@ -457,7 +457,7 @@ ici_kendalltau = function(data_matrix,
   n_each = ceiling(n_todo / ncore)
   
   which_core = rep(seq(1, ncore), each = n_each)
-  which_core = which_core[1:nrow(named_comparisons)]
+  which_core = which_core[seq_len(nrow(named_comparisons))]
   
   named_comparisons$core = which_core
   named_comparisons$raw = Inf
@@ -721,7 +721,7 @@ kt_fast = function(x, y = NULL, use = "everything", return_matrix = TRUE)
   n_each = ceiling(n_todo / ncore)
   
   which_core = rep(seq(1, ncore), each = n_each)
-  which_core = which_core[1:nrow(named_comparisons)]
+  which_core = which_core[seq_len(nrow(named_comparisons))]
   
   named_comparisons$core = which_core
   named_comparisons$tau = Inf
