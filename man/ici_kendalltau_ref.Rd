@@ -2,7 +2,7 @@
 % Please edit documentation in R/kendalltau.R
 \name{ici_kendalltau_ref}
 \alias{ici_kendalltau_ref}
-\title{information-content-informed kendall tau}
+\title{Information-content-informed kendall tau}
 \usage{
 ici_kendalltau_ref(
   data_matrix,
