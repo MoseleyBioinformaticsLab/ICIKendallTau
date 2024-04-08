@@ -20,7 +20,7 @@ test_that("test_left_censorship works", {
   sample_indices = withr::with_seed(1234, sample(n_sample, n_miss, replace = TRUE))
   
   zero_dataset = noisy_dataset
-  for (i_loc in seq_len(all_indices)) {
+  for (i_loc in seq_along(all_indices)) {
     zero_dataset[all_indices[i_loc], sample_indices[i_loc]] = 0
   }
   
