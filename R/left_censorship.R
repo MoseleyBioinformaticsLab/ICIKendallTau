@@ -1,0 +1,119 @@
+#' Test for left censorship
+#' 
+#' Does a binomial test to check if the most likely cause of missing values
+#' is due to values being below the limit of detection, or coming from a 
+#' left-censored distribution.
+#' 
+#' @param in_data matrix or data.frame of numeric data
+#' @param sample_classes which samples are in which class
+#' @param global_na what represents zero or missing?
+#' 
+#' @details
+#' For each feature that is missing in a group of samples, we save as a possibility
+#' to test. For each sample, we calculate the median value with any missing values
+#' removed. Each feature that had a missing value, we test whether the remaining 
+#' non-missing values are below the sample median for those samples where the 
+#' feature is non-missing. A binomial test considers the total number of features
+#' instances (minus missing values) as the number of trials, and the number of
+#' of features below the sample medians as the number of successes.
+#' 
+#' 
+#' @export
+#' @return list of trials / successes, and binom.test result
+test_left_censorship = function(in_data, sample_classes = NULL, global_na = c(0, NA))
+{
+  if (is.null(sample_classes)) {
+    sample_classes = rep("A", ncol(in_data))
+  }
+  
+  split_indices = split(seq_len(ncol(in_data)), sample_classes)
+  in_data_missing = setup_missing_matrix(in_data, global_na)
+  
+  # split the dataset by group
+  split_counts = purrr::imap(split_indices, \(in_split, split_id){
+    # in_split = split_indices[[1]]
+    
+    # grab the group we want to work with
+    split_missing = in_data_missing[, in_split, drop = FALSE]
+    
+    # count the number of missing samples for each feature,
+    # and keep those that have at least one
+    n_miss = rowSums(is.na(split_missing))
+    keep_miss = split_missing[n_miss > 0, ]
+    
+    # get sample medians
+    sample_medians = calculate_matrix_medians(split_missing, use = "col", na.rm = TRUE)
+    
+    # turn the medians into a matrix to make life easier
+    median_matrix = matrix(sample_medians, nrow = nrow(keep_miss),
+                           ncol = ncol(keep_miss), byrow = TRUE)
+    # do the comparison
+    keep_miss_updown = keep_miss < median_matrix
+    
+    # count how many trials we ran, and how many successes we have
+    all_trials = (nrow(keep_miss_updown) * ncol(keep_miss_updown)) - sum(is.na(keep_miss_updown))
+    all_success = sum(keep_miss_updown, na.rm = TRUE)
+    
+    data.frame(trials = all_trials, success = all_success, class = split_id)
+  }) |>
+    purrr::list_rbind()
+  
+  total_trials = sum(split_counts$trials)
+  total_success = sum(split_counts$success)
+  
+  binom_res = binom.test(total_success, total_trials, p = 0.5, alternative = "greater")
+  return(list(values = split_counts,
+              binomial_test = binom_res))
+}
+
+calculate_matrix_medians = function(in_matrix, use = "col", ...)
+{
+  if (use %in% "row") {
+    in_matrix = t(in_matrix)
+  } 
+  out_medians = purrr::map_dbl(seq_len(ncol(in_matrix)), \(in_col){
+    median(in_matrix[, in_col], ...)
+  })
+  return(out_medians)
+}
+
+setup_missing_matrix = function(data_matrix, global_na)
+{
+  exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
+  if (length(global_na) > 0) {
+    if (any(is.na(global_na))) {
+      exclude_loc[is.na(data_matrix)] = TRUE
+      global_na = global_na[!is.na(global_na)]
+    }
+    if (any(is.infinite(global_na))) {
+      exclude_loc[is.infinite(data_matrix)] = TRUE
+      global_na = global_na[!is.infinite(global_na)]
+    }
+  }
+  if (length(global_na) > 0) {
+    for (ival in global_na) {
+      exclude_loc[data_matrix == ival] = TRUE
+    }
+  }
+  out_data = data_matrix
+  out_data[exclude_loc] = NA
+  out_data
+}
+
+add_uniform_noise = function(n_rep, value, sd, use_zero = FALSE){
+  n_value = length(value)
+  
+  n_sd = n_rep * n_value
+  
+  out_sd = rnorm(n_sd, 0, sd)
+  out_sd = matrix(out_sd, nrow = n_value, ncol = n_rep)
+  
+  if (!use_zero){
+    tmp_value = matrix(value, nrow = n_value, ncol = n_rep, byrow = FALSE)
+    out_value = tmp_value + out_sd
+  } else {
+    out_value = out_sd
+  }
+  
+  return(out_value)
+}
