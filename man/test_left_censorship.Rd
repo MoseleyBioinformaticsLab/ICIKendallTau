@@ -14,7 +14,7 @@ test_left_censorship(in_data, sample_classes = NULL, global_na = c(0, NA))
 \item{global_na}{what represents zero or missing?}
 }
 \value{
-list of trials / successes, and binom.test result
+data.frame of trials / successes, and binom.test result
 }
 \description{
 Does a binomial test to check if the most likely cause of missing values
@@ -29,4 +29,15 @@ non-missing values are below the sample median for those samples where the
 feature is non-missing. A binomial test considers the total number of features
 instances (minus missing values) as the number of trials, and the number of
 of features below the sample medians as the number of successes.
+}
+\examples{
+# this example has 80\% missing due to left-censorship
+data(missing_dataset)
+missingness = test_left_censorship(missing_dataset)
+missingness$values
+missingness$binomial_test
+
+}
+\seealso{
+\link{vignette("Testing for Left Censorship", package = "ICIKendallTau")}
 }

@@ -16,21 +16,21 @@ ici_kendalltau(
 )
 }
 \arguments{
-\item{data_matrix}{samples are columns, features are rows}
+\item{data_matrix}{matrix or data.frame of values, samples are columns, features are rows}
 
-\item{global_na}{globally, what should be treated as NA?}
+\item{global_na}{numeric vector that defines globally, what should be treated as NA?}
 
-\item{perspective}{how to treat missing data in denominator and ties, see details}
+\item{perspective}{how to treat missing data in denominator and ties, character}
 
-\item{scale_max}{should everything be scaled compared to the maximum correlation?}
+\item{scale_max}{logical, should everything be scaled compared to the maximum correlation?}
 
-\item{diag_good}{should the diagonal entries reflect how many entries in the sample were "good"?}
+\item{diag_good}{logical, should the diagonal entries reflect how many entries in the sample were "good"?}
 
 \item{include_only}{only run the correlations that include the members (as a vector) or combinations (as a list or data.frame)}
 
-\item{check_timing}{should we try to estimate run time for full dataset? (default is FALSE)}
+\item{check_timing}{logical to determine should we try to estimate run time for full dataset? (default is FALSE)}
 
-\item{return_matrix}{should the data.frame or matrix result be returned?}
+\item{return_matrix}{logical, should the data.frame or matrix result be returned?}
 }
 \value{
 list with cor, raw, pval, taumax

@@ -6,7 +6,7 @@ test_that("test_left_censorship works", {
   test_dataset = withr::with_seed(1234, rlnorm(n_feature, 10, 1))
   test_dataset = sort(test_dataset)
   
-  noisy_dataset = withr::with_seed(1234, add_uniform_noise(n_sample, log(test_dataset), 0.1))
+  noisy_dataset = withr::with_seed(1234, add_uniform_noise(log(test_dataset), n_sample, 0.1))
   sample_medians = calculate_matrix_medians(noisy_dataset)
   
   # check that we get the counts we expect
