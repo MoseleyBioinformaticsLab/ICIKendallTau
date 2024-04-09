@@ -51,7 +51,7 @@ test_left_censorship = function(in_data,
     # count the number of missing samples for each feature,
     # and keep those that have at least one
     n_miss = rowSums(is.na(split_missing))
-    keep_miss = split_missing[n_miss > 0, ]
+    keep_miss = split_missing[n_miss > 0, , drop = FALSE]
     
     # get sample medians
     sample_medians = calculate_matrix_medians(split_missing, use = "col", na.rm = TRUE)
