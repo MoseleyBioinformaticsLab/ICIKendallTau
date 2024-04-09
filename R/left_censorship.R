@@ -51,6 +51,12 @@ test_left_censorship = function(in_data,
     # count the number of missing samples for each feature,
     # and keep those that have at least one
     n_miss = rowSums(is.na(split_missing))
+    
+    if (sum(n_miss) == 0) {
+      out_res = data.frame(trials = 0, success = 0, class = split_id)
+      return(out_res)
+    }
+    
     keep_miss = split_missing[n_miss > 0, , drop = FALSE]
     
     # get sample medians
@@ -66,14 +72,21 @@ test_left_censorship = function(in_data,
     all_trials = (nrow(keep_miss_updown) * ncol(keep_miss_updown)) - sum(is.na(keep_miss_updown))
     all_success = sum(keep_miss_updown, na.rm = TRUE)
     
-    data.frame(trials = all_trials, success = all_success, class = split_id)
+    out_res = data.frame(trials = all_trials, success = all_success, class = split_id)
+    return(out_res)
   }) |>
     purrr::list_rbind()
+  
   
   total_trials = sum(split_counts$trials)
   total_success = sum(split_counts$success)
   
   binom_res = stats::binom.test(total_success, total_trials, p = 0.5, alternative = "greater")
+  
+  if (is.null(sample_classes)) {
+    total_success$class = NULL
+  }
+  
   return(list(values = split_counts,
               binomial_test = binom_res))
 }
