@@ -1,258 +1,18 @@
 #' information-content-informed kendall tau
 #' 
-#' Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
-#' all samples.
-#' 
-#' @param data_matrix samples are columns, features are rows
-#' @param global_na what values should be treated as missing (NA)?
-#' @param zero_value what is the actual zero value?
-#' @param perspective how to treat missing data in denominator and ties, see details
-#' @param scale_max should everything be scaled compared to the maximum correlation?
-#' @param diag_good should the diagonal entries reflect how many entries in the sample were "good"?
-#' @param progress should progress be displayed.
-#' 
-#' @details For more details, see the ICI-Kendall-tau vignette:
-#'   \href{../doc/ici-kendalltau.html}{\code{vignette("ici-kendalltau", package = "ICIKendallTau")}}
-#' 
-#' @return numeric
-#' @keywords internal
-#' 
-ici_kendalltau_ref = function(data_matrix, 
-                             global_na = c(NA, Inf, 0),
-                             zero_value = 0, 
-                             perspective = "global",
-                             scale_max = TRUE,
-                             diag_good = TRUE,
-                             progress = FALSE){
-  
-  
-  exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
-  
-  # Actual NA and Inf values are special cases, so we do
-  # this very specifically.
-  if (length(global_na) > 0) {
-    if (any(is.na(global_na))) {
-      exclude_loc[is.na(data_matrix)] = TRUE
-      global_na = global_na[!is.na(global_na)]
-    }
-    
-    if (any(is.infinite(global_na))) {
-      exclude_loc[is.infinite(data_matrix)] = TRUE
-      global_na = global_na[!is.infinite(global_na)]
-    }
-    
-  }
-  
-  # now that we've done the NA and Inf values, we can go
-  # ahead and take care of the rest.
-  if (length(global_na) > 0) {
-    for (ival in global_na) {
-      exclude_loc[data_matrix == ival] = TRUE
-    }
-  }
-  
-  
-  exclude_data = data_matrix
-  exclude_data[exclude_loc] = NA
-  # set everything to NA and let R take care of it
-  
-  cor_matrix = matrix(NA, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
-  rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
-  ntotal = 0
-  for (icol in seq(1, ncol(exclude_data))) {
-    for (jcol in seq(icol, ncol(exclude_data))) {
-      cor_matrix[icol, jcol] = cor_matrix[jcol, icol] = ici_kt_pairs(exclude_data[, icol], exclude_data[, jcol], perspective = perspective)
-      # ntotal = ntotal + 1
-      # message(ntotal)
-    }
-  }
-  
-  # calculate the max-cor value for use in scaling across multiple comparisons
-  n_observations = nrow(exclude_data)
-  n_na = sort(colSums(exclude_loc))
-  m_value = floor(sum(n_na[1:2]) / 2)
-  n_m = n_observations - m_value
-  max_cor_denominator = choose(n_m, 2) + n_observations * m_value
-  max_cor_numerator = choose(n_m, 2) + n_observations * m_value + choose(m_value, 2)
-  max_cor = max_cor_denominator / max_cor_numerator
-  
-  if (scale_max) {
-    out_matrix = cor_matrix / max_cor
-  } else {
-    out_matrix = cor_matrix
-  }
-  
-  if (diag_good) {
-    n_good = colSums(!exclude_loc)
-    diag(out_matrix) = n_good / max(n_good)
-  }
-  
-  return(list(cor = out_matrix, raw = cor_matrix, keep = t(!exclude_loc)))
-}
-
-missing_either = function(in_x, in_y){
-  not_in_one = sum(in_x | in_y)
-  not_in_one
-}
-
-#' pairwise completeness
-#' 
-#' Calculates the completeness between any two samples using "or", is an
-#' entry missing in either X "or" Y.
-#' 
-#' @param data_matrix samples are columns, features are rows
-#' @param global_na globally, what should be treated as NA?
-#' @param include_only is there certain comparisons to do?
-#' @param return_matrix should the matrix or data.frame be returned?
-#' 
-#' @export
-#' 
-#' @return matrix of degree of completeness
-pairwise_completeness = function(data_matrix,
-                                global_na = c(NA, Inf, 0),
-                                include_only = NULL,
-                                return_matrix = TRUE){
-  
-  
-  if (is.null(colnames(data_matrix))) {
-    stop("rownames of data_matrix cannot be NULL!")
-  }
-  
-  exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
-  rownames(exclude_loc) = rownames(data_matrix)
-  colnames(exclude_loc) = colnames(data_matrix)
-  
-  # Actual NA and Inf values are special cases, so we do
-  # this very specifically.
-  if (length(global_na) > 0) {
-    if (any(is.na(global_na))) {
-      exclude_loc[is.na(data_matrix)] = TRUE
-      global_na = global_na[!is.na(global_na)]
-    }
-    
-    if (any(is.infinite(global_na))) {
-      exclude_loc[is.infinite(data_matrix)] = TRUE
-      global_na = global_na[!is.infinite(global_na)]
-    }
-    
-  }
-  
-  # now that we've done the NA and Inf values, we can go
-  # ahead and take care of the rest.
-  if (length(global_na) > 0) {
-    for (ival in global_na) {
-      exclude_loc[data_matrix == ival] = TRUE
-    }
-  }
-  
-  n_sample = ncol(exclude_loc)
-  
-  if ("furrr" %in% utils::installed.packages()) {
-    ncore = future::nbrOfWorkers()
-    names(ncore) = NULL
-    split_fun = furrr::future_map
-  } else {
-    ncore = 1
-    split_fun = purrr::map
-  }
-  
-  
-  pairwise_comparisons = utils::combn(n_sample, 2)
-  
-  extra_comparisons = matrix(rep(seq(1, n_sample), each = 2), nrow = 2, ncol = n_sample, byrow = FALSE)
-  pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
-  
-  named_comparisons = data.frame(s1 = colnames(data_matrix)[pairwise_comparisons[1, ]],
-                                 s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
-  
-  if (!is.null(include_only)) {
-    if (is.character(include_only) || is.numeric(include_only)) {
-      #message("a vector!")
-      # Check each of the comparison vectors against the include_only variable
-      # This returns TRUE where they match
-      # Use OR to make sure we return everything that should be returned
-      s1_include = named_comparisons$s1 %in% include_only
-      s2_include = named_comparisons$s2 %in% include_only
-      named_comparisons = named_comparisons[(s1_include | s2_include), ]
-    } else if (is.list(include_only)) {
-      if (length(include_only) == 2) {
-        #message("a list!")
-        # In this case the include_only is a list of things, so we have to check both
-        # of the sets against each of the lists. Again, this returns TRUE where
-        # they match. Because we want the things where they
-        # are both TRUE (assuming l1[1] goes with l2[1]), we use the AND at the end.
-        l1_include = (named_comparisons$s1 %in% include_only[[1]]) | (named_comparisons$s2 %in% include_only[[1]])
-        l2_include = (named_comparisons$s1 %in% include_only[[2]]) | (named_comparisons$s2 %in% include_only[[2]])
-        named_comparisons = named_comparisons[(l1_include & l2_include), ]
-      } else {
-        stop("include_only must either be a single vector, or a list of 2 vectors!")
-      }
-    }
-  }
-  
-  if (nrow(named_comparisons) == 0) {
-    stop("nrow(named_comparisons) == 0, did you create include_only correctly?")
-  }
-  
-  n_todo = nrow(named_comparisons)
-  n_each = ceiling(n_todo / ncore)
-  
-  which_core = rep(seq(1, ncore), each = n_each)
-  which_core = which_core[1:nrow(named_comparisons)]
-  
-  named_comparisons$core = which_core
-  named_comparisons$missingness = Inf
-  named_comparisons$completeness = Inf
-  
-  split_comparisons = split(named_comparisons, named_comparisons$core)
-  do_split = function(do_comparisons, exclude_loc) {
-    #seq_range = seq(in_range[1], in_range[2])
-    #print(seq_range)
-    missingness = vector("numeric", nrow(do_comparisons))
-    completeness = vector("numeric", nrow(do_comparisons))
-    for (irow in seq(1, nrow(do_comparisons))) {
-      iloc = do_comparisons[irow, 1]
-      jloc = do_comparisons[irow, 2]
-      missingness[irow] = missing_either(exclude_loc[, iloc], exclude_loc[, jloc])
-    }
-    completeness = 1 - (missingness / nrow(exclude_loc))
-    do_comparisons$missingness = missingness
-    do_comparisons$completeness = completeness
-    do_comparisons
-  }
-  
-  split_missing = split_fun(split_comparisons, do_split, exclude_loc)
-  
-  all_missing = purrr::list_rbind(split_missing)
-  rownames(all_missing) = NULL
-  
-  if (return_matrix) {
-    completeness_matrix = matrix(0, nrow = ncol(exclude_loc), ncol = ncol(exclude_loc))
-    rownames(completeness_matrix) = colnames(completeness_matrix) = colnames(exclude_loc)
-    
-    completeness_matrix[cbind(all_missing$s1, all_missing$s2)] = all_missing$completeness
-    completeness_matrix[cbind(all_missing$s2, all_missing$s1)] = all_missing$completeness
-    
-    return(completeness_matrix)
-  } else {
-    return(all_missing)
-  }
-
-}
-
-#' information-content-informed kendall tau
-#' 
 #' Given a data-matrix, computes the information-theoretic Kendall-tau-b between
 #' all samples.
 #' 
-#' @param data_matrix samples are columns, features are rows
-#' @param global_na globally, what should be treated as NA?
-#' @param perspective how to treat missing data in denominator and ties, see details
-#' @param scale_max should everything be scaled compared to the maximum correlation?
-#' @param diag_good should the diagonal entries reflect how many entries in the sample were "good"?
+#' @param data_matrix matrix or data.frame of values, samples are columns, features are rows
+#' @param global_na numeric vector that defines globally, what should be treated as NA?
+#' @param perspective how to treat missing data in denominator and ties, character
+#' @param scale_max logical, should everything be scaled compared to the maximum correlation?
+#' @param diag_good logical, should the diagonal entries reflect how many entries in the sample were "good"?
 #' @param include_only only run the correlations that include the members (as a vector) or combinations (as a list or data.frame)
-#' @param check_timing should we try to estimate run time for full dataset? (default is FALSE)
-#' @param return_matrix should the data.frame or matrix result be returned?
+#' @param check_timing logical to determine should we try to estimate run time for full dataset? (default is FALSE)
+#' @param return_matrix logical, should the data.frame or matrix result be returned?
+#' 
+#' @seealso [vignette("ici-kendalltau", package = "ICIKendallTau")] [test_left_censorship()]
 #' 
 #' @details For more details, see the ICI-Kendall-tau vignette 
 #' 
@@ -329,16 +89,15 @@ pairwise_completeness = function(data_matrix,
 #' @export
 #' 
 ici_kendalltau = function(data_matrix, 
-                             global_na = c(NA, Inf, 0),
-                             perspective = "global",
-                             scale_max = TRUE,
-                             diag_good = TRUE,
-                             include_only = NULL,
-                             check_timing = FALSE,
-                             return_matrix = TRUE){
+                          global_na = c(NA, Inf, 0),
+                          perspective = "global",
+                          scale_max = TRUE,
+                          diag_good = TRUE,
+                          include_only = NULL,
+                          check_timing = FALSE,
+                          return_matrix = TRUE){
   
   do_log_memory = get("memory", envir = icikt_logger)
-  exclude_loc = matrix(FALSE, nrow = nrow(data_matrix), ncol = ncol(data_matrix))
   
   if (is.data.frame(data_matrix)) {
     data_matrix = as.matrix(data_matrix)
@@ -350,34 +109,7 @@ ici_kendalltau = function(data_matrix,
   
   log_message("Processing missing values ...\n")
   
-  # Actual NA and Inf values are special cases, so we do
-  # this very specifically.
-  if (length(global_na) > 0) {
-    if (any(is.na(global_na))) {
-      exclude_loc[is.na(data_matrix)] = TRUE
-      global_na = global_na[!is.na(global_na)]
-    }
-    
-    if (any(is.infinite(global_na))) {
-      exclude_loc[is.infinite(data_matrix)] = TRUE
-      global_na = global_na[!is.infinite(global_na)]
-    }
-    
-  }
-  
-  # now that we've done the NA and Inf values, we can go
-  # ahead and take care of the rest.
-  if (length(global_na) > 0) {
-    for (ival in global_na) {
-      exclude_loc[data_matrix == ival] = TRUE
-    }
-  }
-
-  # eventually we should be able to handle sample specific and 
-  # feature specific values as well
-  
-  # after we've figured out what should be excluded, we actually set it to NA
-  # and let the icikt code worry about it
+  exclude_loc = setup_missing_matrix(data_matrix, global_na)
   exclude_data = data_matrix
   exclude_data[exclude_loc] = NA
   n_sample = ncol(exclude_data)
@@ -505,7 +237,7 @@ ici_kendalltau = function(data_matrix,
   split_cor = split_fun(split_comparisons, do_split, exclude_data, perspective, do_log_memory)
   t2 = Sys.time()
   t_diff = as.numeric(difftime(t2, t1, units = "secs"))
-
+  
   # put all the results back together again into one data.frame
   log_message("Recombining results ...")
   all_cor = purrr::list_rbind(split_cor)
@@ -573,45 +305,6 @@ ici_kendalltau = function(data_matrix,
   }
 }
 
-
-check_icikt_timing = function(exclude_data, tmp_pairwise, perspective, n_todo, ncore){
-  t_start = Sys.time()
-  for (icol in seq_len(ncol(tmp_pairwise))) {
-    iloc = tmp_pairwise[1, icol]
-    jloc = tmp_pairwise[2, icol]
-    tmp_val = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
-  }
-  t_stop = Sys.time()
-  t_total = as.numeric(difftime(t_stop, t_start, units = "secs"))
-  n_comp = ncol(tmp_pairwise)
-  
-  t_each = t_total / n_comp
-  
-  t_theoretical = t_each * n_todo
-  t_cores = t_theoretical / ncore
-  
-  data.frame(which =
-               c("n_tested",
-                 "n_todo",
-                 "time_tested",
-                 "time_single",
-                 "time_all",
-                 "time_across_cores",
-                 "time_minutes",
-                 "time_hours",
-                 "time_days"),
-             value = c(n_comp,
-                n_todo,
-                t_total,
-                t_each,
-                t_theoretical,
-                t_cores,
-                t_cores / 60,
-                t_cores / (60 * 60),
-                t_cores / (60 * 60 * 60)))
-  
-}
-
 #' fast kendall tau
 #' 
 #' Uses the underlying c++ implementation of `ici_kt` to provide a fast version
@@ -639,7 +332,7 @@ kt_fast = function(x, y = NULL, use = "everything", return_matrix = TRUE)
   do_log_memory = get("memory", envir = icikt_logger)
   # checking types
   na_method = match.arg(use, c("all.obs", "complete.obs", "pairwise.complete.obs", 
-                             "everything", "na.or.complete"))
+                               "everything", "na.or.complete"))
   
   #message(na_method)
   if (na_method %in% "na.or.complete") {
@@ -648,19 +341,19 @@ kt_fast = function(x, y = NULL, use = "everything", return_matrix = TRUE)
   if (is.data.frame(y)) {
     y = as.matrix(y)
   } 
-    
+  
   if (is.data.frame(x)) {
     x = as.matrix(x)
   } 
-    
+  
   if (!is.matrix(x) && is.null(y)) {
     stop("supply both 'x' and 'y' or a matrix-like 'x'")
   } 
-    
+  
   if (!(is.numeric(x) || is.logical(x))) {
     stop("'x' must be numeric")
   }
-    
+  
   if (!is.null(y)) {
     if (!(is.numeric(y) || is.logical(y))) 
       stop("'y' must be numeric")
@@ -830,3 +523,170 @@ kt_fast = function(x, y = NULL, use = "everything", return_matrix = TRUE)
   }
   
 }
+
+
+#' pairwise completeness
+#' 
+#' Calculates the completeness between any two samples using "or", is an
+#' entry missing in either X "or" Y.
+#' 
+#' @param data_matrix samples are columns, features are rows
+#' @param global_na globally, what should be treated as NA?
+#' @param include_only is there certain comparisons to do?
+#' @param return_matrix should the matrix or data.frame be returned?
+#' 
+#' @export
+#' 
+#' @return matrix of degree of completeness
+pairwise_completeness = function(data_matrix,
+                                global_na = c(NA, Inf, 0),
+                                include_only = NULL,
+                                return_matrix = TRUE){
+  
+  
+  if (is.null(colnames(data_matrix))) {
+    stop("rownames of data_matrix cannot be NULL!")
+  }
+  
+  exclude_loc = setup_missing_matrix(data_matrix, global_na)
+  
+  n_sample = ncol(exclude_loc)
+  
+  if ("furrr" %in% utils::installed.packages()) {
+    ncore = future::nbrOfWorkers()
+    names(ncore) = NULL
+    split_fun = furrr::future_map
+  } else {
+    ncore = 1
+    split_fun = purrr::map
+  }
+  
+  
+  pairwise_comparisons = utils::combn(n_sample, 2)
+  
+  extra_comparisons = matrix(rep(seq(1, n_sample), each = 2), nrow = 2, ncol = n_sample, byrow = FALSE)
+  pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
+  
+  named_comparisons = data.frame(s1 = colnames(data_matrix)[pairwise_comparisons[1, ]],
+                                 s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
+  
+  if (!is.null(include_only)) {
+    if (is.character(include_only) || is.numeric(include_only)) {
+      #message("a vector!")
+      # Check each of the comparison vectors against the include_only variable
+      # This returns TRUE where they match
+      # Use OR to make sure we return everything that should be returned
+      s1_include = named_comparisons$s1 %in% include_only
+      s2_include = named_comparisons$s2 %in% include_only
+      named_comparisons = named_comparisons[(s1_include | s2_include), ]
+    } else if (is.list(include_only)) {
+      if (length(include_only) == 2) {
+        #message("a list!")
+        # In this case the include_only is a list of things, so we have to check both
+        # of the sets against each of the lists. Again, this returns TRUE where
+        # they match. Because we want the things where they
+        # are both TRUE (assuming l1[1] goes with l2[1]), we use the AND at the end.
+        l1_include = (named_comparisons$s1 %in% include_only[[1]]) | (named_comparisons$s2 %in% include_only[[1]])
+        l2_include = (named_comparisons$s1 %in% include_only[[2]]) | (named_comparisons$s2 %in% include_only[[2]])
+        named_comparisons = named_comparisons[(l1_include & l2_include), ]
+      } else {
+        stop("include_only must either be a single vector, or a list of 2 vectors!")
+      }
+    }
+  }
+  
+  if (nrow(named_comparisons) == 0) {
+    stop("nrow(named_comparisons) == 0, did you create include_only correctly?")
+  }
+  
+  n_todo = nrow(named_comparisons)
+  n_each = ceiling(n_todo / ncore)
+  
+  which_core = rep(seq(1, ncore), each = n_each)
+  which_core = which_core[1:nrow(named_comparisons)]
+  
+  named_comparisons$core = which_core
+  named_comparisons$missingness = Inf
+  named_comparisons$completeness = Inf
+  
+  split_comparisons = split(named_comparisons, named_comparisons$core)
+  do_split = function(do_comparisons, exclude_loc) {
+    #seq_range = seq(in_range[1], in_range[2])
+    #print(seq_range)
+    missingness = vector("numeric", nrow(do_comparisons))
+    completeness = vector("numeric", nrow(do_comparisons))
+    for (irow in seq(1, nrow(do_comparisons))) {
+      iloc = do_comparisons[irow, 1]
+      jloc = do_comparisons[irow, 2]
+      missingness[irow] = missing_either(exclude_loc[, iloc], exclude_loc[, jloc])
+    }
+    completeness = 1 - (missingness / nrow(exclude_loc))
+    do_comparisons$missingness = missingness
+    do_comparisons$completeness = completeness
+    do_comparisons
+  }
+  
+  split_missing = split_fun(split_comparisons, do_split, exclude_loc)
+  
+  all_missing = purrr::list_rbind(split_missing)
+  rownames(all_missing) = NULL
+  
+  if (return_matrix) {
+    completeness_matrix = matrix(0, nrow = ncol(exclude_loc), ncol = ncol(exclude_loc))
+    rownames(completeness_matrix) = colnames(completeness_matrix) = colnames(exclude_loc)
+    
+    completeness_matrix[cbind(all_missing$s1, all_missing$s2)] = all_missing$completeness
+    completeness_matrix[cbind(all_missing$s2, all_missing$s1)] = all_missing$completeness
+    
+    return(completeness_matrix)
+  } else {
+    return(all_missing)
+  }
+
+}
+
+missing_either = function(in_x, in_y){
+  not_in_one = sum(in_x | in_y)
+  not_in_one
+}
+
+
+
+check_icikt_timing = function(exclude_data, tmp_pairwise, perspective, n_todo, ncore){
+  t_start = Sys.time()
+  for (icol in seq_len(ncol(tmp_pairwise))) {
+    iloc = tmp_pairwise[1, icol]
+    jloc = tmp_pairwise[2, icol]
+    tmp_val = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
+  }
+  t_stop = Sys.time()
+  t_total = as.numeric(difftime(t_stop, t_start, units = "secs"))
+  n_comp = ncol(tmp_pairwise)
+  
+  t_each = t_total / n_comp
+  
+  t_theoretical = t_each * n_todo
+  t_cores = t_theoretical / ncore
+  
+  data.frame(which =
+               c("n_tested",
+                 "n_todo",
+                 "time_tested",
+                 "time_single",
+                 "time_all",
+                 "time_across_cores",
+                 "time_minutes",
+                 "time_hours",
+                 "time_days"),
+             value = c(n_comp,
+                n_todo,
+                t_total,
+                t_each,
+                t_theoretical,
+                t_cores,
+                t_cores / 60,
+                t_cores / (60 * 60),
+                t_cores / (60 * 60 * 60)))
+  
+}
+
