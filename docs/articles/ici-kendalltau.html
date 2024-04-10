@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,6 +42,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
+    <a class="dropdown-item" href="../articles/testing-for-left-censorship.html">Testing for Left Censorship</a>
   </div>
 </li>
 <li class="nav-item">
@@ -83,7 +84,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau" class="external-link">ICIKendallTau</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/" class="external-link">ICIKendallTau</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="problem">Problem<a class="anchor" aria-label="anchor" href="#problem"></a>
 </h2>
@@ -111,8 +112,8 @@ the detection limit.</li>
 Tau Correlation coefficient</a> calculates correlation based on the
 number of concordant and discordant pairs:</p>
 <ul>
-<li><span class="math inline">\(\tau = \frac{ | pairs_{concordant} | - |
-pairs_{discordant} |}{\binom{n}{2}}\)</span></li>
+<li><span class="math inline">\(\tau = \frac{ | pairs_{concordant}  | -
+| pairs_{discordant}  |}{\binom{n}{2}}\)</span></li>
 <li>A pair are two x-y data points.</li>
 <li>A concordant pair has the following classical definition:
 <ul>
@@ -295,6 +296,10 @@ correlation between X and Y vectors.
 </ul>
 </li>
 </ul>
+<p>We’ve also included a function for testing if the missingness in your
+data comes from left-censorship, <code>test_left_censorship</code>. We
+walk through creating example data and testing it in the vignette <a href="vignette(%22Testing%20for%20Left%20Censorship%22,%20package%20=%20%22ICIKendallTau%22)">Testing
+for Left Censorship</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="implementation">Implementation<a class="anchor" aria-label="anchor" href="#implementation"></a>
@@ -323,12 +328,12 @@ use the double merge-sort algorithm, translating {scipy::
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
-<span><span class="co">#&gt;                           expr       min        lq       mean    median</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 12781.169 13088.783 13795.1100 13290.629</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   261.498   304.518   335.7076   305.834</span></span>
+<span><span class="co">#&gt;                           expr       min       lq       mean    median</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 11716.612 12670.75 13230.1676 13124.263</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   231.868   233.36   276.8498   235.229</span></span>
 <span><span class="co">#&gt;         uq       max neval</span></span>
-<span><span class="co">#&gt;  14382.628 15432.341     5</span></span>
-<span><span class="co">#&gt;    327.014   479.674     5</span></span></code></pre></div>
+<span><span class="co">#&gt;  13485.116 15154.096     5</span></span>
+<span><span class="co">#&gt;    268.721   415.071     5</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
@@ -377,7 +382,7 @@ for storage. They are also inefficient, as both the lower and upper
 triangular components are stored. An alternative storage format is as a
 <code>data.frame</code>, where there is a single row for each comparison
 performed. This is actually how the results are stored internally, and
-then they are converted to a matrix form if requested (the default).s To
+then they are converted to a matrix form if requested (the default). To
 keep the <code>data.frame</code> output, add the argument
 <code>return_matrix=FALSE</code> to the call of
 <code>ici_kendalltau</code>.</p>

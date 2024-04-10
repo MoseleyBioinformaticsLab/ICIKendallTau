@@ -23,8 +23,8 @@ Uses the underlying c++ implementation of \code{ici_kt} to provide a fast versio
 of Kendall-tau correlation.
 }
 \details{
-Although the interface is \emph{mostly} identical to the built-in \code{stats::cor} method,
-there are some differences.
+Although the interface is \emph{mostly} identical to the built-in
+\code{\link[stats:cor]{stats::cor()}} method, there are some differences.
 \itemize{
 \item if providing both \code{x} and \code{y}, it is assumed they are both
 single vectors.

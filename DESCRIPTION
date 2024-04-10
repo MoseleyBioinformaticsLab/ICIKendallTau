@@ -1,24 +1,44 @@
 Package: ICIKendallTau
 Title: Calculates information-content-informed Kendall-tau
-Version: 1.0.5
-Date: 2024-04-08
-Authors@R: c(person(given = c("Robert", "M"), family = "Flight", role =
-        c("aut", "cre"), email = "rflight79@gmail.com", comment =
-        c(ORCID = "0000-0001-8141-7788")), person(given = c("Hunter",
-        "NB"), family = "Moseley", role = "aut", comment = c(ORCID =
-        "0000-0003-3995-5368")))
+Version: 1.1.0
+Authors@R: c(
+    person(
+      given = c("Robert", "M"), 
+      family = "Flight", 
+      role = c("aut", "cre"), 
+      email = "rflight79@gmail.com", 
+      comment = c(ORCID = "0000-0001-8141-7788")), 
+    person(
+      given = c("Hunter", "NB"), 
+      family = "Moseley", 
+      role = "aut", 
+      comment = c(ORCID = "0000-0003-3995-5368")))
 Description: Provides functions for calculating
         information-content-informed Kendall-tau. This version of
         Kendall-tau allows for the inclusion of missing values.
 VignetteBuilder: knitr
+LazyData: true
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 LinkingTo: Rcpp
-Imports: Rcpp, purrr, utils, stringr
-Suggests: furrr, future, testthat (>= 3.0.0), microbenchmark,
-        rmarkdown, knitr, dplyr, logger
-URL: https://moseleybioinformaticslab.github.io/ICIKendallTau
-        https://github.com/moseleybioinformaticslab/ICIKendallTau
+Imports: Rcpp, 
+         purrr, 
+         utils, 
+         stringr,
+         stats
+Suggests: furrr, 
+          future, 
+          testthat (>= 3.0.0), 
+          microbenchmark,
+          rmarkdown, 
+          knitr, 
+          dplyr, 
+          logger, 
+          withr,
+          naniar
+URL: https://moseleybioinformaticslab.github.io/ICIKendallTau/
+        https://github.com/moseleybioinformaticslab/ICIKendallTau/
+BugReports: https://github.com/moseleybioinformaticslab/ICIKendallTau/issues
 Config/testthat/edition: 3

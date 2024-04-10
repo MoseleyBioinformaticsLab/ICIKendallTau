@@ -1,0 +1,91 @@
+---
+title: "Testing for Left Censorship"
+output: rmarkdown::html_vignette
+author: "Robert M Flight and Hunter NB Moseley"
+vignette: >
+  %\VignetteIndexEntry{Testing for Left Censorship}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{naniar}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ICIKendallTau)
+```
+
+## Why?
+
+{ICIKendallTau} has a very specific assumption, that the missing values are **largely** due to being below the limit of detection, or the result of left-censorship.
+Therefore, it should only be used **if** the missing values are from left-censorship.
+Ideally, it would be nice to have a way to test for it.
+
+## Strategy
+
+To test this, we do the following (implemented in `test_left_censorship`).
+For any feature that is missing in one or more samples in a class of samples, we check if the non-missing entries are below their sample's median values.
+We count all of the entries below sample medians as successes, and the total number of possible entries as the number of trials in a binomial test, aggregating across all features that had a missing value.
+We can then perform a one-tailed binomial test with the expectation that the successes are greater than 0.5.
+
+## Fake Data
+
+To start, we need to make some fake data that we can evaluate the test on.
+We will make a smallish dataset, with 1000 features across 20 samples, and we will have 80% of the missing values be due to being left-censored.
+
+We sort the initial data so we know where we can easily put missingness due to left-censoring.
+We also use a log-normal distribution initially, just because.
+
+```{r}
+#| label: create-fake-data
+set.seed(1234)
+n_feature = 1000
+n_sample = 20
+n_miss = 100
+n_low = 80
+test_dataset = rlnorm(n_feature, 10, 1)
+test_dataset = sort(test_dataset)
+  
+noisy_dataset = add_uniform_noise(log(test_dataset), n_sample, 0.1)
+sample_medians = calculate_matrix_medians(noisy_dataset)
+```
+
+## Add Missingness
+
+Now we can sample some low and high indices to add our missingness, as well as some samples to add them to.
+
+```{r}
+#| label: add-missingness
+low_indices = sample(seq_len(300), n_low)
+hi_indices = sample(seq(800, 1000), n_miss - n_low)
+  
+all_indices = c(low_indices, hi_indices)
+sample_indices = sample(n_sample, n_miss, replace = TRUE)
+
+missing_dataset = noisy_dataset
+for (i_loc in seq_along(all_indices)) {
+  missing_dataset[all_indices[i_loc], sample_indices[i_loc]] = NA
+}
+```
+
+We can actually visualize the missingness using the `naniar` package.
+
+```{r}
+#| label: examine-missingness
+naniar::vis_miss(as.data.frame(missing_dataset))
+```
+
+## Test
+
+Now we can actually test the missingness entries.
+
+```{r}
+#| label: test-missingness
+missing_test = test_left_censorship(missing_dataset)
+missing_test
+```

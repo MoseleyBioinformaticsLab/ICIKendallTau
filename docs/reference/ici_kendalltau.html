@@ -12,7 +12,7 @@ all samples."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/lib
     
     <a class="navbar-brand me-2" href="../index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,6 +27,7 @@ all samples."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/lib
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
+    <a class="dropdown-item" href="../articles/testing-for-left-censorship.html">Testing for Left Censorship</a>
   </div>
 </li>
 <li class="nav-item">
@@ -75,23 +76,23 @@ all samples.</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data_matrix</dt>
-<dd><p>samples are columns, features are rows</p></dd>
+<dd><p>matrix or data.frame of values, samples are columns, features are rows</p></dd>
 
 
 <dt>global_na</dt>
-<dd><p>globally, what should be treated as NA?</p></dd>
+<dd><p>numeric vector that defines globally, what should be treated as NA?</p></dd>
 
 
 <dt>perspective</dt>
-<dd><p>how to treat missing data in denominator and ties, see details</p></dd>
+<dd><p>how to treat missing data in denominator and ties, character</p></dd>
 
 
 <dt>scale_max</dt>
-<dd><p>should everything be scaled compared to the maximum correlation?</p></dd>
+<dd><p>logical, should everything be scaled compared to the maximum correlation?</p></dd>
 
 
 <dt>diag_good</dt>
-<dd><p>should the diagonal entries reflect how many entries in the sample were "good"?</p></dd>
+<dd><p>logical, should the diagonal entries reflect how many entries in the sample were "good"?</p></dd>
 
 
 <dt>include_only</dt>
@@ -99,11 +100,11 @@ all samples.</p>
 
 
 <dt>check_timing</dt>
-<dd><p>should we try to estimate run time for full dataset? (default is FALSE)</p></dd>
+<dd><p>logical to determine should we try to estimate run time for full dataset? (default is FALSE)</p></dd>
 
 
 <dt>return_matrix</dt>
-<dd><p>should the data.frame or matrix result be returned?</p></dd>
+<dd><p>logical, should the data.frame or matrix result be returned?</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -114,8 +115,7 @@ all samples.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>For more details, see the ICI-Kendall-tau vignette</p>
-<p><code>browseVignettes("ICIKendallTau")</code></p>
+    <p>For more details, see the vignette <code>vignette("ici-kendalltau", package = "ICIKendallTau"))</code></p>
 <p>The default for <code>global_na</code> includes what values in the data to replace with NA for the Kendall-tau calculation. By default these are <code>global_na = c(NA, Inf, 0)</code>. If you want to replace something other than 0, for example, you might use <code>global_na = c(NA, Inf, -2)</code>, and all values of -2 will be replaced instead of 0.</p>
 <p>When <code>check_timing = TRUE</code>, 5 random pairwise comparisons will be run to generate timings on a single core, and then estimates of how long the full set will take are calculated. The data is returned as a data.frame, and will be on the low side, but it should provide you with a good idea of how long your data will take.</p>
 <p>Returned is a list containing matrices with:</p><ul><li><p>cor: scaled correlations</p></li>
@@ -123,6 +123,13 @@ all samples.</p>
 <li><p>pval: p-values</p></li>
 <li><p>taumax: the theoretical maximum kendall-tau value possible</p></li>
 </ul><p>Eventually, we plan to provide two more parameters for replacing values, <code>feature_na</code> for feature specific NA values and <code>sample_na</code> for sample specific NA values.</p>
+<p>If you want to know if the missing values in your data are possibly due to
+left-censorship, we recommend testing that hypothesis with <code><a href="test_left_censorship.html">test_left_censorship()</a></code>
+first.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="test_left_censorship.html">test_left_censorship()</a></code> <code><a href="pairwise_completeness.html">pairwise_completeness()</a></code> <code><a href="kt_fast.html">kt_fast()</a></code></p></div>
     </div>
 
     <div class="section level2">

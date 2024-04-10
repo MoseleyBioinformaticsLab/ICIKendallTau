@@ -40,9 +40,7 @@ Given a data-matrix, computes the information-theoretic Kendall-tau-b between
 all samples.
 }
 \details{
-For more details, see the ICI-Kendall-tau vignette
-
-\code{browseVignettes("ICIKendallTau")}
+For more details, see the vignette \verb{vignette("ici-kendalltau", package = "ICIKendallTau"))}
 
 The default for \code{global_na} includes what values in the data to replace with NA for the Kendall-tau calculation. By default these are \code{global_na = c(NA, Inf, 0)}. If you want to replace something other than 0, for example, you might use \code{global_na = c(NA, Inf, -2)}, and all values of -2 will be replaced instead of 0.
 
@@ -57,6 +55,10 @@ Returned is a list containing matrices with:
 }
 
 Eventually, we plan to provide two more parameters for replacing values, \code{feature_na} for feature specific NA values and \code{sample_na} for sample specific NA values.
+
+If you want to know if the missing values in your data are possibly due to
+left-censorship, we recommend testing that hypothesis with \code{\link[=test_left_censorship]{test_left_censorship()}}
+first.
 }
 \examples{
 \dontrun{
@@ -111,4 +113,7 @@ include_df = as.data.frame(list(g1 = "s1", g2 = c("s2", "s3")))
 s1_df = ici_kendalltau(x, include_only = include_df)
 
 }
+}
+\seealso{
+\code{\link[=test_left_censorship]{test_left_censorship()}} \code{\link[=pairwise_completeness]{pairwise_completeness()}} \code{\link[=kt_fast]{kt_fast()}}
 }

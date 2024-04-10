@@ -4,7 +4,7 @@
 \alias{test_left_censorship}
 \title{Test for left censorship}
 \usage{
-test_left_censorship(in_data, sample_classes = NULL, global_na = c(0, NA))
+test_left_censorship(in_data, sample_classes = NULL, global_na = c(NA, Inf, 0))
 }
 \arguments{
 \item{in_data}{matrix or data.frame of numeric data}
@@ -29,6 +29,8 @@ non-missing values are below the sample median for those samples where the
 feature is non-missing. A binomial test considers the total number of features
 instances (minus missing values) as the number of trials, and the number of
 of features below the sample medians as the number of successes.
+
+There is a bit more detail in the vignette: \code{vignette("testing-for-left-censorship", package = "ICIKendallTau")}
 }
 \examples{
 # this example has 80\% missing due to left-censorship
@@ -39,5 +41,5 @@ missingness$binomial_test
 
 }
 \seealso{
-\link{vignette("Testing for Left Censorship", package = "ICIKendallTau")}
+\code{\link[=ici_kendalltau]{ici_kendalltau()}}
 }

@@ -108,6 +108,8 @@ The functions that implement this include:
     * `plan(multiprocess)`
   * Otherwise will only use a single core.
   
+We've also included a function for testing if the missingness in your data comes from left-censorship, `test_left_censorship`. We walk through creating example data and testing it in the vignette [Testing for Left Censorship](vignette("Testing for Left Censorship", package = "ICIKendallTau")).
+  
 ## Implementation
 
 It turns out, if we think about it really hard, all that is truly necessary is to replace missing values in each vector with a value smaller than the minimum value in each one.
@@ -172,7 +174,7 @@ r_2 = ici_kendalltau(matrix_1)
 In the case of hundreds of thousands of comparisons to be done, the result matrices can become very, very large, and require lots of memory for storage.
 They are also inefficient, as both the lower and upper triangular components are stored.
 An alternative storage format is as a `data.frame`, where there is a single row for each comparison performed.
-This is actually how the results are stored internally, and then they are converted to a matrix form if requested (the default).s
+This is actually how the results are stored internally, and then they are converted to a matrix form if requested (the default).
 To keep the `data.frame` output, add the argument `return_matrix=FALSE` to the call of `ici_kendalltau`.
 
 ```{r}

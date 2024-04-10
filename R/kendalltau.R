@@ -12,11 +12,9 @@
 #' @param check_timing logical to determine should we try to estimate run time for full dataset? (default is FALSE)
 #' @param return_matrix logical, should the data.frame or matrix result be returned?
 #' 
-#' @seealso [vignette("ici-kendalltau", package = "ICIKendallTau")] [test_left_censorship()]
+#' @seealso [test_left_censorship()] [pairwise_completeness()] [kt_fast()]
 #' 
-#' @details For more details, see the ICI-Kendall-tau vignette 
-#' 
-#' \code{browseVignettes("ICIKendallTau")}
+#' @details For more details, see the vignette `vignette("ici-kendalltau", package = "ICIKendallTau"))`
 #' 
 #'   The default for \code{global_na} includes what values in the data to replace with NA for the Kendall-tau calculation. By default these are \code{global_na = c(NA, Inf, 0)}. If you want to replace something other than 0, for example, you might use \code{global_na = c(NA, Inf, -2)}, and all values of -2 will be replaced instead of 0.
 #'   
@@ -30,6 +28,10 @@
 #'   * taumax: the theoretical maximum kendall-tau value possible
 #'   
 #'   Eventually, we plan to provide two more parameters for replacing values, \code{feature_na} for feature specific NA values and \code{sample_na} for sample specific NA values.
+#'   
+#'   If you want to know if the missing values in your data are possibly due to 
+#'   left-censorship, we recommend testing that hypothesis with [test_left_censorship()]
+#'   first.
 #' 
 #' @return list with cor, raw, pval, taumax
 #' 
@@ -315,8 +317,8 @@ ici_kendalltau = function(data_matrix,
 #' @param use an optional character string giving a method for computing correlations in the presence of missing values. This must be (an abbreviation of) one of the strings "everything", "all.obs", "complete.obs", or "pairwise.complete.obs".
 #' @param return_matrix Should the matrices of values be returned, or a long data.frame
 #' 
-#' @details Although the interface is *mostly* identical to the built-in `stats::cor` method, 
-#'   there are some differences. 
+#' @details Although the interface is *mostly* identical to the built-in 
+#' [stats::cor()] method, there are some differences. 
 #'   
 #'  * if providing both `x` and `y`, it is assumed they are both
 #'  single vectors.
@@ -534,6 +536,8 @@ kt_fast = function(x, y = NULL, use = "everything", return_matrix = TRUE)
 #' @param global_na globally, what should be treated as NA?
 #' @param include_only is there certain comparisons to do?
 #' @param return_matrix should the matrix or data.frame be returned?
+#' 
+#' @seealso [ici_kendalltau()]
 #' 
 #' @export
 #' 

@@ -1,3 +1,7 @@
+# ICIKendallTau 1.1.0
+
+- adds the function `test_left_censorship` to verify if `ici_kendalltau` is appropriate to use on the data or not.
+
 # ICIKendallTau 1.0.0
 
 - Calculates correlation between columns of the matrix, **not** the rows.

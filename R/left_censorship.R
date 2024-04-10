@@ -17,7 +17,9 @@
 #' instances (minus missing values) as the number of trials, and the number of
 #' of features below the sample medians as the number of successes.
 #' 
-#' @seealso [vignette("testing-for-left-censorship", package = "ICIKendallTau")]
+#' There is a bit more detail in the vignette: `vignette("testing-for-left-censorship", package = "ICIKendallTau")`
+#' 
+#' @seealso [ici_kendalltau()]
 #' 
 #' @examples
 #' # this example has 80% missing due to left-censorship

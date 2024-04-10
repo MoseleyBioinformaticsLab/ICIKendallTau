@@ -10,7 +10,7 @@ badge](https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau)](ht
 <!-- badges: end -->
 
 You can see the pkgdown site
-[here](https://moseleybioinformaticslab.github.io/ICIKendallTau).
+[here](https://moseleybioinformaticslab.github.io/ICIKendallTau/).
 
 ## Installation
 
@@ -47,7 +47,8 @@ install.packages("ICIKendallTau")
     and contribute to the correlation.
 
 If you want to read more on **how** we solve this problem, see the
-package vignette.
+package
+[vignette](https://moseleybioinformaticslab.github.io/ICIKendallTau/articles/ici-kendalltau.html).
 
 ## Package Functions
 
@@ -65,6 +66,11 @@ The functions that implement this include:
     - `library(furrr)`
     - `plan(multiprocess)`
   - Otherwise will only use a single core.
+
+We’ve also included a function for testing if the missingness in your
+data comes from left-censorship, `test_left_censorship`. We walk through
+creating example data and testing it in the vignette [Testing for Left
+Censorship](https://moseleybioinformaticslab.github.io/ICIKendallTau/articles/testing-for-left-censorship).
 
 ## Examples
 
@@ -136,14 +142,10 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min        lq       mean    median        uq       max
-#>  cor(x, y, method = "kendall") 11506.697 11670.094 12169.6628 12006.418 12482.883 13182.222
-#>         ici_kt(x, y, "global")   243.866   250.125   294.6542   275.104   320.058   384.118
-#>       ici_kt(x2, y2, "global") 13467.011 13739.312 14658.5050 14945.446 14987.140 16153.616
-#>  neval
-#>      5
-#>      5
-#>      5
+#>                           expr       min        lq       mean    median        uq       max neval
+#>  cor(x, y, method = "kendall") 11685.244 12730.878 12860.9060 13071.630 13406.514 13410.264     5
+#>         ici_kt(x, y, "global")   263.306   268.503   332.1288   274.858   283.589   570.388     5
+#>       ici_kt(x2, y2, "global") 14110.743 14322.836 15782.6490 16053.907 16595.979 17829.780     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -188,7 +190,7 @@ for storage. They are also inefficient, as both the lower and upper
 triangular components are stored. An alternative storage format is as a
 `data.frame`, where there is a single row for each comparison performed.
 This is actually how the results are stored internally, and then they
-are converted to a matrix form if requested (the default).s To keep the
+are converted to a matrix form if requested (the default). To keep the
 `data.frame` output, add the argument `return_matrix=FALSE` to the call
 of `ici_kendalltau`.
 
@@ -202,7 +204,7 @@ r_4
 #> 3 s4 s4    0 1.0000000      0 1.000000 1.0000000
 #> 
 #> $run_time
-#> [1] 0.01606894
+#> [1] 0.01747489
 ```
 
 ## Code of Conduct

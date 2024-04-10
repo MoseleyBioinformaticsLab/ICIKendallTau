@@ -30,7 +30,7 @@
     
     <a class="navbar-brand me-2" href="index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +46,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="articles/ici-kendalltau.html">Information-Content-Informed Kendall Tau Correlation</a>
+    <a class="dropdown-item" href="articles/testing-for-left-censorship.html">Testing for Left Censorship</a>
   </div>
 </li>
 <li class="nav-item">
@@ -75,7 +76,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>You can see the pkgdown site <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau" class="external-link">here</a>.</p>
+<p>You can see the pkgdown site <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/" class="external-link">here</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -103,7 +104,7 @@
 </ul>
 </li>
 </ul>
-<p>If you want to read more on <strong>how</strong> we solve this problem, see the package vignette.</p>
+<p>If you want to read more on <strong>how</strong> we solve this problem, see the package <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/articles/ici-kendalltau.html" class="external-link">vignette</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="package-functions">Package Functions<a class="anchor" aria-label="anchor" href="#package-functions"></a>
@@ -131,6 +132,7 @@
 </ul>
 </li>
 </ul>
+<p>We’ve also included a function for testing if the missingness in your data comes from left-censorship, <code>test_left_censorship</code>. We walk through creating example data and testing it in the vignette <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/articles/testing-for-left-censorship" class="external-link">Testing for Left Censorship</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
@@ -139,7 +141,7 @@
 <p>Here we will make some artificial data to show how the correlation changes as we introduce missingness.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau" class="external-link">ICIKendallTau</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/" class="external-link">ICIKendallTau</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">s1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span>, mean <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">s2</span> <span class="op">=</span> <span class="va">s1</span> <span class="op">+</span> <span class="fl">10</span> </span>
@@ -187,14 +189,10 @@
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
-<span><span class="co">#&gt;                           expr       min        lq       mean    median        uq       max</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 11506.697 11670.094 12169.6628 12006.418 12482.883 13182.222</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   243.866   250.125   294.6542   275.104   320.058   384.118</span></span>
-<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 13467.011 13739.312 14658.5050 14945.446 14987.140 16153.616</span></span>
-<span><span class="co">#&gt;  neval</span></span>
-<span><span class="co">#&gt;      5</span></span>
-<span><span class="co">#&gt;      5</span></span>
-<span><span class="co">#&gt;      5</span></span></code></pre></div>
+<span><span class="co">#&gt;                           expr       min        lq       mean    median        uq       max neval</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 11685.244 12730.878 12860.9060 13071.630 13406.514 13410.264     5</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   263.306   268.503   332.1288   274.858   283.589   570.388     5</span></span>
+<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 14110.743 14322.836 15782.6490 16053.907 16595.979 17829.780     5</span></span></code></pre></div>
 <p>In the case of 40,000 features, the average time on a modern CPU is 14 milliseconds.</p>
 <p>Of course, if you want to use it to calculate Kendall-tau-b without incorporating missingness, it can do that just fine as well.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -220,7 +218,7 @@
 <div class="section level2">
 <h2 id="many-many-comparisons">Many Many Comparisons<a class="anchor" aria-label="anchor" href="#many-many-comparisons"></a>
 </h2>
-<p>In the case of hundreds of thousands of comparisons to be done, the result matrices can become very, very large, and require lots of memory for storage. They are also inefficient, as both the lower and upper triangular components are stored. An alternative storage format is as a <code>data.frame</code>, where there is a single row for each comparison performed. This is actually how the results are stored internally, and then they are converted to a matrix form if requested (the default).s To keep the <code>data.frame</code> output, add the argument <code>return_matrix=FALSE</code> to the call of <code>ici_kendalltau</code>.</p>
+<p>In the case of hundreds of thousands of comparisons to be done, the result matrices can become very, very large, and require lots of memory for storage. They are also inefficient, as both the lower and upper triangular components are stored. An alternative storage format is as a <code>data.frame</code>, where there is a single row for each comparison performed. This is actually how the results are stored internally, and then they are converted to a matrix form if requested (the default). To keep the <code>data.frame</code> output, add the argument <code>return_matrix=FALSE</code> to the call of <code>ici_kendalltau</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r_4</span> <span class="op">=</span> <span class="fu"><a href="reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="va">matrix_2</span>, return_matrix <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">r_4</span></span>
@@ -231,7 +229,7 @@
 <span><span class="co">#&gt; 3 s4 s4    0 1.0000000      0 1.000000 1.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $run_time</span></span>
-<span><span class="co">#&gt; [1] 0.01606894</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.01747489</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
@@ -243,6 +241,7 @@
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/moseleybioinformaticslab/ICIKendallTau/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/moseleybioinformaticslab/ICIKendallTau/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 

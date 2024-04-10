@@ -27,3 +27,6 @@ matrix of degree of completeness
 Calculates the completeness between any two samples using "or", is an
 entry missing in either X "or" Y.
 }
+\seealso{
+\code{\link[=ici_kendalltau]{ici_kendalltau()}}
+}
