@@ -156,3 +156,15 @@ add_uniform_noise = function(value, n_rep, sd, use_zero = FALSE){
 #' 
 #' @source Robert M Flight
 "missing_dataset"
+
+#' Example RNA-Seq Dataset With Missingness
+#' 
+#' An example dataset from RNA-seq experiment on yeast, created by Gierliński et al.,
+#' "Statistical models for RNA-seq data derived from a two-condition 48-replicate experiment",
+#' Bioinformatics, 31, 2015 <https://doi.org/10.1093/bioinformatics/btv425>.
+#' 
+#' @format ## `yeast_missing`
+#' A matrix with 6887 rows (genes) and 96 columns (samples).
+#' 
+#' @source <https://dx.doi.org/10.6084/M9.FIGSHARE.1425502.V1> <https://dx.doi.org/10.6084/M9.FIGSHARE.1425503.V1>
+"yeast_missing"
