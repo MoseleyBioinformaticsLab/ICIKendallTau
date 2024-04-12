@@ -1,3 +1,7 @@
+# ICIKendallTau 1.1.3
+
+- makes `rank_order_data` take a sample class argument to enable splitting out by class.
+
 # ICIKendallTau 1.1.2
 
 - adds the `rank_order_data` function to help with visualizing the pattern of missingness with respect to the rank of the rows.

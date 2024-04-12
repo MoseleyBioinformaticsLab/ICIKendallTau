@@ -6,16 +6,16 @@
 \usage{
 test_left_censorship(
   data_matrix,
-  sample_classes = NULL,
-  global_na = c(NA, Inf, 0)
+  global_na = c(NA, Inf, 0),
+  sample_classes = NULL
 )
 }
 \arguments{
 \item{data_matrix}{matrix or data.frame of numeric data}
 
-\item{sample_classes}{which samples are in which class}
-
 \item{global_na}{what represents zero or missing?}
+
+\item{sample_classes}{which samples are in which class}
 }
 \value{
 data.frame of trials / successes, and binom.test result

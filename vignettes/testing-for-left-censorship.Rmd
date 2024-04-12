@@ -114,25 +114,28 @@ In addition to testing, we can re-order the features based on their median ranki
 
 ```{r}
 #| label: order-yeast
-yeast_order = rank_order_data(yeast_missing)
+yeast_order = rank_order_data(yeast_missing, sample_classes = yeast_classes)
 ```
 
 ```{r}
 #| label: fig-yeast-original
 #| fig-cap: Missingness in yeast data set, no ordering.
-visdat::vis_miss(as.data.frame(yeast_order$original))
+visdat::vis_miss(as.data.frame(yeast_order$wt$original))
 ```
 
 ```{r}
 #| label: fig-yeast-reordered
 #| fig-cap: Missingness in yeast data set, after ordering features by rank.
-visdat::vis_miss(as.data.frame(yeast_order$ordered))
+visdat::vis_miss(as.data.frame(yeast_order$wt$ordered))
 ```
 
 ```{r}
 #| label: fig-yeast-nna
 #| fig-cap: Feature rank as a function of the number of missing values.
-yeast_order$n_na_rank |>
+yeast_n_na = dplyr::bind_rows(yeast_order$wt$n_na_rank,
+                              yeast_order$snf2$n_na_rank)
+yeast_n_na |>
   ggplot(aes(x = n_na, y = median_rank)) +
-  geom_point()
+  geom_point(size = 0.1, position = "jitter") +
+  facet_wrap(~ split, nrow = 1)
 ```

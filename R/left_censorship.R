@@ -5,8 +5,8 @@
 #' left-censored distribution.
 #' 
 #' @param data_matrix matrix or data.frame of numeric data
-#' @param sample_classes which samples are in which class
 #' @param global_na what represents zero or missing?
+#' @param sample_classes which samples are in which class
 #' 
 #' @details
 #' For each feature that is missing in a group of samples, we save as a possibility
@@ -31,8 +31,8 @@
 #' @export
 #' @return data.frame of trials / successes, and binom.test result
 test_left_censorship = function(data_matrix, 
-                                sample_classes = NULL, 
-                                global_na = c(NA, Inf, 0))
+                                global_na = c(NA, Inf, 0),
+                                sample_classes = NULL)
 {
   if (inherits(data_matrix, "data.frame")) {
     data_matrix = as.matrix(data_matrix)

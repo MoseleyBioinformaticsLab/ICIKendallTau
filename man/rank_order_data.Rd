@@ -4,12 +4,14 @@
 \alias{rank_order_data}
 \title{Rank order row data}
 \usage{
-rank_order_data(data_matrix, global_na = c(NA, Inf, 0))
+rank_order_data(data_matrix, global_na = c(NA, Inf, 0), sample_classes = NULL)
 }
 \arguments{
 \item{data_matrix}{matrix or data.frame of values}
 
 \item{global_na}{the values to consider as missing}
+
+\item{sample_classes}{are the columns defined by some metadata?}
 }
 \value{
 list with two matrices and a data.frame
