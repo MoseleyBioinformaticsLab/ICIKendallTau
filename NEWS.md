@@ -1,3 +1,8 @@
+# ICIKendallTau 1.1.2
+
+- adds the `rank_order_data` function to help with visualizing the pattern of missingness with respect to the rank of the rows.
+- adds the `yeast_missing` dataset as a more realistic dataset for running the `test_left_censorship` and `rank_order_data`.
+
 # ICIKendallTau 1.1.0
 
 - adds the function `test_left_censorship` to verify if `ici_kendalltau` is appropriate to use on the data or not.
