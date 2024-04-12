@@ -1,6 +1,6 @@
 Package: ICIKendallTau
 Title: Calculates information-content-informed Kendall-tau
-Version: 1.1.1
+Version: 1.1.2
 Authors@R: c(
     person(
       given = c("Robert", "M"), 
@@ -37,7 +37,8 @@ Suggests: furrr,
           dplyr, 
           logger, 
           withr,
-          naniar
+          ggplot2,
+          visdat
 URL: https://moseleybioinformaticslab.github.io/ICIKendallTau/
         https://github.com/moseleybioinformaticslab/ICIKendallTau/
 BugReports:

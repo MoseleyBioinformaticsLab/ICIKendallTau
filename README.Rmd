@@ -66,6 +66,7 @@ The functions that implement this include:
   * Otherwise will only use a single core.
   
 We've also included a function for testing if the missingness in your data comes from left-censorship, `test_left_censorship`. We walk through creating example data and testing it in the vignette [Testing for Left Censorship](https://moseleybioinformaticslab.github.io/ICIKendallTau/articles/testing-for-left-censorship).
+In addition to testing, you can also visualize the missing data pattern by feature rank using the `rank_order_data` function, and use `visdat::vis_miss()` on the original and reordered missing data.
   
 ## Examples
 

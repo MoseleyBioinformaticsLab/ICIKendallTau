@@ -4,10 +4,14 @@
 \alias{test_left_censorship}
 \title{Test for left censorship}
 \usage{
-test_left_censorship(in_data, sample_classes = NULL, global_na = c(NA, Inf, 0))
+test_left_censorship(
+  data_matrix,
+  sample_classes = NULL,
+  global_na = c(NA, Inf, 0)
+)
 }
 \arguments{
-\item{in_data}{matrix or data.frame of numeric data}
+\item{data_matrix}{matrix or data.frame of numeric data}
 
 \item{sample_classes}{which samples are in which class}
 

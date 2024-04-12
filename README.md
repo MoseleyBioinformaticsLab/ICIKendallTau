@@ -71,6 +71,9 @@ We’ve also included a function for testing if the missingness in your
 data comes from left-censorship, `test_left_censorship`. We walk through
 creating example data and testing it in the vignette [Testing for Left
 Censorship](https://moseleybioinformaticslab.github.io/ICIKendallTau/articles/testing-for-left-censorship).
+In addition to testing, you can also visualize the missing data pattern
+by feature rank using the `rank_order_data` function, and use
+`visdat::vis_miss()` on the original and reordered missing data.
 
 ## Examples
 
@@ -142,10 +145,10 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min        lq       mean    median        uq       max neval
-#>  cor(x, y, method = "kendall") 11685.244 12730.878 12860.9060 13071.630 13406.514 13410.264     5
-#>         ici_kt(x, y, "global")   263.306   268.503   332.1288   274.858   283.589   570.388     5
-#>       ici_kt(x2, y2, "global") 14110.743 14322.836 15782.6490 16053.907 16595.979 17829.780     5
+#>                           expr       min        lq       mean    median       uq       max neval
+#>  cor(x, y, method = "kendall") 11666.371 11671.671 12405.0886 12084.801 13276.95 13325.649     5
+#>         ici_kt(x, y, "global")   253.826   255.717   430.9002   277.985   317.24  1049.733     5
+#>       ici_kt(x2, y2, "global") 13405.302 13731.770 15208.7108 14693.928 15415.66 18796.894     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -204,7 +207,7 @@ r_4
 #> 3 s4 s4    0 1.0000000      0 1.000000 1.0000000
 #> 
 #> $run_time
-#> [1] 0.01747489
+#> [1] 0.01783729
 ```
 
 ## Code of Conduct

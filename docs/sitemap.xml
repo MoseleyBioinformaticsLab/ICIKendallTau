@@ -76,6 +76,9 @@
     <loc>/reference/pairwise_completeness.html</loc>
   </url>
   <url>
+    <loc>/reference/rank_order_data.html</loc>
+  </url>
+  <url>
     <loc>/reference/ref_diff_kendallt.html</loc>
   </url>
   <url>
@@ -86,5 +89,8 @@
   </url>
   <url>
     <loc>/reference/test_left_censorship.html</loc>
+  </url>
+  <url>
+    <loc>/reference/yeast_missing.html</loc>
   </url>
 </urlset>

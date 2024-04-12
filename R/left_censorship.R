@@ -4,7 +4,7 @@
 #' is due to values being below the limit of detection, or coming from a 
 #' left-censored distribution.
 #' 
-#' @param in_data matrix or data.frame of numeric data
+#' @param data_matrix matrix or data.frame of numeric data
 #' @param sample_classes which samples are in which class
 #' @param global_na what represents zero or missing?
 #' 
@@ -30,25 +30,28 @@
 #' 
 #' @export
 #' @return data.frame of trials / successes, and binom.test result
-test_left_censorship = function(in_data, 
+test_left_censorship = function(data_matrix, 
                                 sample_classes = NULL, 
                                 global_na = c(NA, Inf, 0))
 {
+  if (inherits(data_matrix, "data.frame")) {
+    data_matrix = as.matrix(data_matrix)
+  }
   if (is.null(sample_classes)) {
-    sample_classes = rep("A", ncol(in_data))
+    sample_classes = rep("A", ncol(data_matrix))
   }
   
-  split_indices = split(seq_len(ncol(in_data)), sample_classes)
-  missing_loc = setup_missing_matrix(in_data, global_na)
-  in_data_missing = in_data
-  in_data_missing[missing_loc] = NA
+  split_indices = split(seq_len(ncol(data_matrix)), sample_classes)
+  missing_loc = setup_missing_matrix(data_matrix, global_na)
+  data_matrix_missing = data_matrix
+  data_matrix_missing[missing_loc] = NA
   
   # split the dataset by group
   split_counts = purrr::imap(split_indices, \(in_split, split_id){
     # in_split = split_indices[[1]]
     
     # grab the group we want to work with
-    split_missing = in_data_missing[, in_split, drop = FALSE]
+    split_missing = data_matrix_missing[, in_split, drop = FALSE]
     
     # count the number of missing samples for each feature,
     # and keep those that have at least one

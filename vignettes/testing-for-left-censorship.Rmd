@@ -6,11 +6,12 @@ vignette: >
   %\VignetteIndexEntry{Testing for Left Censorship}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  \usepackage[utf8]{naniar}
+  \usepackage[utf8]{visdat, ggplot2}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  message = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
@@ -18,6 +19,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(ICIKendallTau)
+library(ggplot2)
 ```
 
 ## Why?
@@ -73,11 +75,12 @@ for (i_loc in seq_along(all_indices)) {
 }
 ```
 
-We can actually visualize the missingness using the `naniar` package.
+We can actually visualize the missingness using the `visdat` package.
 
 ```{r}
 #| label: examine-missingness
-naniar::vis_miss(as.data.frame(missing_dataset))
+#| fig-cap: Missing entries in the test dataset.
+visdat::vis_miss(as.data.frame(missing_dataset))
 ```
 
 ## Test
@@ -88,4 +91,48 @@ Now we can actually test the missingness entries.
 #| label: test-missingness
 missing_test = test_left_censorship(missing_dataset)
 missing_test
+```
+
+## RNA-Seq Example
+
+Gierliński et al ([link](https://doi.org/10.1093/bioinformatics/btv425)) did a really neat experiment in yeast, with a large number of replicates, 48 WT and 48 SNF2 deletion mutant.
+We've included a summarized experiment as part of this package, and use it to demonstrate the left-censorship in a real data context.
+
+```{r}
+#| label: load-yeast
+data(yeast_missing)
+yeast_classes = rep(c("snf2", "wt"), each = 48)
+```
+
+```{r}
+#| label: test-yeast
+yeast_stats = test_left_censorship(yeast_missing, sample_classes = yeast_classes)
+yeast_stats
+```
+
+In addition to testing, we can re-order the features based on their median ranking across samples.
+
+```{r}
+#| label: order-yeast
+yeast_order = rank_order_data(yeast_missing)
+```
+
+```{r}
+#| label: fig-yeast-original
+#| fig-cap: Missingness in yeast data set, no ordering.
+visdat::vis_miss(as.data.frame(yeast_order$original))
+```
+
+```{r}
+#| label: fig-yeast-reordered
+#| fig-cap: Missingness in yeast data set, after ordering features by rank.
+visdat::vis_miss(as.data.frame(yeast_order$ordered))
+```
+
+```{r}
+#| label: fig-yeast-nna
+#| fig-cap: Feature rank as a function of the number of missing values.
+yeast_order$n_na_rank |>
+  ggplot(aes(x = n_na, y = median_rank)) +
+  geom_point()
 ```

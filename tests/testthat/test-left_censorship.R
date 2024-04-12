@@ -43,4 +43,14 @@ test_that("test_left_censorship works", {
   mix_dataset[back_zero] = 0
   mix_binom = test_left_censorship(mix_dataset, global_na = c(0, NA))
   expect_equal(na_binom, mix_binom)
+  
+  single_group_indices = withr::with_seed(1234, sample(n_sample / 2, n_miss, replace = TRUE))
+  group_classes = rep(c("A", "B"), each = 10)
+  group_dataset = noisy_dataset
+  for (i_loc in seq_along(all_indices)) {
+    group_dataset[all_indices[i_loc], single_group_indices[i_loc]] = 0
+  }
+  group_binom = test_left_censorship(group_dataset, sample_classes = group_classes)
+  expect_equal(nrow(group_binom$values), 2)
+  expect_equal(group_binom$values$success[1] / group_binom$values$trials[1], n_low / n_miss)
 })

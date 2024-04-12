@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -328,12 +328,12 @@ use the double merge-sort algorithm, translating {scipy::
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
-<span><span class="co">#&gt;                           expr       min       lq       mean    median</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 11716.612 12670.75 13230.1676 13124.263</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   231.868   233.36   276.8498   235.229</span></span>
+<span><span class="co">#&gt;                           expr      min        lq       mean    median</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 12613.54 13228.435 13407.3404 13229.615</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   268.12   296.982   333.6532   300.057</span></span>
 <span><span class="co">#&gt;         uq       max neval</span></span>
-<span><span class="co">#&gt;  13485.116 15154.096     5</span></span>
-<span><span class="co">#&gt;    268.721   415.071     5</span></span></code></pre></div>
+<span><span class="co">#&gt;  13589.473 14375.637     5</span></span>
+<span><span class="co">#&gt;    303.269   499.838     5</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
