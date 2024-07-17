@@ -180,3 +180,15 @@ test_that("big data kendall works", {
   expect_equal(long_cor$cor$raw[3], matrix_cor$raw[2, 2])
   expect_equal(ici_kt(x, y, "global")[[1]], matrix_cor$raw[2, 1])
 })
+
+test_that("errors and messages appear", {
+  x = matrix(rnorm(200), 20, 10)
+  expect_error(ici_kendalltau(x), 'Colnames of `x` must be be specified.')
+  
+  x_char = matrix(as.character(x), 20, 10)
+  colnames(x_char) = paste0("S", seq_len(ncol(x)))
+  expect_error(ici_kendalltau(x_char), '`x_char` must be a numeric type.')
+
+  x_df = as.data.frame(x)
+  expect_message(ici_kendalltau(x_df), '`x_df` is a data.frame, converting to matrix ...')
+})

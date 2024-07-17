@@ -21,3 +21,46 @@ setup_missing_matrix = function(data_matrix, global_na)
   
   return(exclude_loc)
 }
+
+check_if_colnames_null = function(data_matrix,
+                                  arg = rlang::caller_arg(data_matrix),
+                                  call = rlang::caller_env())
+{
+  if (is.null(colnames(data_matrix))) {
+    cli::cli_abort(
+      message = c('Colnames of {.arg {arg}} must be be specified.',
+                  'x' = 'Currently {.code colnames({arg})} returns \\
+                  {colnames(data_matrix)}'),
+    call = call
+    )  
+  }
+  
+}
+
+check_if_numeric = function(data_matrix,
+                            arg = rlang::caller_arg(data_matrix),
+                            call = rlang::caller_env())
+{
+  if (!(is.double(data_matrix) || is.integer(data_matrix))) {
+    cli::cli_abort(
+      message = c('{.arg {arg}} must be a numeric type.',
+                  'x' = 'Currently, {.code class({arg}[1])} returns \\
+                  {class(data_matrix[1])}'),
+      call = call
+    )
+  }  
+}
+
+transform_to_matrix = function(data_matrix,
+                                arg = rlang::caller_arg(data_matrix),
+                                call = rlang::caller_env())
+{
+  if (is.data.frame(data_matrix)) {
+    cli::cli_inform(message = c(
+      'i' = '{.arg {arg}} is a data.frame, converting to matrix ...'
+    ),
+    call = call)
+    return(as.matrix(data_matrix))
+  }
+  return(data_matrix)
+}

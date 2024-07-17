@@ -1,4 +1,4 @@
-#' information-content-informed kendall tau
+#' Information-content-informed kendall tau
 #' 
 #' Given a data-matrix, computes the information-theoretic Kendall-tau-b between
 #' all samples.
@@ -99,15 +99,15 @@ ici_kendalltau = function(data_matrix,
                           check_timing = FALSE,
                           return_matrix = TRUE){
   
+  arg = rlang::caller_arg(data_matrix)
+  
   do_log_memory = get("memory", envir = icikt_logger)
   
-  if (is.data.frame(data_matrix)) {
-    data_matrix = as.matrix(data_matrix)
-  }
+  check_if_colnames_null(data_matrix, arg = arg)
+
+  data_matrix = transform_to_matrix(data_matrix, arg = arg)
   
-  if (is.null(colnames(data_matrix))) {
-    stop("colnames of data_matrix cannot be NULL!")
-  }
+  check_if_numeric(data_matrix, arg = arg)
   
   log_message("Processing missing values ...\n")
   
