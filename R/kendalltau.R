@@ -100,6 +100,8 @@ ici_kendalltau = function(data_matrix,
                           return_matrix = TRUE){
   
   arg = rlang::caller_arg(data_matrix)
+  include_arg = rlang::caller_arg(include_only)
+  diag_arg = rlang::caller_arg(diag_good)
   
   do_log_memory = get("memory", envir = icikt_logger)
   
@@ -108,7 +110,7 @@ ici_kendalltau = function(data_matrix,
   data_matrix = transform_to_matrix(data_matrix, arg = arg)
   
   check_if_numeric(data_matrix, arg = arg)
-  
+
   log_message("Processing missing values ...\n")
   
   exclude_loc = setup_missing_matrix(data_matrix, global_na)
@@ -129,6 +131,58 @@ ici_kendalltau = function(data_matrix,
   # generate the array of comparisons, 2 x ...,
   # where each column is a comparison between two columns of data
   log_message("Figuring out comparisons to do ...")
+  split_comparisons = setup_comparisons(colnames(data_matrix),
+                                        include_only = include_only,
+                                        diag_good = diag_good,
+                                        ncore = ncore,
+                                        include_arg = include_arg,
+                                        diag_arg = diag_arg)
+  
+  if (check_timing) {
+    sample_compare = sample(nrow(split_comparisons[[1]]), 5)
+    tmp_pairwise = split_comparisons[[1]][, sample_compare]
+    
+    run_tmp = check_icikt_timing(exclude_data, tmp_pairwise, perspective, n_todo, ncore)
+    return(run_tmp)
+  }
+  
+  
+  # we record how much time is actually spent doing ICI-Kt
+  # itself, as some of the other operations will add a bit of time
+  # 
+  log_message("Running correlations ...")
+  t1 = Sys.time()
+  # note here, this takes our list of comparisons, and then calls the do_split
+  # function above on each of them.
+  split_cor = split_fun(split_comparisons, ici_split, exclude_data, perspective, do_log_memory)
+  t2 = Sys.time()
+  t_diff = as.numeric(difftime(t2, t1, units = "secs"))
+  
+  # put all the results back together again into one data.frame
+  log_message("Recombining results ...")
+  
+  n_good = colSums(!exclude_loc)
+  names(n_good) = colnames(data_matrix)
+  scaled_output = scale_and_reshape(split_cor,
+                                    n_good = n_good,
+                                    scale_max = scale_max,
+                                    diag_good = diag_good,
+                                    return_matrix = return_matrix,
+                                    exclude_loc = exclude_loc) 
+     
+  scaled_output[["run_time"]] = t_diff
+  return(scaled_output)
+    
+}
+
+setup_comparisons = function(samples,
+                              include_only = include_only,
+                              diag_good = diag_good,
+                              ncore = ncore,
+                            include_arg = rlang::caller_arg(include_only),
+                            diag_arg = rlang::caller_arg(diag_good))
+{
+  n_sample = length(samples)
   pairwise_comparisons = utils::combn(n_sample, 2)
   
   if (!diag_good) {
@@ -140,11 +194,12 @@ ici_kendalltau = function(data_matrix,
   # this enables indexed comparisons and named comparisons, because
   # we can have row / column names in R
   # This is now n_comparisons x 2
-  named_comparisons = data.frame(s1 = colnames(data_matrix)[pairwise_comparisons[1, ]],
-                                 s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
+  named_comparisons = data.frame(s1 = samples[pairwise_comparisons[1, ]],
+                                 s2 = samples[pairwise_comparisons[2, ]])
   
   if (!is.null(include_only)) {
     if (is.character(include_only) || is.numeric(include_only)) {
+      n_include = length(include_only)
       #message("a vector!")
       # Check each of the comparison vectors against the include_only variable
       # This returns TRUE where they match
@@ -154,6 +209,7 @@ ici_kendalltau = function(data_matrix,
       named_comparisons = named_comparisons[(s1_include | s2_include), ]
     } else if (is.list(include_only)) {
       if (length(include_only) == 2) {
+        n_include = length(include_only[[1]])
         #message("a list!")
         # In this case the include_only is a list of things, so we have to check both
         # of the sets against each of the lists. Again, this returns TRUE where
@@ -163,29 +219,23 @@ ici_kendalltau = function(data_matrix,
         l2_include = (named_comparisons$s1 %in% include_only[[2]]) | (named_comparisons$s2 %in% include_only[[2]])
         named_comparisons = named_comparisons[(l1_include & l2_include), ]
       } else {
-        stop("include_only must either be a single vector, or a list of 2 vectors!")
+        cli::cli_abort(message = c(
+          '{.arg {include_arg}} must be a vector, a data.frame with two columns, or list of two vectors.',
+          'x' = 'Currently, {.code {length({include_arg})} returns \\
+          {length(include_only)}'
+        ))
       }
     }
   }
   
-  if (nrow(named_comparisons) == 0) {
-    stop("nrow(named_comparisons) == 0, did you create include_only correctly?")
-  }
-  
   n_todo = nrow(named_comparisons)
-  if (check_timing) {
-    sample_compare = sample(nrow(named_comparisons), 5)
-    tmp_pairwise = named_comparisons[, sample_compare]
+  if (n_todo == 0) {
+    cli::cli_abort(message = c(
+      'No comparisons to do.',
+      'i' = '{.arg {include_arg}} defines {.val {n_include}} possible comparisons.'
+    ))
     
-    run_tmp = check_icikt_timing(exclude_data, tmp_pairwise, perspective, n_todo, ncore)
-    return(run_tmp)
   }
-  
-  # in my experience, the list of actual comparisons to do does not get split
-  # up well across compute cores (cores, machines, etc), and we end up waiting
-  # on stuff to complete.
-  # Therefore, this code actually does the splitting up of comparisons across
-  # the number of cores (ncore) in a list. 
   
   log_message("Splitting up across compute ...")
   n_each = ceiling(n_todo / ncore)
@@ -200,60 +250,45 @@ ici_kendalltau = function(data_matrix,
   
   
   split_comparisons = split(named_comparisons, named_comparisons$core)
+  return(split_comparisons)
+}
+
+ici_split = function(do_comparisons, exclude_data, perspective, do_log_memory) {
+  #seq_range = seq(in_range[1], in_range[2])
+  #print(seq_range)
   
+  raw = vector("numeric", nrow(do_comparisons))
+  pvalue = raw
+  taumax = raw
   
-  # finally, this is the function for doing each set of icikt comparisons,
-  # possibly across cores.
-  do_split = function(do_comparisons, exclude_data, perspective, do_log_memory) {
-    #seq_range = seq(in_range[1], in_range[2])
-    #print(seq_range)
-    
-    raw = vector("numeric", nrow(do_comparisons))
-    pvalue = raw
-    taumax = raw
-    
-    for (irow in seq_len(nrow(do_comparisons))) {
-      iloc = do_comparisons[irow, 1]
-      jloc = do_comparisons[irow, 2]
-      ici_res = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
-      raw[irow] = ici_res["tau"]
-      pvalue[irow] = ici_res["pvalue"]
-      taumax[irow] = ici_res["tau_max"]
-      if (do_log_memory && ((irow %% 100) == 0)) {
-        log_memory()
-      }
+  for (irow in seq_len(nrow(do_comparisons))) {
+    iloc = do_comparisons[irow, 1]
+    jloc = do_comparisons[irow, 2]
+    ici_res = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
+    raw[irow] = ici_res["tau"]
+    pvalue[irow] = ici_res["pvalue"]
+    taumax[irow] = ici_res["tau_max"]
+    if (do_log_memory && ((irow %% 100) == 0)) {
+      log_memory()
     }
-    do_comparisons$raw = raw
-    do_comparisons$pvalue = pvalue
-    do_comparisons$taumax = taumax
-    #return(ls())
-    do_comparisons
   }
-  # we record how much time is actually spent doing ICI-Kt
-  # itself, as some of the other operations will add a bit of time
-  # 
-  log_message("Running correlations ...")
-  t1 = Sys.time()
-  # note here, this takes our list of comparisons, and then calls the do_split
-  # function above on each of them.
-  split_cor = split_fun(split_comparisons, do_split, exclude_data, perspective, do_log_memory)
-  t2 = Sys.time()
-  t_diff = as.numeric(difftime(t2, t1, units = "secs"))
-  
-  # put all the results back together again into one data.frame
-  log_message("Recombining results ...")
+  do_comparisons$raw = raw
+  do_comparisons$pvalue = pvalue
+  do_comparisons$taumax = taumax
+  #return(ls())
+  do_comparisons
+}
+
+scale_and_reshape = function(split_cor,
+                              n_good = n_good,
+                              scale_max = scale_max,
+                              diag_good = diag_good,
+                              return_matrix = return_matrix,
+                            exclude_loc = exclude_loc) 
+{
   all_cor = purrr::list_rbind(split_cor)
   rownames(all_cor) = NULL
-  
-  # calculate the max-cor value for use in scaling across multiple comparisons
-  # n_observations = nrow(exclude_data)
-  # n_na = sort(colSums(exclude_loc))
-  # m_value = floor(sum(n_na[1:2]) / 2)
-  # n_m = n_observations - m_value
-  # max_cor_denominator = choose(n_m, 2) + n_observations * m_value
-  # max_cor_numerator = choose(n_m, 2) + n_observations * m_value + choose(m_value, 2)
-  # max_cor = max_cor_denominator / max_cor_numerator
-  
+
   if (scale_max) {
     max_cor = max(all_cor$taumax, na.rm = TRUE)
     all_cor$cor = all_cor$raw / max_cor
@@ -262,8 +297,6 @@ ici_kendalltau = function(data_matrix,
   }
   
   if (diag_good) {
-    n_good = colSums(!exclude_loc)
-    names(n_good) = colnames(data_matrix)
     extra_cor = data.frame(s1 = names(n_good),
                            s2 = names(n_good),
                            core = 0,
@@ -279,8 +312,8 @@ ici_kendalltau = function(data_matrix,
   # leave them in the data.frame
   if (return_matrix) {
     log_message("Generating the output matrix ...")
-    cor_matrix = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
-    rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
+    cor_matrix = matrix(0, nrow = length(n_good), ncol = length(n_good))
+    rownames(cor_matrix) = colnames(cor_matrix) = names(n_good)
     raw_matrix = cor_matrix
     pvalue_matrix = cor_matrix
     taumax_matrix = cor_matrix
@@ -300,10 +333,9 @@ ici_kendalltau = function(data_matrix,
     taumax_matrix[one_way_index] = all_cor$taumax
     taumax_matrix[back_way_index] = all_cor$taumax
     
-    
-    return(list(cor = cor_matrix, raw = raw_matrix, pval = pvalue_matrix, taumax = taumax_matrix, keep = t(!exclude_loc), run_time = t_diff))
+    return(list(cor = cor_matrix, raw = raw_matrix, pval = pvalue_matrix, taumax = taumax_matrix, keep = t(!exclude_loc)))
   } else {
-    return(list(cor = all_cor, run_time = t_diff))
+    return(list(cor = all_cor))
   }
 }
 
