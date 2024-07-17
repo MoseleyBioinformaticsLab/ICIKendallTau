@@ -119,14 +119,7 @@ ici_kendalltau = function(data_matrix,
   n_sample = ncol(exclude_data)
   
   # figure out if we are using furrr to process these
-  if ("furrr" %in% utils::installed.packages()) {
-    ncore = future::nbrOfWorkers()
-    names(ncore) = NULL
-    split_fun = furrr::future_map
-  } else {
-    ncore = 1
-    split_fun = purrr::map
-  }
+  computation = check_furrr()
   
   # generate the array of comparisons, 2 x ...,
   # where each column is a comparison between two columns of data
@@ -134,7 +127,7 @@ ici_kendalltau = function(data_matrix,
   split_comparisons = setup_comparisons(colnames(data_matrix),
                                         include_only = include_only,
                                         diag_good = diag_good,
-                                        ncore = ncore,
+                                        ncore = computation$ncore,
                                         include_arg = include_arg,
                                         diag_arg = diag_arg)
   
@@ -142,7 +135,7 @@ ici_kendalltau = function(data_matrix,
     sample_compare = sample(nrow(split_comparisons[[1]]), 5)
     tmp_pairwise = split_comparisons[[1]][, sample_compare]
     
-    run_tmp = check_icikt_timing(exclude_data, tmp_pairwise, perspective, n_todo, ncore)
+    run_tmp = check_icikt_timing(exclude_data, tmp_pairwise, perspective, n_todo, computation$ncore)
     return(run_tmp)
   }
   
@@ -154,7 +147,7 @@ ici_kendalltau = function(data_matrix,
   t1 = Sys.time()
   # note here, this takes our list of comparisons, and then calls the do_split
   # function above on each of them.
-  split_cor = split_fun(split_comparisons, ici_split, exclude_data, perspective, do_log_memory)
+  split_cor = computation$split_fun(split_comparisons, ici_split, exclude_data, perspective, do_log_memory)
   t2 = Sys.time()
   t_diff = as.numeric(difftime(t2, t1, units = "secs"))
   

@@ -64,3 +64,17 @@ transform_to_matrix = function(data_matrix,
   }
   return(data_matrix)
 }
+
+check_furrr = function()
+{
+  if (requireNamespace("furrr", quietly = TRUE)) {
+    ncore = future::nbrOfWorkers()
+    names(ncore) = NULL
+    split_fun = furrr::future_map
+  } else {
+    ncore = 1
+    split_fun = purrr::map
+  }
+  return(list(ncore = ncore,
+              split_fun = split_fun))
+}
