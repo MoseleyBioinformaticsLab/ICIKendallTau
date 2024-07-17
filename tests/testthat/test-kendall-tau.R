@@ -184,11 +184,14 @@ test_that("big data kendall works", {
 test_that("errors and messages appear", {
   x = matrix(rnorm(200), 20, 10)
   expect_error(ici_kendalltau(x), 'Colnames of `x` must be be specified.')
-  
+  expect_error(pairwise_completeness(x), 'Colnames of `x` must be be specified.')
+
   x_char = matrix(as.character(x), 20, 10)
   colnames(x_char) = paste0("S", seq_len(ncol(x)))
   expect_error(ici_kendalltau(x_char), '`x_char` must be a numeric type.')
+  expect_error(pairwise_completeness(x_char), '`x_char` must be a numeric type.')
 
   x_df = as.data.frame(x)
   expect_message(ici_kendalltau(x_df), '`x_df` is a data.frame, converting to matrix ...')
+  expect_message(pairwise_completeness(x_df), '`x_df` is a data.frame, converting to matrix ...')
 })

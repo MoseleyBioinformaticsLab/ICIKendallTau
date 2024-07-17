@@ -1,6 +1,6 @@
 Package: ICIKendallTau
 Title: Calculates information-content-informed Kendall-tau
-Version: 1.1.6
+Version: 1.1.7
 Authors@R: c(
     person(
       given = c("Robert", "M"), 
@@ -46,4 +46,4 @@ URL: https://moseleybioinformaticslab.github.io/ICIKendallTau/
 BugReports:
         https://github.com/moseleybioinformaticslab/ICIKendallTau/issues
 Config/testthat/edition: 3
-Depends: R (>= 2.10)
+Depends: R (>= 3.5)

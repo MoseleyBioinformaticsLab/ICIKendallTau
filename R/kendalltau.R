@@ -106,9 +106,7 @@ ici_kendalltau = function(data_matrix,
   do_log_memory = get("memory", envir = icikt_logger)
   
   check_if_colnames_null(data_matrix, arg = arg)
-
   data_matrix = transform_to_matrix(data_matrix, arg = arg)
-  
   check_if_numeric(data_matrix, arg = arg)
 
   log_message("Processing missing values ...\n")
@@ -128,8 +126,8 @@ ici_kendalltau = function(data_matrix,
                                         include_only = include_only,
                                         diag_good = diag_good,
                                         ncore = computation$ncore,
-                                        include_arg = include_arg,
-                                        diag_arg = diag_arg)
+                                        which = "icikt",
+                                        include_arg = include_arg)
   
   if (check_timing) {
     sample_compare = sample(nrow(split_comparisons[[1]]), 5)
@@ -172,8 +170,8 @@ setup_comparisons = function(samples,
                               include_only = include_only,
                               diag_good = diag_good,
                               ncore = ncore,
-                            include_arg = rlang::caller_arg(include_only),
-                            diag_arg = rlang::caller_arg(diag_good))
+                              which = "icikt",
+                            include_arg = rlang::caller_arg(include_only))
 {
   n_sample = length(samples)
   pairwise_comparisons = utils::combn(n_sample, 2)
@@ -237,11 +235,15 @@ setup_comparisons = function(samples,
   which_core = which_core[1:nrow(named_comparisons)]
   
   named_comparisons$core = which_core
-  named_comparisons$raw = Inf
-  named_comparisons$pvalue = Inf
-  named_comparisons$taumax = Inf
-  
-  
+  if (which %in% "icikt") {
+    named_comparisons$raw = Inf
+    named_comparisons$pvalue = Inf
+    named_comparisons$taumax = Inf
+  } else if (which %in% "completeness") {
+    named_comparisons$missingness = Inf
+    named_comparisons$completeness = Inf
+  }
+    
   split_comparisons = split(named_comparisons, named_comparisons$core)
   return(split_comparisons)
 }
@@ -572,90 +574,29 @@ pairwise_completeness = function(data_matrix,
                                 include_only = NULL,
                                 return_matrix = TRUE){
   
+  data_arg = rlang::caller_arg(data_matrix)
   
-  if (is.null(colnames(data_matrix))) {
-    stop("rownames of data_matrix cannot be NULL!")
-  }
+  check_if_colnames_null(data_matrix, arg = data_arg)
+  data_matrix = transform_to_matrix(data_matrix, arg = data_arg)
+  check_if_numeric(data_matrix, arg = data_arg)
+  
   
   exclude_loc = setup_missing_matrix(data_matrix, global_na)
   
   n_sample = ncol(exclude_loc)
   
-  if ("furrr" %in% utils::installed.packages()) {
-    ncore = future::nbrOfWorkers()
-    names(ncore) = NULL
-    split_fun = furrr::future_map
-  } else {
-    ncore = 1
-    split_fun = purrr::map
-  }
+  computation = check_furrr()
+
+  split_comparisons = setup_comparisons(colnames(data_matrix),
+                                        include_only = include_only,
+                                        diag_good = FALSE,
+                                        ncore = computation$ncore,
+                                        which = "completeness",
+                                        include_arg = include_arg)
   
   
-  pairwise_comparisons = utils::combn(n_sample, 2)
   
-  extra_comparisons = matrix(rep(seq(1, n_sample), each = 2), nrow = 2, ncol = n_sample, byrow = FALSE)
-  pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
-  
-  named_comparisons = data.frame(s1 = colnames(data_matrix)[pairwise_comparisons[1, ]],
-                                 s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
-  
-  if (!is.null(include_only)) {
-    if (is.character(include_only) || is.numeric(include_only)) {
-      #message("a vector!")
-      # Check each of the comparison vectors against the include_only variable
-      # This returns TRUE where they match
-      # Use OR to make sure we return everything that should be returned
-      s1_include = named_comparisons$s1 %in% include_only
-      s2_include = named_comparisons$s2 %in% include_only
-      named_comparisons = named_comparisons[(s1_include | s2_include), ]
-    } else if (is.list(include_only)) {
-      if (length(include_only) == 2) {
-        #message("a list!")
-        # In this case the include_only is a list of things, so we have to check both
-        # of the sets against each of the lists. Again, this returns TRUE where
-        # they match. Because we want the things where they
-        # are both TRUE (assuming l1[1] goes with l2[1]), we use the AND at the end.
-        l1_include = (named_comparisons$s1 %in% include_only[[1]]) | (named_comparisons$s2 %in% include_only[[1]])
-        l2_include = (named_comparisons$s1 %in% include_only[[2]]) | (named_comparisons$s2 %in% include_only[[2]])
-        named_comparisons = named_comparisons[(l1_include & l2_include), ]
-      } else {
-        stop("include_only must either be a single vector, or a list of 2 vectors!")
-      }
-    }
-  }
-  
-  if (nrow(named_comparisons) == 0) {
-    stop("nrow(named_comparisons) == 0, did you create include_only correctly?")
-  }
-  
-  n_todo = nrow(named_comparisons)
-  n_each = ceiling(n_todo / ncore)
-  
-  which_core = rep(seq(1, ncore), each = n_each)
-  which_core = which_core[1:nrow(named_comparisons)]
-  
-  named_comparisons$core = which_core
-  named_comparisons$missingness = Inf
-  named_comparisons$completeness = Inf
-  
-  split_comparisons = split(named_comparisons, named_comparisons$core)
-  do_split = function(do_comparisons, exclude_loc) {
-    #seq_range = seq(in_range[1], in_range[2])
-    #print(seq_range)
-    missingness = vector("numeric", nrow(do_comparisons))
-    completeness = vector("numeric", nrow(do_comparisons))
-    for (irow in seq(1, nrow(do_comparisons))) {
-      iloc = do_comparisons[irow, 1]
-      jloc = do_comparisons[irow, 2]
-      missingness[irow] = missing_either(exclude_loc[, iloc], exclude_loc[, jloc])
-    }
-    completeness = 1 - (missingness / nrow(exclude_loc))
-    do_comparisons$missingness = missingness
-    do_comparisons$completeness = completeness
-    do_comparisons
-  }
-  
-  split_missing = split_fun(split_comparisons, do_split, exclude_loc)
+  split_missing = computation$split_fun(split_comparisons, complete_split, exclude_loc)
   
   all_missing = purrr::list_rbind(split_missing)
   rownames(all_missing) = NULL
@@ -672,6 +613,22 @@ pairwise_completeness = function(data_matrix,
     return(all_missing)
   }
 
+}
+
+complete_split = function(do_comparisons, exclude_loc) {
+  #seq_range = seq(in_range[1], in_range[2])
+  #print(seq_range)
+  missingness = vector("numeric", nrow(do_comparisons))
+  completeness = vector("numeric", nrow(do_comparisons))
+  for (irow in seq(1, nrow(do_comparisons))) {
+    iloc = do_comparisons[irow, 1]
+    jloc = do_comparisons[irow, 2]
+    missingness[irow] = missing_either(exclude_loc[, iloc], exclude_loc[, jloc])
+  }
+  completeness = 1 - (missingness / nrow(exclude_loc))
+  do_comparisons$missingness = missingness
+  do_comparisons$completeness = completeness
+  do_comparisons
 }
 
 missing_either = function(in_x, in_y){
