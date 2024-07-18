@@ -136,8 +136,6 @@ y = rnorm(1000)
 x2 = rnorm(40000)
 y2 = rnorm(40000)
 
-library(microbenchmark)
-
 microbenchmark(
   cor(x, y, method = "kendall"),
   ici_kt(x, y, "global"),
@@ -145,10 +143,10 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min        lq       mean    median       uq       max neval
-#>  cor(x, y, method = "kendall") 11666.371 11671.671 12405.0886 12084.801 13276.95 13325.649     5
-#>         ici_kt(x, y, "global")   253.826   255.717   430.9002   277.985   317.24  1049.733     5
-#>       ici_kt(x2, y2, "global") 13405.302 13731.770 15208.7108 14693.928 15415.66 18796.894     5
+#>                           expr       min        lq      mean    median        uq       max neval
+#>  cor(x, y, method = "kendall") 11755.570 11928.248 12437.300 12409.265 12841.010 13252.408     5
+#>         ici_kt(x, y, "global")   239.267   248.566   413.841   263.888   269.249  1048.235     5
+#>       ici_kt(x2, y2, "global") 13897.996 13991.561 15903.593 15191.136 18077.771 18359.500     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -169,8 +167,18 @@ treats `NA` values similarly to `stats::cor`.
 ``` r
 k_tau_fast = kt_fast(x, y)
 k_tau_fast
-#>          tau       pvalue 
-#> -0.003411411  0.871672260
+#> $tau
+#>              x            y
+#> x  1.000000000 -0.003411411
+#> y -0.003411411  1.000000000
+#> 
+#> $pvalue
+#>           x         y
+#> x 0.0000000 0.8716723
+#> y 0.8716723 0.0000000
+#> 
+#> $run_time
+#> [1] 0.02890801
 ```
 
 ## Parallelism
@@ -207,7 +215,56 @@ r_4
 #> 3 s4 s4    0 1.0000000      0 1.000000 1.0000000
 #> 
 #> $run_time
-#> [1] 0.01783729
+#> [1] 0.02034473
+```
+
+## Other Correlations
+
+`ici_kendalltau` and `ici_kt` calculate the p-value of the correlation
+as part of the overall calculation. `stats::cor` does not, and
+`stats::cor.test` can only calculate the p-value for a single comparison
+of two vectors. It is sometimes advantageous to obtain p-values for a
+large number of correlations. We provide `cor_fast`, which works
+analogously to `kt_fast`, with the ability to choose `pearson` or
+`spearman` as the method. Note that if a matrix is provided, the columns
+must be named.
+
+``` r
+r_5 = cor_fast(x, y, method = "pearson")
+r_5
+#> $rho
+#>            x          y
+#> x 1.00000000 0.00720612
+#> y 0.00720612 1.00000000
+#> 
+#> $pvalue
+#>           x         y
+#> x 0.0000000 0.8199608
+#> y 0.8199608 0.0000000
+#> 
+#> $run_time
+#> [1] 0.02450991
+```
+
+``` r
+m_3 = cbind(x, y, x)
+colnames(m_3) = c("s1", "s2", "s3")
+r_6 = cor_fast(m_3)
+r_6
+#> $rho
+#>            s1         s2         s3
+#> s1 1.00000000 0.00720612 1.00000000
+#> s2 0.00720612 1.00000000 0.00720612
+#> s3 1.00000000 0.00720612 1.00000000
+#> 
+#> $pvalue
+#>           s1        s2        s3
+#> s1 0.0000000 0.8199608 0.0000000
+#> s2 0.8199608 0.0000000 0.8199608
+#> s3 0.0000000 0.8199608 0.0000000
+#> 
+#> $run_time
+#> [1] 0.0231781
 ```
 
 ## Code of Conduct

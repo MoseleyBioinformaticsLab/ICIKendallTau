@@ -1,4 +1,4 @@
-#' information-content-informed kendall tau
+#' Information-content-informed kendall tau
 #' 
 #' Given a data-matrix, computes the information-content-informed (ICI) Kendall-tau-b between
 #' all samples.

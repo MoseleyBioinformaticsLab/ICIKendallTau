@@ -1,4 +1,4 @@
-#' information-content-informed kendall tau
+#' Information-content-informed kendall tau
 #' 
 #' Given a data-matrix, computes the information-theoretic Kendall-tau-b between
 #' all samples.
@@ -9,6 +9,8 @@
 #' @param scale_max logical, should everything be scaled compared to the maximum correlation?
 #' @param diag_good logical, should the diagonal entries reflect how many entries in the sample were "good"?
 #' @param include_only only run the correlations that include the members (as a vector) or combinations (as a list or data.frame)
+#' @param alternative what is the alternative for the p-value test?
+#' @param continuity should a continuity correction be applied?
 #' @param check_timing logical to determine should we try to estimate run time for full dataset? (default is FALSE)
 #' @param return_matrix logical, should the data.frame or matrix result be returned?
 #' 
@@ -96,19 +98,21 @@ ici_kendalltau = function(data_matrix,
                           scale_max = TRUE,
                           diag_good = TRUE,
                           include_only = NULL,
+                          alternative = "two.sided",
+                          continuity = FALSE,
                           check_timing = FALSE,
                           return_matrix = TRUE){
   
+  arg = rlang::caller_arg(data_matrix)
+  include_arg = rlang::caller_arg(include_only)
+  diag_arg = rlang::caller_arg(diag_good)
+  
   do_log_memory = get("memory", envir = icikt_logger)
   
-  if (is.data.frame(data_matrix)) {
-    data_matrix = as.matrix(data_matrix)
-  }
-  
-  if (is.null(colnames(data_matrix))) {
-    stop("colnames of data_matrix cannot be NULL!")
-  }
-  
+  check_if_colnames_null(data_matrix, arg = arg)
+  data_matrix = transform_to_matrix(data_matrix, arg = arg)
+  check_if_numeric(data_matrix, arg = arg)
+
   log_message("Processing missing values ...\n")
   
   exclude_loc = setup_missing_matrix(data_matrix, global_na)
@@ -117,18 +121,65 @@ ici_kendalltau = function(data_matrix,
   n_sample = ncol(exclude_data)
   
   # figure out if we are using furrr to process these
-  if ("furrr" %in% utils::installed.packages()) {
-    ncore = future::nbrOfWorkers()
-    names(ncore) = NULL
-    split_fun = furrr::future_map
-  } else {
-    ncore = 1
-    split_fun = purrr::map
-  }
+  computation = check_furrr()
   
   # generate the array of comparisons, 2 x ...,
   # where each column is a comparison between two columns of data
   log_message("Figuring out comparisons to do ...")
+  split_comparisons = setup_comparisons(colnames(data_matrix),
+                                        include_only = include_only,
+                                        diag_good = diag_good,
+                                        ncore = computation$ncore,
+                                        which = "icikt",
+                                        include_arg = include_arg)
+  
+  n_todo = sum(purrr::map_int(split_comparisons, nrow))
+  
+  if (check_timing) {
+    sample_compare = sample(nrow(split_comparisons[[1]]), 5)
+    tmp_pairwise = split_comparisons[[1]][, sample_compare]
+    
+    run_tmp = check_icikt_timing(exclude_data, tmp_pairwise, perspective, n_todo, computation$ncore)
+    return(run_tmp)
+  }
+  
+  
+  # we record how much time is actually spent doing ICI-Kt
+  # itself, as some of the other operations will add a bit of time
+  # 
+  log_message("Running correlations ...")
+  t1 = Sys.time()
+  # note here, this takes our list of comparisons, and then calls the do_split
+  # function above on each of them.
+  split_cor = computation$split_fun(split_comparisons, ici_split, exclude_data, perspective, do_log_memory, alternative, continuity)
+  t2 = Sys.time()
+  t_diff = as.numeric(difftime(t2, t1, units = "secs"))
+  
+  # put all the results back together again into one data.frame
+  log_message("Recombining results ...")
+  
+  n_good = colSums(!exclude_loc)
+  names(n_good) = colnames(data_matrix)
+  scaled_output = scale_and_reshape(split_cor,
+                                    n_good = n_good,
+                                    scale_max = scale_max,
+                                    diag_good = diag_good,
+                                    return_matrix = return_matrix,
+                                    exclude_loc = exclude_loc) 
+     
+  scaled_output[["run_time"]] = t_diff
+  return(scaled_output)
+    
+}
+
+setup_comparisons = function(samples,
+                              include_only = include_only,
+                              diag_good = diag_good,
+                              ncore = ncore,
+                              which = "icikt",
+                            include_arg = rlang::caller_arg(include_only))
+{
+  n_sample = length(samples)
   pairwise_comparisons = utils::combn(n_sample, 2)
   
   if (!diag_good) {
@@ -140,11 +191,12 @@ ici_kendalltau = function(data_matrix,
   # this enables indexed comparisons and named comparisons, because
   # we can have row / column names in R
   # This is now n_comparisons x 2
-  named_comparisons = data.frame(s1 = colnames(data_matrix)[pairwise_comparisons[1, ]],
-                                 s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
+  named_comparisons = data.frame(s1 = samples[pairwise_comparisons[1, ]],
+                                 s2 = samples[pairwise_comparisons[2, ]])
   
   if (!is.null(include_only)) {
     if (is.character(include_only) || is.numeric(include_only)) {
+      n_include = length(include_only)
       #message("a vector!")
       # Check each of the comparison vectors against the include_only variable
       # This returns TRUE where they match
@@ -154,6 +206,7 @@ ici_kendalltau = function(data_matrix,
       named_comparisons = named_comparisons[(s1_include | s2_include), ]
     } else if (is.list(include_only)) {
       if (length(include_only) == 2) {
+        n_include = length(include_only[[1]])
         #message("a list!")
         # In this case the include_only is a list of things, so we have to check both
         # of the sets against each of the lists. Again, this returns TRUE where
@@ -163,29 +216,23 @@ ici_kendalltau = function(data_matrix,
         l2_include = (named_comparisons$s1 %in% include_only[[2]]) | (named_comparisons$s2 %in% include_only[[2]])
         named_comparisons = named_comparisons[(l1_include & l2_include), ]
       } else {
-        stop("include_only must either be a single vector, or a list of 2 vectors!")
+        cli::cli_abort(message = c(
+          '{.arg {include_arg}} must be a vector, a data.frame with two columns, or list of two vectors.',
+          'x' = 'Currently, {.code {length({include_arg})} returns \\
+          {length(include_only)}'
+        ))
       }
     }
   }
   
-  if (nrow(named_comparisons) == 0) {
-    stop("nrow(named_comparisons) == 0, did you create include_only correctly?")
-  }
-  
   n_todo = nrow(named_comparisons)
-  if (check_timing) {
-    sample_compare = sample(nrow(named_comparisons), 5)
-    tmp_pairwise = named_comparisons[, sample_compare]
+  if (n_todo == 0) {
+    cli::cli_abort(message = c(
+      'No comparisons to do.',
+      'i' = '{.arg {include_arg}} defines {.val {n_include}} possible comparisons.'
+    ))
     
-    run_tmp = check_icikt_timing(exclude_data, tmp_pairwise, perspective, n_todo, ncore)
-    return(run_tmp)
   }
-  
-  # in my experience, the list of actual comparisons to do does not get split
-  # up well across compute cores (cores, machines, etc), and we end up waiting
-  # on stuff to complete.
-  # Therefore, this code actually does the splitting up of comparisons across
-  # the number of cores (ncore) in a list. 
   
   log_message("Splitting up across compute ...")
   n_each = ceiling(n_todo / ncore)
@@ -194,66 +241,112 @@ ici_kendalltau = function(data_matrix,
   which_core = which_core[1:nrow(named_comparisons)]
   
   named_comparisons$core = which_core
-  named_comparisons$raw = Inf
-  named_comparisons$pvalue = Inf
-  named_comparisons$taumax = Inf
-  
-  
-  split_comparisons = split(named_comparisons, named_comparisons$core)
-  
-  
-  # finally, this is the function for doing each set of icikt comparisons,
-  # possibly across cores.
-  do_split = function(do_comparisons, exclude_data, perspective, do_log_memory) {
-    #seq_range = seq(in_range[1], in_range[2])
-    #print(seq_range)
-    
-    raw = vector("numeric", nrow(do_comparisons))
-    pvalue = raw
-    taumax = raw
-    
-    for (irow in seq_len(nrow(do_comparisons))) {
-      iloc = do_comparisons[irow, 1]
-      jloc = do_comparisons[irow, 2]
-      ici_res = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
-      raw[irow] = ici_res["tau"]
-      pvalue[irow] = ici_res["pvalue"]
-      taumax[irow] = ici_res["tau_max"]
-      if (do_log_memory && ((irow %% 100) == 0)) {
-        log_memory()
-      }
-    }
-    do_comparisons$raw = raw
-    do_comparisons$pvalue = pvalue
-    do_comparisons$taumax = taumax
-    #return(ls())
-    do_comparisons
+  if (which %in% "icikt") {
+    named_comparisons$raw = Inf
+    named_comparisons$pvalue = Inf
+    named_comparisons$taumax = Inf
+  } else if (which %in% "completeness") {
+    named_comparisons$missingness = Inf
+    named_comparisons$completeness = Inf
+  } else if (which %in% "kt") {
+    named_comparisons$tau = Inf
+    named_comparisons$pvalue = Inf
+  } else if (which %in% "pearson") {
+    named_comparisons$rho = Inf
+    named_comparisons$pvalue = Inf
+  } else if (which %in% "spearman") {
+    named_comparisons$rho = Inf
+    named_comparisons$pvalue = Inf
   }
-  # we record how much time is actually spent doing ICI-Kt
-  # itself, as some of the other operations will add a bit of time
-  # 
-  log_message("Running correlations ...")
-  t1 = Sys.time()
-  # note here, this takes our list of comparisons, and then calls the do_split
-  # function above on each of them.
-  split_cor = split_fun(split_comparisons, do_split, exclude_data, perspective, do_log_memory)
-  t2 = Sys.time()
-  t_diff = as.numeric(difftime(t2, t1, units = "secs"))
+    
+  split_comparisons = split(named_comparisons, named_comparisons$core)
+  return(split_comparisons)
+}
+
+ici_split = function(do_comparisons, exclude_data, perspective, do_log_memory, alternative, continuity) {
+  #seq_range = seq(in_range[1], in_range[2])
+  #print(seq_range)
   
-  # put all the results back together again into one data.frame
-  log_message("Recombining results ...")
+  raw = vector("numeric", nrow(do_comparisons))
+  pvalue = raw
+  taumax = raw
+  
+  for (irow in seq_len(nrow(do_comparisons))) {
+    iloc = do_comparisons[irow, 1]
+    jloc = do_comparisons[irow, 2]
+    ici_res = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective,
+                      alternative = alternative, continuity = continuity)
+    raw[irow] = ici_res["tau"]
+    pvalue[irow] = ici_res["pvalue"]
+    taumax[irow] = ici_res["tau_max"]
+    if (do_log_memory && ((irow %% 100) == 0)) {
+      log_memory()
+    }
+  }
+  do_comparisons$raw = raw
+  do_comparisons$pvalue = pvalue
+  do_comparisons$taumax = taumax
+  #return(ls())
+  do_comparisons
+}
+
+kt_split = function(do_comparisons, x, na_method, do_log_memory) {
+  #seq_range = seq(in_range[1], in_range[2])
+  #print(seq_range)
+  tau = vector("numeric", nrow(do_comparisons))
+  pvalue = tau
+  
+  for (irow in seq(1, nrow(do_comparisons))) {
+    return_na = FALSE
+    iloc = do_comparisons[irow, 1]
+    jloc = do_comparisons[irow, 2]
+    
+    tmp_x = x[, iloc]
+    tmp_y = x[, jloc]
+    if (na_method %in% "pairwise.complete.obs") {
+      pair_good = !is.na(tmp_x) & !is.na(tmp_y)
+      if (sum(pair_good) == 0) {
+        return_na = TRUE
+      } else {
+        return_na = FALSE
+        tmp_x = tmp_x[pair_good]
+        tmp_y = tmp_y[pair_good]
+      }
+    } else if (na_method %in% c("everything", "all.obs")) {
+      return_na = any(is.na(c(tmp_x, tmp_y)))
+    }
+    
+    if (return_na) {
+      tau[irow] = as.double(NA)
+      pvalue[irow] = as.double(NA)
+      
+    } else {
+      ici_res = ici_kt(tmp_x, tmp_y)
+      tau[irow] = ici_res["tau"]
+      pvalue[irow] = ici_res["pvalue"]
+      
+    }
+    if (do_log_memory && ((irow %% 100) == 0)) {
+      log_memory()
+    }
+    
+  }
+  do_comparisons$tau = tau
+  do_comparisons$pvalue = pvalue
+  do_comparisons
+}
+
+
+scale_and_reshape = function(split_cor,
+                              n_good = n_good,
+                              scale_max = scale_max,
+                              diag_good = diag_good,
+                              return_matrix = return_matrix,
+                            exclude_loc = exclude_loc) 
+{
   all_cor = purrr::list_rbind(split_cor)
   rownames(all_cor) = NULL
-  
-  # calculate the max-cor value for use in scaling across multiple comparisons
-  # n_observations = nrow(exclude_data)
-  # n_na = sort(colSums(exclude_loc))
-  # m_value = floor(sum(n_na[1:2]) / 2)
-  # n_m = n_observations - m_value
-  # max_cor_denominator = choose(n_m, 2) + n_observations * m_value
-  # max_cor_numerator = choose(n_m, 2) + n_observations * m_value + choose(m_value, 2)
-  # max_cor = max_cor_denominator / max_cor_numerator
-  
+
   if (scale_max) {
     max_cor = max(all_cor$taumax, na.rm = TRUE)
     all_cor$cor = all_cor$raw / max_cor
@@ -262,8 +355,6 @@ ici_kendalltau = function(data_matrix,
   }
   
   if (diag_good) {
-    n_good = colSums(!exclude_loc)
-    names(n_good) = colnames(data_matrix)
     extra_cor = data.frame(s1 = names(n_good),
                            s2 = names(n_good),
                            core = 0,
@@ -279,8 +370,8 @@ ici_kendalltau = function(data_matrix,
   # leave them in the data.frame
   if (return_matrix) {
     log_message("Generating the output matrix ...")
-    cor_matrix = matrix(0, nrow = ncol(exclude_data), ncol = ncol(exclude_data))
-    rownames(cor_matrix) = colnames(cor_matrix) = colnames(exclude_data)
+    cor_matrix = matrix(0, nrow = length(n_good), ncol = length(n_good))
+    rownames(cor_matrix) = colnames(cor_matrix) = names(n_good)
     raw_matrix = cor_matrix
     pvalue_matrix = cor_matrix
     taumax_matrix = cor_matrix
@@ -300,14 +391,13 @@ ici_kendalltau = function(data_matrix,
     taumax_matrix[one_way_index] = all_cor$taumax
     taumax_matrix[back_way_index] = all_cor$taumax
     
-    
-    return(list(cor = cor_matrix, raw = raw_matrix, pval = pvalue_matrix, taumax = taumax_matrix, keep = t(!exclude_loc), run_time = t_diff))
+    return(list(cor = cor_matrix, raw = raw_matrix, pval = pvalue_matrix, taumax = taumax_matrix, keep = t(!exclude_loc)))
   } else {
-    return(list(cor = all_cor, run_time = t_diff))
+    return(list(cor = all_cor))
   }
 }
 
-#' fast kendall tau
+#' Fast kendall tau
 #' 
 #' Uses the underlying c++ implementation of `ici_kt` to provide a fast version
 #' of Kendall-tau correlation.
@@ -315,184 +405,92 @@ ici_kendalltau = function(data_matrix,
 #' @param x a numeric vector, matrix, or data frame.
 #' @param y NULL (default) or a vector.
 #' @param use an optional character string giving a method for computing correlations in the presence of missing values. This must be (an abbreviation of) one of the strings "everything", "all.obs", "complete.obs", or "pairwise.complete.obs".
+#' @param alternative the type of test
+#' @param continuity should a continuity correction be applied
 #' @param return_matrix Should the matrices of values be returned, or a long data.frame
 #' 
 #' @details Although the interface is *mostly* identical to the built-in 
 #' [stats::cor()] method, there are some differences. 
 #'   
+#'  * if only `x` is provided as a matrix or data.frame, the columns must be named.
 #'  * if providing both `x` and `y`, it is assumed they are both
 #'  single vectors.
 #'  * if `NA` values are present, this function does not error, but will either remove them 
 #'  or return `NA`, depending on the option.
 #'  * "na.or.complete" is not a valid option for `use`.
-#'  * A named vector or a named list with matrices is returned, with the `tau` and `pvalue` values.
+#'  * A named list with matrices or data.frame is returned, with the `tau` and `pvalue` values.
 #' 
-#' @return a named vector or list of matrices.
+#' @return a list of matrices, tau, pvalue, or a data.frame.
 #' @export
-kt_fast = function(x, y = NULL, use = "everything", return_matrix = TRUE)
+kt_fast = function(x, y = NULL, use = "everything",
+                  alternative = "two.sided",
+                  continuity = FALSE, return_matrix = TRUE)
 {
   do_log_memory = get("memory", envir = icikt_logger)
-  # checking types
+  use_arg = rlang::caller_arg(use)
+  x_arg = rlang::caller_arg(x)
+  y_arg = rlang::caller_arg(y)
+  
+  # checking use
   na_method = match.arg(use, c("all.obs", "complete.obs", "pairwise.complete.obs", 
                                "everything", "na.or.complete"))
   
   #message(na_method)
-  if (na_method %in% "na.or.complete") {
-    stop("'na.or.complete' is not a supported use option.")
-  }
-  if (is.data.frame(y)) {
-    y = as.matrix(y)
-  } 
+  # all of this top stuff can probably be wrapped in a function to parse
+  # the logic, and can borrow some of the other new helpers.
+  check_na_method(na_method)
+
+  x = check_x_y(x = x, y = y,
+            x_arg = x_arg, 
+            y_arg = y_arg)
+
+  na_vals = is.na(x)
+  any_na = any(na_vals)
+  no_na_rows = rowSums(na_vals) == 0
+  sum_nona = sum(no_na_rows)
+
+  computation = check_furrr()
+
+  split_comparisons = setup_comparisons(colnames(x),
+                                        include_only = NULL,
+                                        diag_good = FALSE,
+                                        ncore = computation$ncore,
+                                        which = "kt",
+                                        include_arg = NULL)
   
-  if (is.data.frame(x)) {
-    x = as.matrix(x)
-  } 
-  
-  if (!is.matrix(x) && is.null(y)) {
-    stop("supply both 'x' and 'y' or a matrix-like 'x'")
-  } 
-  
-  if (!(is.numeric(x) || is.logical(x))) {
-    stop("'x' must be numeric")
-  }
-  
-  if (!is.null(y)) {
-    if (!(is.numeric(y) || is.logical(y))) 
-      stop("'y' must be numeric")
-    stopifnot(is.atomic(y))
-  }
-  
-  if (!is.null(y)) {
-    if ((is.null(ncol(x))) && (is.null(ncol(y)))) {
-      x = x
-      any_na = any(is.na(c(x, y)))
-      if (na_method %in% c("everything", "all.obs")) {
-        if (any_na) {
-          return(c("tau" = NA, "pvalue" = NA))
-        } else {
-          kt_vals = ici_kt(x, y)
-          return(kt_vals[c("tau", "pvalue")])
-        }
-      } else if (na_method %in% c("complete.obs", "pairwise.complete.obs")) {
-        na_x = is.na(x)
-        na_y = is.na(y)
-        not_na = !(na_x | na_y)
-        if (length(not_na) == 0) {
-          return(c("tau" = NA, "pvalue" = NA))
-        }
-        return(ici_kt(x[not_na], y[not_na]))
-      } 
+  do_computation = TRUE
+  if (na_method %in% c("everything", "all.obs")) {
+    if (any_na) {
+      do_computation = FALSE
     }
   }
-  
-  n_sample = ncol(x)
-  
-  # figure out if we are using furrr to process these
-  if ("furrr" %in% utils::installed.packages()) {
-    ncore = future::nbrOfWorkers()
-    names(ncore) = NULL
-    split_fun = furrr::future_map
-  } else {
-    ncore = 1
-    split_fun = purrr::map
-  }
-  
-  log_message("Figuring out comparisons to do ...")
-  # generate the array of comparisons, 2 x ...,
-  # where each column is a comparison between two columns of data
-  pairwise_comparisons = utils::combn(n_sample, 2)
-  
-  extra_comparisons = matrix(rep(seq(1, n_sample), each = 2), nrow = 2, ncol = n_sample, byrow = FALSE)
-  pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
-  
-  if (is.null(colnames(x))) {
-    colnames(x) = seq(1, ncol(x))
-  }
-  named_comparisons = data.frame(s1 = colnames(x)[pairwise_comparisons[1, ]],
-                                 s2 = colnames(x)[pairwise_comparisons[2, ]])
-  
-  n_todo = nrow(named_comparisons)
-  log_message("Splitting up across compute ...")
-  n_each = ceiling(n_todo / ncore)
-  
-  which_core = rep(seq(1, ncore), each = n_each)
-  which_core = which_core[1:nrow(named_comparisons)]
-  
-  named_comparisons$core = which_core
-  named_comparisons$tau = Inf
-  named_comparisons$pvalue = Inf
-  
-  na_vals = is.na(x)
-  do_calculation = TRUE
-  if (na_method %in% "complete.obs") {
-    no_na_rows = rowSums(na_vals) == 0
-    if (sum(no_na_rows) == 0) {
-      named_comparisons$tau = NA
-      named_comparisons$pvalue = NA
-      split_cor = split(named_comparisons, named_comparisons$core)
-      do_calculation = FALSE
+
+  if (na_method %in% c("complete.obs", "pariwise.complete.obs")) {
+    if (sum_nona == 0) {
+      do_computation = FALSE
     } else {
       x = x[no_na_rows, , drop = FALSE]
     }
   }
-  
-  
-  split_comparisons = split(named_comparisons, named_comparisons$core)
-  
-  
-  do_split = function(do_comparisons, x, na_method, do_log_memory) {
-    #seq_range = seq(in_range[1], in_range[2])
-    #print(seq_range)
-    tau = vector("numeric", nrow(do_comparisons))
-    pvalue = tau
-    
-    for (irow in seq(1, nrow(do_comparisons))) {
-      return_na = FALSE
-      iloc = do_comparisons[irow, 1]
-      jloc = do_comparisons[irow, 2]
-      
-      tmp_x = x[, iloc]
-      tmp_y = x[, jloc]
-      if (na_method %in% "pairwise.complete.obs") {
-        pair_good = !is.na(tmp_x) & !is.na(tmp_y)
-        if (sum(pair_good) == 0) {
-          return_na = TRUE
-        } else {
-          return_na = FALSE
-          tmp_x = tmp_x[pair_good]
-          tmp_y = tmp_y[pair_good]
-        }
-      } else if (na_method %in% c("everything", "all.obs")) {
-        return_na = any(is.na(c(tmp_x, tmp_y)))
-      }
-      
-      if (return_na) {
-        tau[irow] = as.double(NA)
-        pvalue[irow] = as.double(NA)
-        
-      } else {
-        ici_res = ici_kt(tmp_x, tmp_y)
-        tau[irow] = ici_res["tau"]
-        pvalue[irow] = ici_res["pvalue"]
-        
-      }
-      if (do_log_memory && ((irow %% 100) == 0)) {
-        log_memory()
-      }
-      
-    }
-    do_comparisons$tau = tau
-    do_comparisons$pvalue = pvalue
-    do_comparisons
+
+  if (!do_computation) {
+    split_cor = purrr::map(split_comparisons, \(in_split){
+      in_split$tau = NA
+      in_split$pvalue = NA
+      in_split
+    })
   }
+
+  
+  
   # we record how much time is actually spent doing ICI-Kt
   # itself, as some of the other operations will add a bit of time
   # 
-  if (do_calculation) {
+  if (do_computation) {
     t1 = Sys.time()
     # note here, this takes our list of comparisons, and then calls the do_split
     # function above on each of them.
-    split_cor = split_fun(split_comparisons, do_split, x, na_method, do_log_memory)
+    split_cor = computation$split_fun(split_comparisons, kt_split, x, na_method, do_log_memory)
     t2 = Sys.time()
     t_diff = as.numeric(difftime(t2, t1, units = "secs"))
   } else {
@@ -509,9 +507,6 @@ kt_fast = function(x, y = NULL, use = "everything", return_matrix = TRUE)
     
     one_way_index = cbind(all_cor$s1, all_cor$s2)
     back_way_index = cbind(all_cor$s2, all_cor$s1)
-    
-    tau_matrix[one_way_index] = all_cor$tau
-    tau_matrix[back_way_index] = all_cor$tau
     
     tau_matrix[one_way_index] = all_cor$tau
     tau_matrix[back_way_index] = all_cor$tau
@@ -547,90 +542,30 @@ pairwise_completeness = function(data_matrix,
                                 include_only = NULL,
                                 return_matrix = TRUE){
   
+  data_arg = rlang::caller_arg(data_matrix)
+  include_arg = rlang::caller_arg(include_only)
   
-  if (is.null(colnames(data_matrix))) {
-    stop("rownames of data_matrix cannot be NULL!")
-  }
+  check_if_colnames_null(data_matrix, arg = data_arg)
+  data_matrix = transform_to_matrix(data_matrix, arg = data_arg)
+  check_if_numeric(data_matrix, arg = data_arg)
+  
   
   exclude_loc = setup_missing_matrix(data_matrix, global_na)
   
   n_sample = ncol(exclude_loc)
   
-  if ("furrr" %in% utils::installed.packages()) {
-    ncore = future::nbrOfWorkers()
-    names(ncore) = NULL
-    split_fun = furrr::future_map
-  } else {
-    ncore = 1
-    split_fun = purrr::map
-  }
+  computation = check_furrr()
+
+  split_comparisons = setup_comparisons(colnames(data_matrix),
+                                        include_only = include_only,
+                                        diag_good = FALSE,
+                                        ncore = computation$ncore,
+                                        which = "completeness",
+                                        include_arg = include_arg)
   
   
-  pairwise_comparisons = utils::combn(n_sample, 2)
   
-  extra_comparisons = matrix(rep(seq(1, n_sample), each = 2), nrow = 2, ncol = n_sample, byrow = FALSE)
-  pairwise_comparisons = cbind(pairwise_comparisons, extra_comparisons)
-  
-  named_comparisons = data.frame(s1 = colnames(data_matrix)[pairwise_comparisons[1, ]],
-                                 s2 = colnames(data_matrix)[pairwise_comparisons[2, ]])
-  
-  if (!is.null(include_only)) {
-    if (is.character(include_only) || is.numeric(include_only)) {
-      #message("a vector!")
-      # Check each of the comparison vectors against the include_only variable
-      # This returns TRUE where they match
-      # Use OR to make sure we return everything that should be returned
-      s1_include = named_comparisons$s1 %in% include_only
-      s2_include = named_comparisons$s2 %in% include_only
-      named_comparisons = named_comparisons[(s1_include | s2_include), ]
-    } else if (is.list(include_only)) {
-      if (length(include_only) == 2) {
-        #message("a list!")
-        # In this case the include_only is a list of things, so we have to check both
-        # of the sets against each of the lists. Again, this returns TRUE where
-        # they match. Because we want the things where they
-        # are both TRUE (assuming l1[1] goes with l2[1]), we use the AND at the end.
-        l1_include = (named_comparisons$s1 %in% include_only[[1]]) | (named_comparisons$s2 %in% include_only[[1]])
-        l2_include = (named_comparisons$s1 %in% include_only[[2]]) | (named_comparisons$s2 %in% include_only[[2]])
-        named_comparisons = named_comparisons[(l1_include & l2_include), ]
-      } else {
-        stop("include_only must either be a single vector, or a list of 2 vectors!")
-      }
-    }
-  }
-  
-  if (nrow(named_comparisons) == 0) {
-    stop("nrow(named_comparisons) == 0, did you create include_only correctly?")
-  }
-  
-  n_todo = nrow(named_comparisons)
-  n_each = ceiling(n_todo / ncore)
-  
-  which_core = rep(seq(1, ncore), each = n_each)
-  which_core = which_core[1:nrow(named_comparisons)]
-  
-  named_comparisons$core = which_core
-  named_comparisons$missingness = Inf
-  named_comparisons$completeness = Inf
-  
-  split_comparisons = split(named_comparisons, named_comparisons$core)
-  do_split = function(do_comparisons, exclude_loc) {
-    #seq_range = seq(in_range[1], in_range[2])
-    #print(seq_range)
-    missingness = vector("numeric", nrow(do_comparisons))
-    completeness = vector("numeric", nrow(do_comparisons))
-    for (irow in seq(1, nrow(do_comparisons))) {
-      iloc = do_comparisons[irow, 1]
-      jloc = do_comparisons[irow, 2]
-      missingness[irow] = missing_either(exclude_loc[, iloc], exclude_loc[, jloc])
-    }
-    completeness = 1 - (missingness / nrow(exclude_loc))
-    do_comparisons$missingness = missingness
-    do_comparisons$completeness = completeness
-    do_comparisons
-  }
-  
-  split_missing = split_fun(split_comparisons, do_split, exclude_loc)
+  split_missing = computation$split_fun(split_comparisons, complete_split, exclude_loc)
   
   all_missing = purrr::list_rbind(split_missing)
   rownames(all_missing) = NULL
@@ -647,6 +582,22 @@ pairwise_completeness = function(data_matrix,
     return(all_missing)
   }
 
+}
+
+complete_split = function(do_comparisons, exclude_loc) {
+  #seq_range = seq(in_range[1], in_range[2])
+  #print(seq_range)
+  missingness = vector("numeric", nrow(do_comparisons))
+  completeness = vector("numeric", nrow(do_comparisons))
+  for (irow in seq(1, nrow(do_comparisons))) {
+    iloc = do_comparisons[irow, 1]
+    jloc = do_comparisons[irow, 2]
+    missingness[irow] = missing_either(exclude_loc[, iloc], exclude_loc[, jloc])
+  }
+  completeness = 1 - (missingness / nrow(exclude_loc))
+  do_comparisons$missingness = missingness
+  do_comparisons$completeness = completeness
+  do_comparisons
 }
 
 missing_either = function(in_x, in_y){

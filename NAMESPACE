@@ -2,6 +2,7 @@
 
 export(add_uniform_noise)
 export(calculate_matrix_medians)
+export(cor_fast)
 export(cor_matrix_2_long_df)
 export(disable_logging)
 export(enable_logging)
@@ -16,4 +17,5 @@ export(rank_order_data)
 export(show_progress)
 export(test_left_censorship)
 importFrom(Rcpp,sourceCpp)
+importFrom(stats,median)
 useDynLib(ICIKendallTau)

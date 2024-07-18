@@ -28,6 +28,8 @@
 #' missingness$values
 #' missingness$binomial_test
 #' 
+#' @importFrom stats median
+#' 
 #' @export
 #' @return data.frame of trials / successes, and binom.test result
 test_left_censorship = function(data_matrix, 

@@ -118,8 +118,6 @@ y = rnorm(1000)
 x2 = rnorm(40000)
 y2 = rnorm(40000)
 
-library(microbenchmark)
-
 microbenchmark(
   cor(x, y, method = "kendall"),
   ici_kt(x, y, "global"),
@@ -168,6 +166,28 @@ To keep the `data.frame` output, add the argument `return_matrix=FALSE` to the c
 #| label: matrix
 r_4 = ici_kendalltau(matrix_2, return_matrix = FALSE)
 r_4
+```
+
+## Other Correlations
+
+`ici_kendalltau` and `ici_kt` calculate the p-value of the correlation as part of the overall calculation.
+`stats::cor` does not, and `stats::cor.test` can only calculate the p-value for a single comparison of two vectors.
+It is sometimes advantageous to obtain p-values for a large number of correlations.
+We provide `cor_fast`, which works analogously to `kt_fast`, with the ability to choose `pearson` or `spearman` as the method.
+Note that if a matrix is provided, the columns must be named.
+
+```{r}
+#| label: cor-fast
+r_5 = cor_fast(x, y, method = "pearson")
+r_5
+```
+
+```{r}
+#| label: cor-fast2
+m_3 = cbind(x, y, x)
+colnames(m_3) = c("s1", "s2", "s3")
+r_6 = cor_fast(m_3)
+r_6
 ```
 
 ## Code of Conduct

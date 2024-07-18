@@ -2,7 +2,7 @@
 % Please edit documentation in R/kendalltau.R
 \name{ici_kendalltau}
 \alias{ici_kendalltau}
-\title{information-content-informed kendall tau}
+\title{Information-content-informed kendall tau}
 \usage{
 ici_kendalltau(
   data_matrix,
@@ -11,6 +11,8 @@ ici_kendalltau(
   scale_max = TRUE,
   diag_good = TRUE,
   include_only = NULL,
+  alternative = "two.sided",
+  continuity = FALSE,
   check_timing = FALSE,
   return_matrix = TRUE
 )
@@ -27,6 +29,10 @@ ici_kendalltau(
 \item{diag_good}{logical, should the diagonal entries reflect how many entries in the sample were "good"?}
 
 \item{include_only}{only run the correlations that include the members (as a vector) or combinations (as a list or data.frame)}
+
+\item{alternative}{what is the alternative for the p-value test?}
+
+\item{continuity}{should a continuity correction be applied?}
 
 \item{check_timing}{logical to determine should we try to estimate run time for full dataset? (default is FALSE)}
 
