@@ -1,3 +1,10 @@
+# ICIKendallTau 1.2.0
+
+- Refactored much of `ici_kendalltau`, making the code more consistent and easier to extend, as well as providing more informative error messages. Thanks to @njtierney for suggestions.
+- Also refactored `kt_fast` to be more consistent and use more functions internally. **Note**: now returns matrix or data.frame regardless of whether passing simply two vectors or a matrix input.
+- Added `alternative` and `continuity` arguments to both `ici_kendalltau` and `kt_fast`.
+- Added `cor_fast` to allow running many iterations of `cor.test` on large matrix inputs if desired, with parallel processing to speed things up.
+
 # ICIKendallTau 1.1.3
 
 - makes `rank_order_data` take a sample class argument to enable splitting out by class.

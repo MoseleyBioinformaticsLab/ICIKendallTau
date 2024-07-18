@@ -30,7 +30,7 @@
     
     <a class="navbar-brand me-2" href="index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -180,8 +180,6 @@
 <span><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">40000</span><span class="op">)</span></span>
 <span><span class="va">y2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">40000</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span>,</span>
@@ -189,10 +187,10 @@
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
-<span><span class="co">#&gt;                           expr       min        lq       mean    median       uq       max neval</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 11666.371 11671.671 12405.0886 12084.801 13276.95 13325.649     5</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   253.826   255.717   430.9002   277.985   317.24  1049.733     5</span></span>
-<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 13405.302 13731.770 15208.7108 14693.928 15415.66 18796.894     5</span></span></code></pre></div>
+<span><span class="co">#&gt;                           expr       min        lq      mean    median        uq       max neval</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 11755.570 11928.248 12437.300 12409.265 12841.010 13252.408     5</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   239.267   248.566   413.841   263.888   269.249  1048.235     5</span></span>
+<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 13897.996 13991.561 15903.593 15191.136 18077.771 18359.500     5</span></span></code></pre></div>
 <p>In the case of 40,000 features, the average time on a modern CPU is 14 milliseconds.</p>
 <p>Of course, if you want to use it to calculate Kendall-tau-b without incorporating missingness, it can do that just fine as well.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -203,8 +201,18 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k_tau_fast</span> <span class="op">=</span> <span class="fu"><a href="reference/kt_fast.html">kt_fast</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
 <span><span class="va">k_tau_fast</span></span>
-<span><span class="co">#&gt;          tau       pvalue </span></span>
-<span><span class="co">#&gt; -0.003411411  0.871672260</span></span></code></pre></div>
+<span><span class="co">#&gt; $tau</span></span>
+<span><span class="co">#&gt;              x            y</span></span>
+<span><span class="co">#&gt; x  1.000000000 -0.003411411</span></span>
+<span><span class="co">#&gt; y -0.003411411  1.000000000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $pvalue</span></span>
+<span><span class="co">#&gt;           x         y</span></span>
+<span><span class="co">#&gt; x 0.0000000 0.8716723</span></span>
+<span><span class="co">#&gt; y 0.8716723 0.0000000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $run_time</span></span>
+<span><span class="co">#&gt; [1] 0.02890801</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="parallelism">Parallelism<a class="anchor" aria-label="anchor" href="#parallelism"></a>
@@ -229,7 +237,46 @@
 <span><span class="co">#&gt; 3 s4 s4    0 1.0000000      0 1.000000 1.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $run_time</span></span>
-<span><span class="co">#&gt; [1] 0.01783729</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.02034473</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="other-correlations">Other Correlations<a class="anchor" aria-label="anchor" href="#other-correlations"></a>
+</h2>
+<p><code>ici_kendalltau</code> and <code>ici_kt</code> calculate the p-value of the correlation as part of the overall calculation. <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">stats::cor</a></code> does not, and <code><a href="https://rdrr.io/r/stats/cor.test.html" class="external-link">stats::cor.test</a></code> can only calculate the p-value for a single comparison of two vectors. It is sometimes advantageous to obtain p-values for a large number of correlations. We provide <code>cor_fast</code>, which works analogously to <code>kt_fast</code>, with the ability to choose <code>pearson</code> or <code>spearman</code> as the method. Note that if a matrix is provided, the columns must be named.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">r_5</span> <span class="op">=</span> <span class="fu"><a href="reference/cor_fast.html">cor_fast</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span></span>
+<span><span class="va">r_5</span></span>
+<span><span class="co">#&gt; $rho</span></span>
+<span><span class="co">#&gt;            x          y</span></span>
+<span><span class="co">#&gt; x 1.00000000 0.00720612</span></span>
+<span><span class="co">#&gt; y 0.00720612 1.00000000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $pvalue</span></span>
+<span><span class="co">#&gt;           x         y</span></span>
+<span><span class="co">#&gt; x 0.0000000 0.8199608</span></span>
+<span><span class="co">#&gt; y 0.8199608 0.0000000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $run_time</span></span>
+<span><span class="co">#&gt; [1] 0.02450991</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">m_3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_3</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"s3"</span><span class="op">)</span></span>
+<span><span class="va">r_6</span> <span class="op">=</span> <span class="fu"><a href="reference/cor_fast.html">cor_fast</a></span><span class="op">(</span><span class="va">m_3</span><span class="op">)</span></span>
+<span><span class="va">r_6</span></span>
+<span><span class="co">#&gt; $rho</span></span>
+<span><span class="co">#&gt;            s1         s2         s3</span></span>
+<span><span class="co">#&gt; s1 1.00000000 0.00720612 1.00000000</span></span>
+<span><span class="co">#&gt; s2 0.00720612 1.00000000 0.00720612</span></span>
+<span><span class="co">#&gt; s3 1.00000000 0.00720612 1.00000000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $pvalue</span></span>
+<span><span class="co">#&gt;           s1        s2        s3</span></span>
+<span><span class="co">#&gt; s1 0.0000000 0.8199608 0.0000000</span></span>
+<span><span class="co">#&gt; s2 0.8199608 0.0000000 0.8199608</span></span>
+<span><span class="co">#&gt; s3 0.0000000 0.8199608 0.0000000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $run_time</span></span>
+<span><span class="co">#&gt; [1] 0.0231781</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>

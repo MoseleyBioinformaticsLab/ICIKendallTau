@@ -21,16 +21,32 @@
     Code
       na_pairs_everything[c("tau", "pvalue")]
     Output
-         tau pvalue 
-          NA     NA 
+      $tau
+                 x_na2...1. x_na2...2.
+      x_na2...1.         NA         NA
+      x_na2...2.         NA         NA
+      
+      $pvalue
+                 x_na2...1. x_na2...2.
+      x_na2...1.         NA         NA
+      x_na2...2.         NA         NA
+      
 
 ---
 
     Code
       na_pairs_complete[c("tau", "pvalue")]
     Output
-              tau      pvalue 
-      0.003092146 0.963830701 
+      $tau
+                  x_na2...1.  x_na2...2.
+      x_na2...1. 1.000000000 0.003092146
+      x_na2...2. 0.003092146 1.000000000
+      
+      $pvalue
+                   x_na2...1.   x_na2...2.
+      x_na2...1. 1.076521e-48 9.638307e-01
+      x_na2...2. 9.638307e-01 1.076521e-48
+      
 
 ---
 
