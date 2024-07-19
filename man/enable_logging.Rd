@@ -15,7 +15,7 @@ enable_logging(log_file = NULL, memory = FALSE)
 Choose to enable logging, to a specific file if desired.
 }
 \details{
-Uses the {logger} package under the hood, which is suggested in the dependencies.
+Uses the logger package under the hood, which is suggested in the dependencies.
 Having logging enabled is nice to see when things are starting and stopping, and what exactly
 has been done, without needing to write messages to the console. It is especially
 useful if you are getting errors, but can't really see them, then you can add

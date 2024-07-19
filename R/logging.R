@@ -82,7 +82,7 @@ disable_logging = function(){
 #' @param log_file the file to log to
 #' @param memory provide memory logging too? Only available on Linux and MacOS
 #'
-#' @details Uses the {logger} package under the hood, which is suggested in the dependencies.
+#' @details Uses the logger package under the hood, which is suggested in the dependencies.
 #'   Having logging enabled is nice to see when things are starting and stopping, and what exactly
 #'   has been done, without needing to write messages to the console. It is especially
 #'   useful if you are getting errors, but can't really see them, then you can add
