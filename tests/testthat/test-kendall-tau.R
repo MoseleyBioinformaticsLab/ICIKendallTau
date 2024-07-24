@@ -104,6 +104,13 @@ test_that("include_only works as intended", {
   include_df = as.data.frame(include_test)
   small_include4 = ici_kendalltau(x, include_only = include_df)
   expect_equal(small_include4$cor, small_include3$cor)
+  
+  # turn off self-comparisons and see if it gets smaller
+  small_include5 = ici_kendalltau(x, include_only = include_test, diag_good = FALSE)
+  expect_equal(sum(small_include5$cor == 0), 9996)
+  
+  small_include6 = ici_kendalltau(x, include_only = include_test, diag_good = FALSE, return_matrix = FALSE)
+  expect_equal(nrow(small_include6$cor), 2)
 })
 
 test_that("completeness works correctly",{

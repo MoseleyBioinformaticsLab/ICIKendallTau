@@ -1,3 +1,7 @@
+# ICIKendallTau 1.2.2
+
+- Fixed a bug where passing a two vector list is **supposed** to restrict the comparisons to just those provided, but instead did all possible pairwise comparisons between the two things and all others available.
+
 # ICIKendallTau 1.2.0
 
 - Refactored much of `ici_kendalltau`, making the code more consistent and easier to extend, as well as providing more informative error messages. Thanks to @njtierney for suggestions.
