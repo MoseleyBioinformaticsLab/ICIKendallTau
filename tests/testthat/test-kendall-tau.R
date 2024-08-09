@@ -15,6 +15,11 @@ test_that("basic kendall-tau matches base R", {
   
   y[2] = 15
   expect_equal(ici_kt(x, y)[[1]], cor(x, y, method = "kendall"))
+  
+  # check p-values using other tests
+  expect_equal(ici_kt(x, y, alternative = "two.sided")[[2]], cor.test(x, y, method = "kendall", alternative = "two.sided", exact = FALSE)$p.value)
+  expect_equal(ici_kt(x, y, alternative = "less")[[2]], cor.test(x, y, method = "kendall", alternative = "less", exact = FALSE)$p.value)
+  expect_equal(ici_kt(x, y, alternative = "greater")[[2]], cor.test(x, y, method = "kendall", alternative = "greater", exact = FALSE)$p.value)
 })
 
 test_that("difference and reference match - short", {

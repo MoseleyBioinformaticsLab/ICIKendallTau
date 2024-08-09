@@ -142,6 +142,13 @@ k_tau_fast = kt_fast(x, y)
 k_tau_fast
 ```
 
+## P-Values
+
+ICI-Kt functions only calculates the tau-b variant that handles ties.
+P-value calculations use the asymptotic approximation in all cases, and thus
+may vary slightly from the p-values returned by R's `cor.test` and Python's `scipy.stats.kendalltau`
+depending on the number of values in *x* and *y*.
+
 ## Parallelism
 
 If you have {future} and the {furrr} packages installed, then it is also possible to split up the a set of matrix comparisons across compute resources for any multiprocessing engine registered with {future}.

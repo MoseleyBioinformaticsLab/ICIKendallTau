@@ -31,6 +31,10 @@ count_rank_tie <- function(ranks) {
 
 #' Calculates ici-kendall-tau
 #' 
+#' Calculates kendall-tau, with consideration of missingness providing information.
+#' Uses the calculation of tau-b, and always uses the asymptotic approximation of 
+#' the p-value.
+#' 
 #' @param x numeric vector
 #' @param y numeric vector
 #' @param perspective should we consider the "local" or "global" perspective?

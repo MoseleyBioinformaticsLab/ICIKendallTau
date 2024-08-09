@@ -30,7 +30,9 @@ ici_kt(
 kendall tau correlation, p-value, max-correlation
 }
 \description{
-Calculates ici-kendall-tau
+Calculates kendall-tau, with consideration of missingness providing information.
+Uses the calculation of tau-b, and always uses the asymptotic approximation of
+the p-value.
 }
 \details{
 Calculates the information-content-informed Kendall-tau correlation measure.
