@@ -217,9 +217,15 @@ setup_comparisons = function(samples,
         # of the sets against each of the lists. Again, this returns TRUE where
         # they match. Because we want the things where they
         # are both TRUE (assuming l1[1] goes with l2[1]), we use the AND at the end.
-        l1_include = (named_comparisons$s1 %in% include_only[[1]]) | (named_comparisons$s2 %in% include_only[[1]])
-        l2_include = (named_comparisons$s1 %in% include_only[[2]]) | (named_comparisons$s2 %in% include_only[[2]])
-        named_comparisons = named_comparisons[(l1_include & l2_include), ]
+        l1_l2 = paste0(include_only[[1]], "-", include_only[[2]])
+        l2_l1 = paste0(include_only[[2]], "-", include_only[[1]])
+        
+        all_include = c(l1_l2, l2_l1)
+        all_compare = paste0(named_comparisons$s1, "-", named_comparisons$s2)
+        
+        keep_compare = all_compare %in% all_include
+        named_comparisons = named_comparisons[keep_compare, ]
+        
       } else {
         cli::cli_abort(message = c(
           '{.arg {include_arg}} must be a vector, a data.frame with two columns, or list of two vectors.',
@@ -243,7 +249,7 @@ setup_comparisons = function(samples,
   n_each = ceiling(n_todo / ncore)
   
   which_core = rep(seq(1, ncore), each = n_each)
-  which_core = which_core[1:nrow(named_comparisons)]
+  which_core = which_core[seq_len(nrow(named_comparisons))]
   
   named_comparisons$core = which_core
   if (which %in% "icikt") {
