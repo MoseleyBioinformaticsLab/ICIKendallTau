@@ -20,6 +20,15 @@ test_that("basic kendall-tau matches base R", {
   expect_equal(ici_kt(x, y, alternative = "two.sided")[[2]], cor.test(x, y, method = "kendall", alternative = "two.sided", exact = FALSE)$p.value)
   expect_equal(ici_kt(x, y, alternative = "less")[[2]], cor.test(x, y, method = "kendall", alternative = "less", exact = FALSE)$p.value)
   expect_equal(ici_kt(x, y, alternative = "greater")[[2]], cor.test(x, y, method = "kendall", alternative = "greater", exact = FALSE)$p.value)
+  
+  # check completeness
+  y[2] = NA
+  expect_equal(ici_kt(x, y)[[4]], 0.9)
+  x[8] = NA
+  expect_equal(ici_kt(x, y)[[4]], 0.8)
+  x[2] = NA
+  expect_equal(ici_kt(x, y)[[4]], (1 - (1/9)))
+  expect_equal(ici_kt(x, y, perspective = "global")[[4]], 0.8)
 })
 
 test_that("difference and reference match - short", {
@@ -33,11 +42,12 @@ test_that("difference and reference match - short", {
 test_that("bad values passed error or return NA", {
   x = sort(rnorm(100))
   y = rep(NA, 100)
-  result = numeric(3)
+  result = numeric(4)
   result[1] = NA
   result[2] = NA
   result[3] = NA
-  names(result) = c("tau", "pvalue", "tau_max")
+  result[4] = NA
+  names(result) = c("tau", "pvalue", "tau_max", "completeness")
   expect_equal(ici_kt(x, y), result)
   
   y = x[1:99]
@@ -120,6 +130,8 @@ test_that("completeness works correctly",{
   x_cor = ici_kendalltau(x, perspective = "global", return_matrix = FALSE)
   x_comp = pairwise_completeness(x, return_matrix = FALSE)
   expect_equal(nrow(x_cor$cor), nrow(x_comp))
+  
+  expect_equal(x_cor$cor$completeness, x_comp$completeness)
   
   expect_snapshot(x_comp[4:6, ])
 })

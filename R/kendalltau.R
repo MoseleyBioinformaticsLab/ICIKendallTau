@@ -26,8 +26,9 @@
 #'   
 #'   * cor: scaled correlations
 #'   * raw: raw kendall-tau correlations
-#'   * pval: p-values
+#'   * pvalue: p-values
 #'   * taumax: the theoretical maximum kendall-tau value possible
+#'   * completeness: how complete the two samples are (i.e. how many entries are not missing in either sample)
 #'   
 #'   Eventually, we plan to provide two more parameters for replacing values, \code{feature_na} for feature specific NA values and \code{sample_na} for sample specific NA values.
 #'   
@@ -35,7 +36,7 @@
 #'   left-censorship, we recommend testing that hypothesis with [test_left_censorship()]
 #'   first.
 #' 
-#' @return list with cor, raw, pval, taumax
+#' @return list with cor, raw, pvalue, taumax, completeness
 #' 
 #' @examples
 #' \dontrun{
@@ -53,7 +54,7 @@
 #' # s1  1  1
 #' # s2  1  1
 #' names(r_1)
-#' # "cor", "raw", "pval", "taumax", "keep", "run_time"
+#' # "cor", "raw", "pvalue", "taumax", "completeness", "keep", "run_time"
 #' 
 #' s3 = s1
 #' s3[sample(100, 50)] = NA
@@ -119,6 +120,8 @@ ici_kendalltau = function(data_matrix,
   exclude_data = data_matrix
   exclude_data[exclude_loc] = NA
   n_sample = ncol(exclude_data)
+  n_feature = nrow(exclude_data)
+  
   
   # figure out if we are using furrr to process these
   computation = check_furrr()
@@ -160,10 +163,12 @@ ici_kendalltau = function(data_matrix,
   
   n_good = colSums(!exclude_loc)
   names(n_good) = colnames(data_matrix)
+  frac_complete = n_good / nrow(exclude_loc)
   scaled_output = scale_and_reshape(split_cor,
                                     n_good = n_good,
                                     scale_max = scale_max,
                                     diag_good = diag_good,
+                                    frac_complete = frac_complete,
                                     return_matrix = return_matrix,
                                     exclude_loc = exclude_loc) 
      
@@ -270,6 +275,7 @@ ici_split = function(do_comparisons, exclude_data, perspective, do_log_memory, a
   raw = vector("numeric", nrow(do_comparisons))
   pvalue = raw
   taumax = raw
+  completeness = raw
   
   for (irow in seq_len(nrow(do_comparisons))) {
     iloc = do_comparisons[irow, 1]
@@ -279,6 +285,7 @@ ici_split = function(do_comparisons, exclude_data, perspective, do_log_memory, a
     raw[irow] = ici_res["tau"]
     pvalue[irow] = ici_res["pvalue"]
     taumax[irow] = ici_res["tau_max"]
+    completeness[irow] = ici_res["completeness"]
     if (do_log_memory && ((irow %% 100) == 0)) {
       log_memory()
     }
@@ -286,6 +293,7 @@ ici_split = function(do_comparisons, exclude_data, perspective, do_log_memory, a
   do_comparisons$raw = raw
   do_comparisons$pvalue = pvalue
   do_comparisons$taumax = taumax
+  do_comparisons$completeness = completeness
   #return(ls())
   do_comparisons
 }
@@ -341,6 +349,7 @@ scale_and_reshape = function(split_cor,
                               n_good = n_good,
                               scale_max = scale_max,
                               diag_good = diag_good,
+                              frac_complete = frac_complete,
                               return_matrix = return_matrix,
                             exclude_loc = exclude_loc) 
 {
@@ -361,6 +370,7 @@ scale_and_reshape = function(split_cor,
                            raw = n_good / max(n_good),
                            pvalue = 0,
                            taumax = 1,
+                           completeness = frac_complete,
                            cor = n_good / max(n_good))
     rownames(extra_cor) = NULL
     all_cor = rbind(all_cor, extra_cor)
@@ -375,6 +385,7 @@ scale_and_reshape = function(split_cor,
     raw_matrix = cor_matrix
     pvalue_matrix = cor_matrix
     taumax_matrix = cor_matrix
+    completeness_matrix = cor_matrix
     
     one_way_index = cbind(all_cor$s1, all_cor$s2)
     back_way_index = cbind(all_cor$s2, all_cor$s1)
@@ -391,7 +402,10 @@ scale_and_reshape = function(split_cor,
     taumax_matrix[one_way_index] = all_cor$taumax
     taumax_matrix[back_way_index] = all_cor$taumax
     
-    return(list(cor = cor_matrix, raw = raw_matrix, pval = pvalue_matrix, taumax = taumax_matrix, keep = t(!exclude_loc)))
+    completeness_matrix[one_way_index] = all_cor$completeness
+    completeness_matrix[back_way_index] = all_cor$completeness
+    
+    return(list(cor = cor_matrix, raw = raw_matrix, pvalue = pvalue_matrix, taumax = taumax_matrix, completeness = completeness_matrix, keep = t(!exclude_loc)))
   } else {
     return(list(cor = all_cor))
   }

@@ -63,7 +63,7 @@ count_rank_tie <- function(ranks) {
 #' @importFrom Rcpp sourceCpp
 #' @export
 #' @useDynLib ICIKendallTau
-#' @return kendall tau correlation, p-value, max-correlation
+#' @return kendall tau correlation, p-value, max-correlation, completeness
 ici_kt <- function(x, y, perspective = "local", alternative = "two.sided", continuity = FALSE, output = "simple") {
     .Call('_ICIKendallTau_ici_kt', PACKAGE = 'ICIKendallTau', x, y, perspective, alternative, continuity, output)
 }

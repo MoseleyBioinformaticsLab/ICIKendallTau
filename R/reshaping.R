@@ -19,12 +19,13 @@ cor_matrix_2_long_df = function(in_matrix)
   wide_df = as.data.frame(in_matrix)
   wide_df$row = rownames(in_matrix)
   
-  if ("dplyr" %in% utils::installed.packages()) {
-    long_df = data.frame(row = wide_df$row, stack(wide_df, select = -row)) |>
-      dplyr::transmute(s1 = as.character(row), s2 = as.character(ind), cor = values)
-  } else {
-    stop("This operation uses 'dplyr', and that package is not installed.")
-  }
+  long_df = data.frame(row = wide_df$row, stack(wide_df, select = -row))
+  long_df$s1 = as.character(long_df$row)
+  long_df$s2 = as.character(long_df$ind)
+  long_df$cor = long_df$values
+  long_df$row = NULL
+  long_df$ind = NULL
+  long_df$values = NULL
   
   long_df
 }

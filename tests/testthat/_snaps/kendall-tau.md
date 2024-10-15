@@ -3,8 +3,8 @@
     Code
       ici_val
     Output
-              tau      pvalue     tau_max 
-      -0.00123518  0.67867094  1.00000000 
+               tau       pvalue      tau_max completeness 
+       -0.00123518   0.67867094   1.00000000   1.00000000 
 
 # completeness works correctly
 

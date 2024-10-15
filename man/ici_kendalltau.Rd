@@ -39,7 +39,7 @@ ici_kendalltau(
 \item{return_matrix}{logical, should the data.frame or matrix result be returned?}
 }
 \value{
-list with cor, raw, pval, taumax
+list with cor, raw, pvalue, taumax, completeness
 }
 \description{
 Given a data-matrix, computes the information-theoretic Kendall-tau-b between
@@ -56,8 +56,9 @@ Returned is a list containing matrices with:
 \itemize{
 \item cor: scaled correlations
 \item raw: raw kendall-tau correlations
-\item pval: p-values
+\item pvalue: p-values
 \item taumax: the theoretical maximum kendall-tau value possible
+\item completeness: how complete the two samples are (i.e. how many entries are not missing in either sample)
 }
 
 Eventually, we plan to provide two more parameters for replacing values, \code{feature_na} for feature specific NA values and \code{sample_na} for sample specific NA values.
@@ -82,7 +83,7 @@ r_1$cor
 # s1  1  1
 # s2  1  1
 names(r_1)
-# "cor", "raw", "pval", "taumax", "keep", "run_time"
+# "cor", "raw", "pvalue", "taumax", "completeness", "keep", "run_time"
 
 s3 = s1
 s3[sample(100, 50)] = NA

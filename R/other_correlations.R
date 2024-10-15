@@ -78,7 +78,7 @@ cor_fast = function(x, y = NULL, use = "everything",
 
   if (!do_computation) {
     split_cor = purrr::map(split_comparisons, \(in_split){
-      in_split$tau = NA
+      in_split$rho = NA
       in_split$pvalue = NA
       in_split
     })

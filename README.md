@@ -143,10 +143,14 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min        lq      mean    median        uq       max neval
-#>  cor(x, y, method = "kendall") 11755.570 11928.248 12437.300 12409.265 12841.010 13252.408     5
-#>         ici_kt(x, y, "global")   239.267   248.566   413.841   263.888   269.249  1048.235     5
-#>       ici_kt(x2, y2, "global") 13897.996 13991.561 15903.593 15191.136 18077.771 18359.500     5
+#>                           expr       min        lq       mean    median
+#>  cor(x, y, method = "kendall") 13191.399 13608.067 13688.8872 13773.376
+#>         ici_kt(x, y, "global")   337.849   367.467   426.3204   375.616
+#>       ici_kt(x2, y2, "global") 20221.147 21001.428 21366.2374 21186.299
+#>         uq       max neval
+#>  13895.864 13975.730     5
+#>    390.208   660.462     5
+#>  21580.156 22842.157     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -178,8 +182,16 @@ k_tau_fast
 #> y 0.8716723 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02890801
+#> [1] 0.02046323
 ```
+
+## P-Values
+
+ICI-Kt functions only calculates the tau-b variant that handles ties.
+P-value calculations use the asymptotic approximation in all cases, and
+thus may vary slightly from the p-values returned by R’s `cor.test` and
+Python’s `scipy.stats.kendalltau` depending on the number of values in
+*x* and *y*.
 
 ## Parallelism
 
@@ -209,13 +221,13 @@ of `ici_kendalltau`.
 r_4 = ici_kendalltau(matrix_2, return_matrix = FALSE)
 r_4
 #> $cor
-#>   s1 s2 core       raw pvalue   taumax       cor
-#> 1 s3 s4    1 0.9924359      0 0.997963 0.9944616
-#> 2 s3 s3    0 1.0000000      0 1.000000 1.0000000
-#> 3 s4 s4    0 1.0000000      0 1.000000 1.0000000
+#>   s1 s2 core       raw pvalue   taumax completeness       cor
+#> 1 s3 s4    1 0.9924359      0 0.997963        0.921 0.9944616
+#> 2 s3 s3    0 1.0000000      0 1.000000        0.950 1.0000000
+#> 3 s4 s4    0 1.0000000      0 1.000000        0.950 1.0000000
 #> 
 #> $run_time
-#> [1] 0.02034473
+#> [1] 0.01763749
 ```
 
 ## Other Correlations
@@ -243,7 +255,7 @@ r_5
 #> y 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02450991
+#> [1] 0.02564859
 ```
 
 ``` r
@@ -264,7 +276,7 @@ r_6
 #> s3 0.0000000 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.0231781
+#> [1] 0.02596617
 ```
 
 ## Code of Conduct

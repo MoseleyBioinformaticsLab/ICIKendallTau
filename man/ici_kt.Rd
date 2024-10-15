@@ -27,7 +27,7 @@ ici_kt(
 \item{output}{used to control reporting of values for debugging}
 }
 \value{
-kendall tau correlation, p-value, max-correlation
+kendall tau correlation, p-value, max-correlation, completeness
 }
 \description{
 Calculates kendall-tau, with consideration of missingness providing information.

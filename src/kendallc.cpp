@@ -162,15 +162,15 @@ inline double signC(double x) {
 //' @importFrom Rcpp sourceCpp
 //' @export
 //' @useDynLib ICIKendallTau
-//' @return kendall tau correlation, p-value, max-correlation
+//' @return kendall tau correlation, p-value, max-correlation, completeness
 // [[Rcpp::export]]
 NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "local", String alternative = "two.sided", bool continuity = false, String output = "simple") {
   
   if (x.length() != y.length()) {
     stop("'X' and 'Y' are not the same length!");
   }
-  NumericVector k_res(3);
-  k_res.names() = CharacterVector({"tau", "pvalue", "tau_max"});
+  NumericVector k_res(4);
+  k_res.names() = CharacterVector({"tau", "pvalue", "tau_max", "completeness"});
   
   NumericVector z_b (1);
   NumericVector p_value (1);
@@ -195,11 +195,22 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
     k_res(0) = NA_REAL;
     k_res(1) = NA_REAL;
     k_res(2) = NA_REAL;
+    k_res(3) = NA_REAL;
     return k_res;
   }
   
   x2 = clone(x);
   y2 = clone(y);
+  
+  // completeness calculation
+  LogicalVector either_na;
+  int64_t missingness;
+  long double completeness;
+  
+  either_na = is_na(x) | is_na(y);
+  long double either_na_length = either_na.size();
+  missingness = sum(either_na);
+  completeness = 1 - (missingness / either_na_length);
   
   double min_x = min(na_omit(x2)) - 0.1;
   double min_y = min(na_omit(y2)) - 0.1;
@@ -216,6 +227,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
     k_res(0) = NA_REAL;
     k_res(1) = NA_REAL;
     k_res(2) = NA_REAL;
+    k_res(3) = NA_REAL;
     return k_res;
   }
   
@@ -228,6 +240,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
     k_res(0) = NA_REAL;
     k_res(1) = NA_REAL;
     k_res(2) = NA_REAL;
+    k_res(3) = NA_REAL;
     return k_res;
   }
   
@@ -280,6 +293,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
     warning("Warning: Ties equal the total, NA returned!");
     k_res(0) = NA_REAL;
     k_res(1) = NA_REAL;
+    k_res(2) = NA_REAL;
     k_res(3) = NA_REAL;
     return k_res;
   }
@@ -319,6 +333,7 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   }
   k_res[0] = tau;
   k_res[2] = tau_max;
+  k_res[3] = completeness;
   
   //Rprintf("n_entry: %f\n", n_entry);
   
@@ -326,6 +341,8 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
     std::string report_st = "min_x: " + std::to_string(min_x) + "\n" +
       "min_y: " + std::to_string(min_y) + "\n" +
       "n_entry: " + std::to_string(n_entry) + "\n" +
+      "missingness: " + std::to_string(missingness) + "\n" +
+      "completeness: " + std::to_string(completeness) + "\n" +
       "tot: " + std::to_string(tot) + "\n" +
       "sum_obs: " + std::to_string(sum_obs) + "\n" +
       "dis: " + std::to_string(dis) + "\n" +
