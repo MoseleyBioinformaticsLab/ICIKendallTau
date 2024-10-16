@@ -334,6 +334,9 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
   k_res[2] = tau_max;
   k_res[3] = completeness;
   
+  double p_report;
+  p_report = k_res[1];
+  
   //Rprintf("n_entry: %f\n", n_entry);
   
   if (output != "simple") {
@@ -354,8 +357,8 @@ NumericVector ici_kt(NumericVector x, NumericVector y, String perspective = "loc
       "var: " + std::to_string(var) + "\n" +
       "z_b: " + std::to_string(z_b_0) + "\n" +
       "tau: " + std::to_string(tau) + "\n" +
-      "tau_max:" + std::to_string(tau_max) + "\n";
-      "pvalue: " + std::to_string(k_res[1]) + "\n";
+      "tau_max:" + std::to_string(tau_max) + "\n" +
+      "pvalue: " + std::to_string(p_report) + "\n";
     Rcout << report_st;
   }
   
