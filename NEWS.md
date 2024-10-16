@@ -1,3 +1,9 @@
+# ICIKendallTau 1.2.5
+
+- Fixed a bug where the `check_timing` wasn't taking the right arguments, and wasn't actually calculating what it should.
+- Added the `completeness` metric to the output of `ici_kt` (and therefore to `ici_kendalltau`) (closes #23).
+- Added more tests (closes #22 for now).
+
 # ICIKendallTau 1.2.2
 
 - Fixed a bug where passing a two vector list is **supposed** to restrict the comparisons to just those provided, but instead did all possible pairwise comparisons between the two things and all others available.

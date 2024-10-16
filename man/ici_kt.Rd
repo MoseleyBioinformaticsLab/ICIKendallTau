@@ -22,7 +22,7 @@ ici_kt(
 
 \item{alternative}{what is the alternative for the p-value test?}
 
-\item{continuity}{logical: if true, a continuity correction is used}
+\item{continuity}{logical: if true, a continuity correction is applied to the p-value}
 
 \item{output}{used to control reporting of values for debugging}
 }
@@ -31,8 +31,7 @@ kendall tau correlation, p-value, max-correlation, completeness
 }
 \description{
 Calculates kendall-tau, with consideration of missingness providing information.
-Uses the calculation of tau-b, and always uses the asymptotic approximation of
-the p-value.
+Uses the calculation of tau-b.
 }
 \details{
 Calculates the information-content-informed Kendall-tau correlation measure.

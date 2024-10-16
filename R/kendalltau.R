@@ -139,8 +139,9 @@ ici_kendalltau = function(data_matrix,
   n_todo = sum(purrr::map_int(split_comparisons, nrow))
   
   if (check_timing) {
+    
     sample_compare = sample(nrow(split_comparisons[[1]]), 5)
-    tmp_pairwise = split_comparisons[[1]][, sample_compare]
+    tmp_pairwise = split_comparisons[[1]][sample_compare, , drop = FALSE]
     
     run_tmp = check_icikt_timing(exclude_data, tmp_pairwise, perspective, n_todo, computation$ncore)
     return(run_tmp)
@@ -229,7 +230,7 @@ setup_comparisons = function(samples,
       } else {
         cli::cli_abort(message = c(
           '{.arg {include_arg}} must be a vector, a data.frame with two columns, or list of two vectors.',
-          'x' = 'Currently, {.code {length({include_arg})} returns \\
+          'x' = 'Currently, {.code {length({include_arg})}} returns \\
           {length(include_only)}'
         ))
       }
@@ -240,7 +241,7 @@ setup_comparisons = function(samples,
   if (n_todo == 0) {
     cli::cli_abort(message = c(
       'No comparisons to do.',
-      'i' = '{.arg {include_arg}} defines {.val {n_include}} possible comparisons.'
+      'i' = 'Check the list of column names in {.arg {include_arg}} vs those in the samples.'
     ))
     
   }
@@ -629,14 +630,14 @@ missing_either = function(in_x, in_y){
 
 check_icikt_timing = function(exclude_data, tmp_pairwise, perspective, n_todo, ncore){
   t_start = Sys.time()
-  for (icol in seq_len(ncol(tmp_pairwise))) {
-    iloc = tmp_pairwise[1, icol]
-    jloc = tmp_pairwise[2, icol]
+  for (irow in seq_len(nrow(tmp_pairwise))) {
+    iloc = tmp_pairwise[irow, 1]
+    jloc = tmp_pairwise[irow, 2]
     tmp_val = ici_kt(exclude_data[, iloc], exclude_data[, jloc], perspective = perspective)
   }
   t_stop = Sys.time()
   t_total = as.numeric(difftime(t_stop, t_start, units = "secs"))
-  n_comp = ncol(tmp_pairwise)
+  n_comp = nrow(tmp_pairwise)
   
   t_each = t_total / n_comp
   

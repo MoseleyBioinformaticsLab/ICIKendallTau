@@ -23,13 +23,13 @@ log_memory = function(){
       swapfree_to_swap = 0
     }
     
-    swapfree_to_swap = (memory_numbers["SwapTotal"] - memory_numbers["SwapFree"]) / memory_numbers["SwapTotal"]
-    if (is.nan(swapfree_to_swap)) {
-      swapfree_to_swap = 0
+    swapused_to_swap = (memory_numbers["SwapTotal"] - memory_numbers["SwapFree"]) / memory_numbers["SwapTotal"]
+    if (is.nan(swapused_to_swap)) {
+      swapused_to_swap = 0
     }
     
     
-    if ((active_to_total >= 0.95) || (swapfree_to_swap >= 0.7)) {
+    if ((active_to_total >= 0.95) || (swapused_to_swap >= 0.7)) {
       memory_string2 = paste0("HIGH MEMORY USAGE!!! ", memory_string)
       if (get("logger", envir = icikt_logger)) {
         logger::log_warn(memory_string2, namespace = "ICIKendallTau")
@@ -97,7 +97,10 @@ disable_logging = function(){
 enable_logging = function(log_file = NULL, memory = FALSE){
   has_logger = requireNamespace("logger", quietly = TRUE)
   if (!has_logger) {
-    stop("logger package is not available. Please install it to enable logging!\ninstall.packages('logger')")
+    cli::cli_abort(message = c(
+      'Logging requested, but the {.pkg logger} package is not installed.',
+      'i' = '{.code install.packages("logger")}'
+    ))
   } else {
     assign("logger", TRUE, envir = icikt_logger)
     # if no log file supplied, and we see an old one, just use it

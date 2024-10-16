@@ -131,14 +131,13 @@ inline double signC(double x) {
 //' Calculates ici-kendall-tau
 //' 
 //' Calculates kendall-tau, with consideration of missingness providing information.
-//' Uses the calculation of tau-b, and always uses the asymptotic approximation of 
-//' the p-value.
+//' Uses the calculation of tau-b.
 //' 
 //' @param x numeric vector
 //' @param y numeric vector
 //' @param perspective should we consider the "local" or "global" perspective?
 //' @param alternative what is the alternative for the p-value test?
-//' @param continuity logical: if true, a continuity correction is used
+//' @param continuity logical: if true, a continuity correction is applied to the p-value
 //' @param output used to control reporting of values for debugging
 //' 
 //' @details Calculates the information-content-informed Kendall-tau correlation measure.

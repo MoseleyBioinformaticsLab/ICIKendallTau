@@ -126,6 +126,12 @@ test_that("include_only works as intended", {
   
   small_include6 = ici_kendalltau(x, include_only = include_test, diag_good = FALSE, return_matrix = FALSE)
   expect_equal(nrow(small_include6$cor), 2)
+  
+  include_3 = list(s1 = "s1", s2 = c("s2", "s3"), s3 = "s4")
+  expect_error(ici_kendalltau(x, include_only = include_3, diag_good = FALSE, return_matrix = FALSE), "list of two vectors")
+  
+  include_none = list(s1 = "s102", s2 = "s105")
+  expect_error(ici_kendalltau(x, include_only = include_none, diag_good = FALSE, return_matrix = FALSE), "No comparisons to do.")
 })
 
 test_that("completeness works correctly",{
@@ -244,4 +250,15 @@ test_that("errors and messages appear", {
   x_df = as.data.frame(x)
   expect_message(ici_kendalltau(x_df), '`x_df` is a data.frame, converting to matrix ...')
   expect_message(pairwise_completeness(x_df), '`x_df` is a data.frame, converting to matrix ...')
+})
+
+test_that("check timing works", {
+  set.seed(1234)
+  x = matrix(rnorm(4000), nrow = 100, ncol = 40)
+  colnames(x) = paste0("s", seq(1, ncol(x)))
+  
+  small_check = ici_kendalltau(x, check_timing = TRUE)
+  expect_equal(small_check$value[1], 5)
+  expect_equal(small_check$value[2], 780)
+  expect_lt(small_check$value[7], 0.05)
 })
