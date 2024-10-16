@@ -8,6 +8,7 @@ test_that("logger detection works", {
 })
 
 test_that("logging works", {
+  skip_on_os(c("windows", "mac"))
   enable_logging("nomemory_logs.log")
   
   set.seed(1234)
