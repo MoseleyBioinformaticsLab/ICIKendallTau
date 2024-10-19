@@ -1,4 +1,10 @@
+run_long_kendallt = as.logical(Sys.getenv("run_long_kendallt"))
+if (is.na(run_long_kendallt)) {
+  run_long_kendallt = FALSE
+}
+
 test_that("logger detection works", {
+  skip_if_not(run_long_kendallt)
   new_lib = tempfile()
   dir.create(new_lib)
   withr::with_libpaths(new_lib, {

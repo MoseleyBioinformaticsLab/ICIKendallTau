@@ -77,25 +77,26 @@ test_that("large kendall returns correct", {
   expect_snapshot(ici_val)
 })
 
-if (run_long_kendallt) {
-  test_that("big kendall works", {
-    x = sort(rnorm(50000))
-    y = x + 1
-    x[1:5000] = NA
-    
-    t1 = ici_kt(x, y, perspective = "global")
-    t2 = ICIKendallTau:::ici_kt_pairs(x, y, perspective = "global")
-    expect_equal(t1[c(1, 2)], t2)
-  })
+test_that("big kendall works", {
+  skip_if_not(run_long_kendallt)
+  x = sort(rnorm(50000))
+  y = x + 1
+  x[1:5000] = NA
+  
+  t1 = ici_kt(x, y, perspective = "global")
+  t2 = ICIKendallTau:::ici_kt_pairs(x, y, perspective = "global")
+  expect_equal(t1[c(1, 2)], t2)
+})
 
-  test_that("lots of kendall works", {
-    x = matrix(rnorm(500000), 5000, 100)
-    colnames(x) = paste0('s', seq_len(ncol(x)))
+test_that("lots of kendall works", {
+  skip_if_not(run_long_kendallt)
+  x = matrix(rnorm(500000), 5000, 100)
+  colnames(x) = paste0('s', seq_len(ncol(x)))
 
-    t1 = ici_kendalltau(x)
-    expect_lt(t1$run_time, 9)
-  })
-}
+  t1 = ici_kendalltau(x)
+  expect_lt(t1$run_time, 9)
+})
+
 
 
 test_that("include_only works as intended", {
