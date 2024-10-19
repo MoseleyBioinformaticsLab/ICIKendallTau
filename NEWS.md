@@ -1,3 +1,7 @@
+# ICIKendallTau 1.2.7
+
+- Fixing a test that fails on r-universe.
+
 # ICIKendallTau 1.2.5
 
 - Fixed a bug where the `check_timing` wasn't taking the right arguments, and wasn't actually calculating what it should.

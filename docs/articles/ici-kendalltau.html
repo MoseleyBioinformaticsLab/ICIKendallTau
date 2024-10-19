@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/" class="external-link">ICIKendallTau</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/">ICIKendallTau</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="problem">Problem<a class="anchor" aria-label="anchor" href="#problem"></a>
 </h2>
@@ -351,13 +351,13 @@ use the double merge-sort algorithm, translating {scipy::
 <span>  <span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span>,</span>
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Unit: microseconds</span></span>
-<span><span class="co">#&gt;                           expr       min        lq       mean    median</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 12461.039 12474.304 12581.1060 12559.450</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   314.301   340.933   359.9484   341.286</span></span>
+<span><span class="co">#&gt; Unit: milliseconds</span></span>
+<span><span class="co">#&gt;                           expr       min        lq      mean    median</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 14.021754 14.192800 14.663676 14.250622</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")  1.833214  1.836678  2.073085  1.888855</span></span>
 <span><span class="co">#&gt;         uq       max neval</span></span>
-<span><span class="co">#&gt;  12563.314 12847.423     5</span></span>
-<span><span class="co">#&gt;    375.534   427.688     5</span></span></code></pre></div>
+<span><span class="co">#&gt;  15.407372 15.445833     5</span></span>
+<span><span class="co">#&gt;   2.297732  2.508947     5</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>

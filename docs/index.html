@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>You can see the pkgdown site <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/" class="external-link">here</a>.</p>
+<p>You can see the pkgdown site <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/">here</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -86,7 +86,7 @@
 </ul>
 </li>
 </ul>
-<p>If you want to read more on <strong>how</strong> we solve this problem, see the package <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/articles/ici-kendalltau.html" class="external-link">vignette</a>.</p>
+<p>If you want to read more on <strong>how</strong> we solve this problem, see the package <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/articles/ici-kendalltau.html">vignette</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="package-functions">Package Functions<a class="anchor" aria-label="anchor" href="#package-functions"></a>
@@ -114,7 +114,7 @@
 </ul>
 </li>
 </ul>
-<p>We’ve also included a function for testing if the missingness in your data comes from left-censorship, <code>test_left_censorship</code>. We walk through creating example data and testing it in the vignette <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/articles/testing-for-left-censorship" class="external-link">Testing for Left Censorship</a>. In addition to testing, you can also visualize the missing data pattern by feature rank using the <code>rank_order_data</code> function, and use <code><a href="https://docs.ropensci.org/visdat/reference/vis_miss.html" class="external-link">visdat::vis_miss()</a></code> on the original and reordered missing data.</p>
+<p>We’ve also included a function for testing if the missingness in your data comes from left-censorship, <code>test_left_censorship</code>. We walk through creating example data and testing it in the vignette <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/articles/testing-for-left-censorship">Testing for Left Censorship</a>. In addition to testing, you can also visualize the missing data pattern by feature rank using the <code>rank_order_data</code> function, and use <code><a href="https://docs.ropensci.org/visdat/reference/vis_miss.html" class="external-link">visdat::vis_miss()</a></code> on the original and reordered missing data.</p>
 </div>
 <div class="section level2">
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
@@ -123,7 +123,7 @@
 <p>Here we will make some artificial data to show how the correlation changes as we introduce missingness.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/" class="external-link">ICIKendallTau</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/">ICIKendallTau</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">s1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span>, mean <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">s2</span> <span class="op">=</span> <span class="va">s1</span> <span class="op">+</span> <span class="fl">10</span> </span>
