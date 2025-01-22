@@ -147,7 +147,7 @@ cor_split = function(do_comparisons, x, na_method, do_log_memory, method, altern
     tmp_y = x[, jloc]
     if (na_method %in% "pairwise.complete.obs") {
       pair_good = !is.na(tmp_x) & !is.na(tmp_y)
-      if (sum(pair_good) == 0) {
+      if (sum(pair_good) < 3) {
         return_na = TRUE
       } else {
         return_na = FALSE
