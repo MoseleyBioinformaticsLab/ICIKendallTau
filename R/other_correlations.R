@@ -8,6 +8,7 @@
 #' @param method which correlation method to use, "pearson" or "spearman"
 #' @param alternative how to perform the statistical test
 #' @param continuity should a continuity correction be applied
+#' @param include_only only run the correlations that include the members (as a vector) or combinations (as a list or data.frame)
 #' @param return_matrix should the matrices of values be returned, or a long data.frame
 #' 
 #' @details Although the interface is *mostly* identical to the built-in 
@@ -27,6 +28,7 @@ cor_fast = function(x, y = NULL, use = "everything",
                     method = "pearson", 
                     alternative = "two.sided", 
                     continuity = FALSE,
+                    include_only = NULL,
                     return_matrix = TRUE)
 {
   do_log_memory = get("memory", envir = icikt_logger)
@@ -55,7 +57,7 @@ cor_fast = function(x, y = NULL, use = "everything",
   computation = check_furrr()
 
   split_comparisons = setup_comparisons(colnames(x),
-                                        include_only = NULL,
+                                        include_only = include_only,
                                         diag_good = FALSE,
                                         ncore = computation$ncore,
                                         which = method,
@@ -68,11 +70,17 @@ cor_fast = function(x, y = NULL, use = "everything",
     }
   }
 
-  if (na_method %in% c("complete.obs", "pariwise.complete.obs")) {
+  if (na_method %in% c("complete.obs")) {
     if (sum_nona == 0) {
       do_computation = FALSE
     } else {
       x = x[no_na_rows, , drop = FALSE]
+    }
+  }
+
+  if (na_method %in% c("pariwise.complete.obs")) {
+    if (sum_nona == 0) {
+      do_computation = FALSE
     }
   }
 

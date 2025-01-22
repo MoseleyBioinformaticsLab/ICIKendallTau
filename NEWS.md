@@ -1,3 +1,8 @@
+# ICIKendallTau 1.2.9
+
+- Fixing an issue where **any** `NA` observations would be removed when using `cor_fast` and `pairwise.complete.obs`, instead of just those for the pairs (closes #25).
+- Adding `include_only` function argument to `cor_fast` to allow specification of which correlations to include (closes #24).
+
 # ICIKendallTau 1.2.7
 
 - Fixing a test that fails on r-universe.
