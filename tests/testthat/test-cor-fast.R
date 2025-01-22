@@ -45,3 +45,23 @@ test_that("cor_fast warnings and errors come up", {
   tmp = cor_fast(x_vec, y_vec)
   expect_equal(colnames(tmp$rho), c("x_vec", "y_vec"))
 })
+
+test_that("na values are handled correctly by cor_fast", {
+  set.seed(1234)
+  x = matrix(rnorm(400), nrow = 100, ncol = 4)
+  colnames(x) = paste0("s", seq(1, ncol(x)))
+
+  na_locs = sample(400, 40)
+  x[na_locs] = NA
+
+  cor_base_complete = cor.test(x[, 1], x[, 2], method = "pearson", use = "complete")
+  cor_fast_complete = cor_fast(x = x[, 1], y = x[, 2], method = "pearson", use = "complete", return_matrix = FALSE)
+  expect_equal(cor_base_complete$estimate[["cor"]], cor_fast_complete$rho$rho[1])
+
+  cor_fast_pairwise_1 = cor_fast(x = x[, 1], y = x[, 2], method = "pearson", use = "pairwise.complete.obs", return_matrix = FALSE)
+  cor_fast_pairwise_all = cor_fast(x, method = "pearson", use = "pairwise.complete.obs", return_matrix = FALSE)
+  expect_equal(cor_fast_pairwise_1$rho$rho[1], cor_fast_pairwise_all$rho$rho[1])
+  
+  cor_base_pairwise_2 = cor.test(x[, 1], x[, 3], method = "pearson", use = "pairwise.complete.obs")
+  expect_equal(cor_fast_pairwise_all$rho$rho[2], cor_base_pairwise_2$estimate[["cor"]])
+})

@@ -11,6 +11,7 @@ cor_fast(
   method = "pearson",
   alternative = "two.sided",
   continuity = FALSE,
+  include_only = NULL,
   return_matrix = TRUE
 )
 }
@@ -26,6 +27,8 @@ cor_fast(
 \item{alternative}{how to perform the statistical test}
 
 \item{continuity}{should a continuity correction be applied}
+
+\item{include_only}{only run the correlations that include the members (as a vector) or combinations (as a list or data.frame)}
 
 \item{return_matrix}{should the matrices of values be returned, or a long data.frame}
 }
