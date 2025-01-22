@@ -1,3 +1,7 @@
+# ICIKendallTau 1.2.10
+
+- Added the number of non-missing values used to calculate correlation in data.frame output of `cor_fast`.
+
 # ICIKendallTau 1.2.9
 
 - Fixing an issue where **any** `NA` observations would be removed when using `cor_fast` and `pairwise.complete.obs`, instead of just those for the pairs (closes #25).

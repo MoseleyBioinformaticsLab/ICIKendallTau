@@ -266,9 +266,11 @@ setup_comparisons = function(samples,
   } else if (which %in% "pearson") {
     named_comparisons$rho = Inf
     named_comparisons$pvalue = Inf
+    named_comparisons$n_values = Inf
   } else if (which %in% "spearman") {
     named_comparisons$rho = Inf
     named_comparisons$pvalue = Inf
+    named_comparisons$n_values = Inf
   }
     
   split_comparisons = split(named_comparisons, named_comparisons$core)

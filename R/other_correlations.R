@@ -20,7 +20,7 @@
 #'  * if `NA` values are present, this function does not error, but will either remove them 
 #'  or return `NA`, depending on the option.
 #'  * "na.or.complete" is not a valid option for `use`.
-#'  * A named list with matrices or data.frame is returned, with the `rho` and `pvalue` values.
+#'  * A named list with matrices or data.frame is returned, with the `rho`, `pvalue`, and number of non-`NA` values.
 #' 
 #' @return a list of matrices, rho, pvalue, or a data.frame.
 #' @export
@@ -88,6 +88,7 @@ cor_fast = function(x, y = NULL, use = "everything",
     split_cor = purrr::map(split_comparisons, \(in_split){
       in_split$rho = NA
       in_split$pvalue = NA
+      in_split$n_values = NA
       in_split
     })
   }
@@ -137,6 +138,7 @@ cor_split = function(do_comparisons, x, na_method, do_log_memory, method, altern
   #print(seq_range)
   rho = vector("numeric", nrow(do_comparisons))
   pvalue = rho
+  n_values = rho
   
   for (irow in seq(1, nrow(do_comparisons))) {
     return_na = FALSE
@@ -145,8 +147,9 @@ cor_split = function(do_comparisons, x, na_method, do_log_memory, method, altern
     
     tmp_x = x[, iloc]
     tmp_y = x[, jloc]
+    pair_good = !is.na(tmp_x) & !is.na(tmp_y)
     if (na_method %in% "pairwise.complete.obs") {
-      pair_good = !is.na(tmp_x) & !is.na(tmp_y)
+      
       if (sum(pair_good) < 3) {
         return_na = TRUE
       } else {
@@ -161,6 +164,7 @@ cor_split = function(do_comparisons, x, na_method, do_log_memory, method, altern
     if (return_na) {
       rho[irow] = as.double(NA)
       pvalue[irow] = as.double(NA)
+      n_values = sum(pair_good)
       
     } else {
       cor_res = stats::cor.test(tmp_x, tmp_y,
@@ -169,7 +173,7 @@ cor_split = function(do_comparisons, x, na_method, do_log_memory, method, altern
                                 continuity = continuity)
       rho[irow] = cor_res[["estimate"]][[1]]
       pvalue[irow] = cor_res[["p.value"]]
-      
+      n_values[irow] = sum(pair_good)
     }
     if (do_log_memory && ((irow %% 100) == 0)) {
       log_memory()
@@ -178,5 +182,6 @@ cor_split = function(do_comparisons, x, na_method, do_log_memory, method, altern
   }
   do_comparisons$rho = rho
   do_comparisons$pvalue = pvalue
+  do_comparisons$n_values = n_values
   do_comparisons
 }

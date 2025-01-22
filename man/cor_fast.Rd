@@ -48,6 +48,6 @@ single vectors.
 \item if \code{NA} values are present, this function does not error, but will either remove them
 or return \code{NA}, depending on the option.
 \item "na.or.complete" is not a valid option for \code{use}.
-\item A named list with matrices or data.frame is returned, with the \code{rho} and \code{pvalue} values.
+\item A named list with matrices or data.frame is returned, with the \code{rho}, \code{pvalue}, and number of non-\code{NA} values.
 }
 }
