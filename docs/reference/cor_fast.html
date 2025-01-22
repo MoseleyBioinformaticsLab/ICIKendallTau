@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,7 @@
 <span>  method <span class="op">=</span> <span class="st">"pearson"</span>,</span>
 <span>  alternative <span class="op">=</span> <span class="st">"two.sided"</span>,</span>
 <span>  continuity <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  include_only <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  return_matrix <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -81,6 +82,10 @@
 
 <dt id="arg-continuity">continuity<a class="anchor" aria-label="anchor" href="#arg-continuity"></a></dt>
 <dd><p>should a continuity correction be applied</p></dd>
+
+
+<dt id="arg-include-only">include_only<a class="anchor" aria-label="anchor" href="#arg-include-only"></a></dt>
+<dd><p>only run the correlations that include the members (as a vector) or combinations (as a list or data.frame)</p></dd>
 
 
 <dt id="arg-return-matrix">return_matrix<a class="anchor" aria-label="anchor" href="#arg-return-matrix"></a></dt>
