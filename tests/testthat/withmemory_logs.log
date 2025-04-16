@@ -1,55 +1,55 @@
-INFO [2025-01-22 09:21:09] Processing missing values ...
-INFO [2025-01-22 09:21:09] Figuring out comparisons to do ...
-INFO [2025-01-22 09:21:09] Splitting up across compute ...
-INFO [2025-01-22 09:21:09] Running correlations ...
-INFO [2025-01-22 09:21:09] Memory: Total: 32539440 kB, Available: 9213456 kB, Active: 19293060 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:09] Memory: Total: 32539440 kB, Available: 9213464 kB, Active: 19292900 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:09] Memory: Total: 32539440 kB, Available: 9213212 kB, Active: 19292904 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:09] Memory: Total: 32539440 kB, Available: 9213212 kB, Active: 19292908 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:09] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19292908 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:09] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19292936 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:09] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19293024 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:09] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19293024 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:09] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19293052 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:09] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19293052 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19293052 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19293164 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19293164 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19293184 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19293180 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9212972 kB, Active: 19293272 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9212748 kB, Active: 19293272 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9212748 kB, Active: 19293292 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9212748 kB, Active: 19293320 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9212748 kB, Active: 19293308 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9212496 kB, Active: 19293332 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9211740 kB, Active: 19293912 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9209724 kB, Active: 19295528 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9209220 kB, Active: 19296516 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9207708 kB, Active: 19297708 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9207456 kB, Active: 19298820 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9205440 kB, Active: 19299896 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9204212 kB, Active: 19301976 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9203208 kB, Active: 19304024 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9201808 kB, Active: 19298860 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9200592 kB, Active: 19299060 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9200088 kB, Active: 19300312 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9198100 kB, Active: 19301484 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9197596 kB, Active: 19302696 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9195832 kB, Active: 19303868 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9195076 kB, Active: 19305040 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9193564 kB, Active: 19306208 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9193060 kB, Active: 19307404 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9191548 kB, Active: 19308572 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9190568 kB, Active: 19309584 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9189812 kB, Active: 19310924 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9188048 kB, Active: 19312236 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9187068 kB, Active: 19313112 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9185556 kB, Active: 19314600 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9186976 kB, Active: 19315824 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9185212 kB, Active: 19317000 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9184204 kB, Active: 19317900 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:10] Memory: Total: 32539440 kB, Available: 9183952 kB, Active: 19319352 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:11] Memory: Total: 32539440 kB, Available: 9182440 kB, Active: 19320444 kB, SwapTotal: 33160692 kB, SwapFree: 33160668 kB
-INFO [2025-01-22 09:21:11] Recombining results ...
-INFO [2025-01-22 09:21:11] Generating the output matrix ...
+INFO [2025-01-22 15:12:31] Processing missing values ...
+INFO [2025-01-22 15:12:31] Figuring out comparisons to do ...
+INFO [2025-01-22 15:12:31] Splitting up across compute ...
+INFO [2025-01-22 15:12:31] Running correlations ...
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6409988 kB, Active: 18075072 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6409736 kB, Active: 18076120 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6408980 kB, Active: 18076652 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6408980 kB, Active: 18076628 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6408980 kB, Active: 18076628 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6408980 kB, Active: 18076784 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6408476 kB, Active: 18076768 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6408460 kB, Active: 18076800 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6408460 kB, Active: 18076800 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6408460 kB, Active: 18076700 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6408460 kB, Active: 18076856 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6404932 kB, Active: 18079024 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6404932 kB, Active: 18079308 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6404932 kB, Active: 18079448 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6404680 kB, Active: 18077456 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6404680 kB, Active: 18077456 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6404684 kB, Active: 18077632 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6404684 kB, Active: 18077632 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6408076 kB, Active: 18077856 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407836 kB, Active: 18077872 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407836 kB, Active: 18077976 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407836 kB, Active: 18078000 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407612 kB, Active: 18077980 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407612 kB, Active: 18077984 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407612 kB, Active: 18077984 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407612 kB, Active: 18078000 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407612 kB, Active: 18078008 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407612 kB, Active: 18078016 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407612 kB, Active: 18078024 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407612 kB, Active: 18078028 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407612 kB, Active: 18078032 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407612 kB, Active: 18078032 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078112 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078064 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078064 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078180 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078180 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078180 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078184 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078160 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078160 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078172 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078232 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078240 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:31] Memory: Total: 32539440 kB, Available: 6407616 kB, Active: 18078240 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:32] Memory: Total: 32539440 kB, Available: 6407392 kB, Active: 18078240 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:32] Memory: Total: 32539440 kB, Available: 6407392 kB, Active: 18078240 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:32] Memory: Total: 32539440 kB, Available: 6407140 kB, Active: 18078256 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:32] Memory: Total: 32539440 kB, Available: 6406668 kB, Active: 18078096 kB, SwapTotal: 33160692 kB, SwapFree: 33087452 kB
+INFO [2025-01-22 15:12:32] Recombining results ...
+INFO [2025-01-22 15:12:32] Generating the output matrix ...

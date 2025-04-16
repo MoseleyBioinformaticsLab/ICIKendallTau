@@ -57,7 +57,7 @@ test_that("na values are handled correctly by cor_fast", {
   cor_base_complete = cor.test(x[, 1], x[, 2], method = "pearson", use = "complete")
   cor_fast_complete = cor_fast(x = x[, 1], y = x[, 2], method = "pearson", use = "complete", return_matrix = FALSE)
   expect_equal(cor_base_complete$estimate[["cor"]], cor_fast_complete$rho$rho[1])
-
+  expect_equal(cor_fast_complete$rho$n_values[1], 84)
   cor_fast_pairwise_1 = cor_fast(x = x[, 1], y = x[, 2], method = "pearson", use = "pairwise.complete.obs", return_matrix = FALSE)
   cor_fast_pairwise_all = cor_fast(x, method = "pearson", use = "pairwise.complete.obs", return_matrix = FALSE)
   expect_equal(cor_fast_pairwise_1$rho$rho[1], cor_fast_pairwise_all$rho$rho[1])
