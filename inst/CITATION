@@ -1,0 +1,13 @@
+bibentry(
+       bibtype = "Article",
+       title = "Information-Content-Informed Kendall-tau Correlation Methodology: Interpreting Missing Values as Useful Information",
+       author = c(
+              person(given = c("Robert", "M"), family = "Flight"),
+              person(given = c("Praneeth", "S"), family = "Bhatt"),
+              person(given = c("Hunter", "NB"), family = "Moseley")
+       ),
+       year = 2025,
+       url = "https://doi.org/10.1101/2022.02.24.481854",
+       doi = "10.1101/2022.02.24.481854",
+       journal = "bioRxiv"
+)

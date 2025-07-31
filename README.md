@@ -12,6 +12,14 @@ badge](https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau)](ht
 You can see the pkgdown site
 [here](https://moseleybioinformaticslab.github.io/ICIKendallTau/).
 
+## Citation
+
+This package has an [associated preprint on
+bioRxiv](https://doi.org/10.1101/2022.02.24.481854), please cite it if
+you use the package in your own work.
+
+> Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed Kendall-tau Correlation Methodology: Interpreting Missing Values as Useful Information.” _bioRxiv_. doi:10.1101/2022.02.24.481854 
+
 ## Installation
 
 You can install the current version of ICIKendallTau via GitHub:
@@ -88,7 +96,7 @@ set.seed(1234)
 library(ICIKendallTau)
 
 s1 = sort(rnorm(1000, mean = 100, sd = 10))
-s2 = s1 + 10 
+s2 = s1 + 10
 
 matrix_1 = cbind(s1, s2)
 
@@ -143,14 +151,10 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min        lq       mean    median
-#>  cor(x, y, method = "kendall") 12299.117 12617.607 13300.3072 13214.135
-#>         ici_kt(x, y, "global")   366.796   370.173   530.6206   401.068
-#>       ici_kt(x2, y2, "global") 19343.691 19680.732 20578.4926 19799.741
-#>         uq       max neval
-#>  13767.479 14603.198     5
-#>    405.009  1110.057     5
-#>  20533.946 23534.353     5
+#>                           expr       min        lq      mean    median        uq       max neval
+#>  cor(x, y, method = "kendall") 12020.945 12227.957 12778.679 12241.762 13459.533 13943.197     5
+#>         ici_kt(x, y, "global")   331.001   346.866   456.299   361.061   401.216   841.351     5
+#>       ici_kt(x2, y2, "global") 18462.550 18468.493 20342.581 19215.913 22400.049 23165.899     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -161,7 +165,7 @@ incorporating missingness, it can do that just fine as well.
 
 ``` r
 k_tau = ici_kt(x, y, "global")
-all.equal(k_tau[[1]] ,cor(x, y, method = "kendall"))
+all.equal(k_tau[[1]], cor(x, y, method = "kendall"))
 #> [1] TRUE
 ```
 
@@ -182,7 +186,7 @@ k_tau_fast
 #> y 0.8716723 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02207708
+#> [1] 0.02020574
 ```
 
 ## P-Values
@@ -227,7 +231,7 @@ r_4
 #> 3 s4 s4    0 1.0000000      0 1.000000        0.950 1.0000000
 #> 
 #> $run_time
-#> [1] 0.02029967
+#> [1] 0.01733327
 ```
 
 ## Other Correlations
@@ -255,7 +259,7 @@ r_5
 #> y 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02324367
+#> [1] 0.02877402
 ```
 
 ``` r
@@ -276,7 +280,7 @@ r_6
 #> s3 0.0000000 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.0229435
+#> [1] 0.02604246
 ```
 
 ## Code of Conduct

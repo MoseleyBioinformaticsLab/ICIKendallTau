@@ -23,6 +23,15 @@ knitr::opts_chunk$set(
 
 You can see the pkgdown site [here](https://moseleybioinformaticslab.github.io/ICIKendallTau/).
 
+## Citation
+
+This package has an [associated preprint on bioRxiv](https://doi.org/10.1101/2022.02.24.481854), please cite it if you use the package in your own work.
+
+```
+Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed Kendall-tau Correlation Methodology: Interpreting Missing Values as Useful Information.”
+_bioRxiv_. doi:10.1101/2022.02.24.481854 
+```
+
 ## Installation
 
 You can install the current version of ICIKendallTau via GitHub:
@@ -79,7 +88,7 @@ set.seed(1234)
 library(ICIKendallTau)
 
 s1 = sort(rnorm(1000, mean = 100, sd = 10))
-s2 = s1 + 10 
+s2 = s1 + 10
 
 matrix_1 = cbind(s1, s2)
 
@@ -132,7 +141,7 @@ Of course, if you want to use it to calculate Kendall-tau-b without incorporatin
 
 ```{r check_values}
 k_tau = ici_kt(x, y, "global")
-all.equal(k_tau[[1]] ,cor(x, y, method = "kendall"))
+all.equal(k_tau[[1]], cor(x, y, method = "kendall"))
 ```
 
 We also provide the `kt_fast` function, if you want something that treats `NA` values similarly to `stats::cor`.

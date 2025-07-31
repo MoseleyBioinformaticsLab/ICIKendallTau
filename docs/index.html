@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.11</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,14 @@
 <!-- badges: start -->
 
 <p>You can see the pkgdown site <a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/">here</a>.</p>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
+<p>This package has an <a href="https://doi.org/10.1101/2022.02.24.481854" class="external-link">associated preprint on bioRxiv</a>, please cite it if you use the package in your own work.</p>
+<blockquote>
+<p>Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed Kendall-tau Correlation Methodology: Interpreting Missing Values as Useful Information.” <em>bioRxiv</em>. <a href="doi:10.1101/2022.02.24.481854" class="uri">doi:10.1101/2022.02.24.481854</a></p>
+</blockquote>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -126,7 +134,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/">ICIKendallTau</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">s1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span>, mean <span class="op">=</span> <span class="fl">100</span>, sd <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">s2</span> <span class="op">=</span> <span class="va">s1</span> <span class="op">+</span> <span class="fl">10</span> </span>
+<span><span class="va">s2</span> <span class="op">=</span> <span class="va">s1</span> <span class="op">+</span> <span class="fl">10</span></span>
 <span></span>
 <span><span class="va">matrix_1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">s1</span>, <span class="va">s2</span><span class="op">)</span></span>
 <span></span>
@@ -169,19 +177,15 @@
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
-<span><span class="co">#&gt;                           expr       min        lq       mean    median</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 12299.117 12617.607 13300.3072 13214.135</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   366.796   370.173   530.6206   401.068</span></span>
-<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 19343.691 19680.732 20578.4926 19799.741</span></span>
-<span><span class="co">#&gt;         uq       max neval</span></span>
-<span><span class="co">#&gt;  13767.479 14603.198     5</span></span>
-<span><span class="co">#&gt;    405.009  1110.057     5</span></span>
-<span><span class="co">#&gt;  20533.946 23534.353     5</span></span></code></pre></div>
+<span><span class="co">#&gt;                           expr       min        lq      mean    median        uq       max neval</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 12020.945 12227.957 12778.679 12241.762 13459.533 13943.197     5</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   331.001   346.866   456.299   361.061   401.216   841.351     5</span></span>
+<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 18462.550 18468.493 20342.581 19215.913 22400.049 23165.899     5</span></span></code></pre></div>
 <p>In the case of 40,000 features, the average time on a modern CPU is 14 milliseconds.</p>
 <p>Of course, if you want to use it to calculate Kendall-tau-b without incorporating missingness, it can do that just fine as well.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k_tau</span> <span class="op">=</span> <span class="fu"><a href="reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">k_tau</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> ,<span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">k_tau</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>We also provide the <code>kt_fast</code> function, if you want something that treats <code>NA</code> values similarly to <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">stats::cor</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -198,7 +202,7 @@
 <span><span class="co">#&gt; y 0.8716723 0.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $run_time</span></span>
-<span><span class="co">#&gt; [1] 0.02207708</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.02020574</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="p-values">P-Values<a class="anchor" aria-label="anchor" href="#p-values"></a>
@@ -228,7 +232,7 @@
 <span><span class="co">#&gt; 3 s4 s4    0 1.0000000      0 1.000000        0.950 1.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $run_time</span></span>
-<span><span class="co">#&gt; [1] 0.02029967</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.01733327</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="other-correlations">Other Correlations<a class="anchor" aria-label="anchor" href="#other-correlations"></a>
@@ -248,7 +252,7 @@
 <span><span class="co">#&gt; y 0.8199608 0.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $run_time</span></span>
-<span><span class="co">#&gt; [1] 0.02324367</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.02877402</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m_3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_3</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"s3"</span><span class="op">)</span></span>
@@ -267,7 +271,7 @@
 <span><span class="co">#&gt; s3 0.0000000 0.8199608 0.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $run_time</span></span>
-<span><span class="co">#&gt; [1] 0.0229435</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.02604246</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
