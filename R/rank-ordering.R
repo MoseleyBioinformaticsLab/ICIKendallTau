@@ -31,7 +31,7 @@ rank_order_data = function(
   split_classes = split(colnames(data_matrix_na), sample_classes)
 
   get_ranks = function(in_na) {
-    if (nrow(split_na) == 0) {
+    if (nrow(in_na) == 0) {
       return(NULL)
     }
     sample_ranks = purrr::map(seq_len(ncol(in_na)), \(in_col) {
