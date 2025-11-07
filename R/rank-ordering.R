@@ -53,10 +53,10 @@ rank_order_data = function(
   }
 
   split_ranks = purrr::imap(split_classes, \(in_split, split_id) {
-    split_na = data_matrix_na[, in_split]
+    split_na = data_matrix_na[, in_split, drop = FALSE]
     n_na = rowSums(is.na(split_na))
     keep_na = !(n_na == ncol(split_na))
-    split_na = split_na[keep_na, ]
+    split_na = split_na[keep_na, , drop = FALSE]
 
     na_info = get_ranks(split_na)
     if (!(split_id %in% "rmf_abcd") && !is.null(na_info)) {
