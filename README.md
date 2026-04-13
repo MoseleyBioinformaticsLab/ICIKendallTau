@@ -7,6 +7,11 @@
 
 [![ICIKendallTau status
 badge](https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau)](https://moseleybioinformaticslab.r-universe.dev)
+
+[![Manuscript](resources/manuscript_badge.svg)](https://doi.org/10.3390/metabo16040245)
+
+[![covr2gh
+coverage](/../covr2gh-storage/badges/main/coverage_badge.svg)](/../actions/workflows/covr2gh.yaml)
 <!-- badges: end -->
 
 You can see the pkgdown site
@@ -14,11 +19,12 @@ You can see the pkgdown site
 
 ## Citation
 
-This package has an [associated preprint on
-bioRxiv](https://doi.org/10.1101/2022.02.24.481854), please cite it if
+This package has an [associated
+manuscript](https://doi.org/10.3390/metabo16040245), please cite it if
 you use the package in your own work.
 
-> Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed Kendall-tau Correlation Methodology: Interpreting Missing Values as Useful Information.” _bioRxiv_. doi:10.1101/2022.02.24.481854 
+    Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed Kendall-Tau Correlation Methodology: Interpreting Missing Values in Metabolomics as Potentially Useful Information”
+    Metabolites 2026, 16(4), 245; https://doi.org/10.3390/metabo16040245
 
 ## Installation
 
@@ -151,10 +157,14 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min        lq      mean    median        uq       max neval
-#>  cor(x, y, method = "kendall") 12020.945 12227.957 12778.679 12241.762 13459.533 13943.197     5
-#>         ici_kt(x, y, "global")   331.001   346.866   456.299   361.061   401.216   841.351     5
-#>       ici_kt(x2, y2, "global") 18462.550 18468.493 20342.581 19215.913 22400.049 23165.899     5
+#>                           expr       min        lq       mean    median
+#>  cor(x, y, method = "kendall") 12020.945 12288.406 12968.1902 12504.293
+#>         ici_kt(x, y, "global")   321.417   342.083   392.7402   358.559
+#>       ici_kt(x2, y2, "global") 17931.107 17951.997 19609.9184 19269.568
+#>         uq       max neval
+#>  13253.422 14773.885     5
+#>    368.906   572.736     5
+#>  21263.368 21633.552     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -186,7 +196,7 @@ k_tau_fast
 #> y 0.8716723 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02020574
+#> [1] 0.01948571
 ```
 
 ## P-Values
@@ -231,7 +241,7 @@ r_4
 #> 3 s4 s4    0 1.0000000      0 1.000000        0.950 1.0000000
 #> 
 #> $run_time
-#> [1] 0.01733327
+#> [1] 0.01575375
 ```
 
 ## Other Correlations
@@ -259,7 +269,7 @@ r_5
 #> y 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02877402
+#> [1] 0.02522302
 ```
 
 ``` r
@@ -280,7 +290,7 @@ r_6
 #> s3 0.0000000 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02604246
+#> [1] 0.02191949
 ```
 
 ## Code of Conduct

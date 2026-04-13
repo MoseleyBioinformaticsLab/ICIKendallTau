@@ -20,18 +20,20 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![ICIKendallTau status badge](https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau)](https://moseleybioinformaticslab.r-universe.dev)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18675150.svg)](https://doi.org/10.5281/zenodo.18675150)
+[![Manuscript](resources/manuscript_badge.svg)](https://doi.org/10.3390/metabo16040245)
+
+[![covr2gh coverage](/../covr2gh-storage/badges/main/coverage_badge.svg)](/../actions/workflows/covr2gh.yaml)
 <!-- badges: end -->
 
 You can see the pkgdown site [here](https://moseleybioinformaticslab.github.io/ICIKendallTau/).
 
 ## Citation
 
-This package has an [associated preprint on bioRxiv](https://doi.org/10.1101/2022.02.24.481854), please cite it if you use the package in your own work.
+This package has an [associated manuscript](https://doi.org/10.3390/metabo16040245), please cite it if you use the package in your own work.
 
 ```
-Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed Kendall-tau Correlation Methodology: Interpreting Missing Values as Useful Information.”
-_bioRxiv_. doi:10.1101/2022.02.24.481854 
+Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed Kendall-Tau Correlation Methodology: Interpreting Missing Values in Metabolomics as Potentially Useful Information”
+Metabolites 2026, 16(4), 245; https://doi.org/10.3390/metabo16040245
 ```
 
 ## Installation
