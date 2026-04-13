@@ -21,8 +21,16 @@ This package has an [associated
 manuscript](https://doi.org/10.3390/metabo16040245), please cite it if
 you use the package in your own work.
 
-    Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed Kendall-Tau Correlation Methodology: Interpreting Missing Values in Metabolomics as Potentially Useful Information”
-    Metabolites 2026, 16(4), 245; https://doi.org/10.3390/metabo16040245
+Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed
+Kendall-Tau Correlation Methodology: Interpreting Missing Values in
+Metabolomics as Potentially Useful Information” Metabolites 2026, 16(4),
+245; <https://doi.org/10.3390/metabo16040245>
+
+You can also access it by doing:
+
+``` r
+citation("ICIKendallTau")
+```
 
 ## Installation
 
@@ -70,7 +78,7 @@ The functions that implement this include:
   between an X and Y.
   - The option `perspective` will control how the `NA` values influence
     ties.
-  - When comparing samples, you likely want to use
+  - When comparing **multiple** samples, you likely want to use
     `perspective = "global"`.
 - `ici_kendallt`: Handles comparisons for a large matrix.
   - Rows are features, columns are samples.
@@ -155,14 +163,14 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min        lq       mean    median
-#>  cor(x, y, method = "kendall") 12847.840 14582.699 14493.5544 14713.413
-#>         ici_kt(x, y, "global")   364.309   374.186   419.3514   392.646
-#>       ici_kt(x2, y2, "global") 21038.735 22497.186 22878.8090 23280.945
-#>         uq       max neval
-#>  14944.140 15379.680     5
-#>    394.318   571.298     5
-#>  23656.842 23920.337     5
+#>                           expr       min       lq      mean    median        uq
+#>  cor(x, y, method = "kendall") 12280.017 13342.02 13727.888 13354.975 14526.627
+#>         ici_kt(x, y, "global")   354.203   365.37   404.586   366.763   375.366
+#>       ici_kt(x2, y2, "global") 19234.974 19404.45 20322.053 20706.912 20912.065
+#>        max neval
+#>  15135.805     5
+#>    561.228     5
+#>  21351.866     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -194,7 +202,7 @@ k_tau_fast
 #> y 0.8716723 0.0000000
 #> 
 #> $run_time
-#> [1] 0.01831102
+#> [1] 0.0190556
 ```
 
 ## P-Values
@@ -239,7 +247,7 @@ r_4
 #> 3 s4 s4    0 1.0000000      0 1.000000        0.950 1.0000000
 #> 
 #> $run_time
-#> [1] 0.01591182
+#> [1] 0.01614738
 ```
 
 ## Other Correlations
@@ -267,7 +275,7 @@ r_5
 #> y 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02628803
+#> [1] 0.02553201
 ```
 
 ``` r
@@ -288,7 +296,7 @@ r_6
 #> s3 0.0000000 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.0294497
+#> [1] 0.02152324
 ```
 
 ## Code of Conduct

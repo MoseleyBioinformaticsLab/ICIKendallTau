@@ -29,16 +29,21 @@ You can see the pkgdown site [here](https://moseleybioinformaticslab.github.io/I
 
 This package has an [associated manuscript](https://doi.org/10.3390/metabo16040245), please cite it if you use the package in your own work.
 
-```
+
 Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed Kendall-Tau Correlation Methodology: Interpreting Missing Values in Metabolomics as Potentially Useful Information”
 Metabolites 2026, 16(4), 245; https://doi.org/10.3390/metabo16040245
+
+You can also access it by doing:
+
+```r
+citation("ICIKendallTau")
 ```
 
 ## Installation
 
 You can install the current version of ICIKendallTau via GitHub:
 
-``` r
+```r
 remotes::install_github("MoseleyBioinformaticsLab/ICIKendallTau")
 ```
 
@@ -68,7 +73,7 @@ The functions that implement this include:
 
 * `ici_kt`: the C++ workhorse, actually calculating a correlation between an X and Y.
   * The option `perspective` will control how the `NA` values influence ties.
-  * When comparing samples, you likely want to use `perspective = "global"`.
+  * When comparing **multiple** samples, you likely want to use `perspective = "global"`.
 * `ici_kendallt`: Handles comparisons for a large matrix.
   * Rows are features, columns are samples.
   * Implicitly parallel, but have to call:

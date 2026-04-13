@@ -1,0 +1,13 @@
+bibentry(
+  bibtype = "Article",
+  title = "Information-Content-Informed Kendall-Tau Correlation Methodology: Interpreting Missing Values in Metabolomics as Potentially Useful Information",
+  author = c(
+    person(given = c("Robert", "M"), family = "Flight"),
+    person(given = c("Praneeth", "S"), family = "Bhatt"),
+    person(given = c("Hunter", "N", "B"), family = "Moseley")
+  ),
+  year = 2026,
+  url = "https://doi.org/10.3390/metabo16040245",
+  doi = "10.3390/metabo16040245",
+  journal = "Metabolites"
+)
