@@ -7,9 +7,7 @@
 
 [![ICIKendallTau status
 badge](https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau)](https://moseleybioinformaticslab.r-universe.dev)
-
 [![Manuscript](resources/manuscript_badge.svg)](https://doi.org/10.3390/metabo16040245)
-
 [![covr2gh
 coverage](/../covr2gh-storage/badges/main/coverage_badge.svg)](/../actions/workflows/covr2gh.yaml)
 <!-- badges: end -->
@@ -158,13 +156,13 @@ microbenchmark(
 )
 #> Unit: microseconds
 #>                           expr       min        lq       mean    median
-#>  cor(x, y, method = "kendall") 12020.945 12288.406 12968.1902 12504.293
-#>         ici_kt(x, y, "global")   321.417   342.083   392.7402   358.559
-#>       ici_kt(x2, y2, "global") 17931.107 17951.997 19609.9184 19269.568
+#>  cor(x, y, method = "kendall") 12847.840 14582.699 14493.5544 14713.413
+#>         ici_kt(x, y, "global")   364.309   374.186   419.3514   392.646
+#>       ici_kt(x2, y2, "global") 21038.735 22497.186 22878.8090 23280.945
 #>         uq       max neval
-#>  13253.422 14773.885     5
-#>    368.906   572.736     5
-#>  21263.368 21633.552     5
+#>  14944.140 15379.680     5
+#>    394.318   571.298     5
+#>  23656.842 23920.337     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -196,7 +194,7 @@ k_tau_fast
 #> y 0.8716723 0.0000000
 #> 
 #> $run_time
-#> [1] 0.01948571
+#> [1] 0.01831102
 ```
 
 ## P-Values
@@ -241,7 +239,7 @@ r_4
 #> 3 s4 s4    0 1.0000000      0 1.000000        0.950 1.0000000
 #> 
 #> $run_time
-#> [1] 0.01575375
+#> [1] 0.01591182
 ```
 
 ## Other Correlations
@@ -269,7 +267,7 @@ r_5
 #> y 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02522302
+#> [1] 0.02628803
 ```
 
 ``` r
@@ -290,7 +288,7 @@ r_6
 #> s3 0.0000000 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02191949
+#> [1] 0.0294497
 ```
 
 ## Code of Conduct
