@@ -30,6 +30,24 @@ You can also access it by doing:
 
 ``` r
 citation("ICIKendallTau")
+#> To cite package 'ICIKendallTau' in publications use:
+#> 
+#>   Flight RM, Bhatt PS, Moseley HN (2025). "Information-Content-Informed
+#>   Kendall-tau Correlation Methodology: Interpreting Missing Values as
+#>   Useful Information." _bioRxiv_. doi:10.1101/2022.02.24.481854
+#>   <https://doi.org/10.1101/2022.02.24.481854>,
+#>   <https://doi.org/10.1101/2022.02.24.481854>.
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Article{,
+#>     title = {Information-Content-Informed Kendall-tau Correlation Methodology: Interpreting Missing Values as Useful Information},
+#>     author = {Robert M Flight and Praneeth S Bhatt and Hunter NB Moseley},
+#>     year = {2025},
+#>     url = {https://doi.org/10.1101/2022.02.24.481854},
+#>     doi = {10.1101/2022.02.24.481854},
+#>     journal = {bioRxiv},
+#>   }
 ```
 
 ## Installation
@@ -163,14 +181,14 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min       lq      mean    median        uq
-#>  cor(x, y, method = "kendall") 12280.017 13342.02 13727.888 13354.975 14526.627
-#>         ici_kt(x, y, "global")   354.203   365.37   404.586   366.763   375.366
-#>       ici_kt(x2, y2, "global") 19234.974 19404.45 20322.053 20706.912 20912.065
-#>        max neval
-#>  15135.805     5
-#>    561.228     5
-#>  21351.866     5
+#>                           expr       min        lq       mean    median
+#>  cor(x, y, method = "kendall") 11631.473 11822.618 12600.2322 12032.079
+#>         ici_kt(x, y, "global")   314.755   325.395   392.5708   352.068
+#>       ici_kt(x2, y2, "global") 18236.787 18476.817 19817.4358 19341.954
+#>         uq       max neval
+#>  12775.969 14739.022     5
+#>    370.027   600.609     5
+#>  21466.571 21565.050     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -202,7 +220,7 @@ k_tau_fast
 #> y 0.8716723 0.0000000
 #> 
 #> $run_time
-#> [1] 0.0190556
+#> [1] 0.0185883
 ```
 
 ## P-Values
@@ -247,7 +265,7 @@ r_4
 #> 3 s4 s4    0 1.0000000      0 1.000000        0.950 1.0000000
 #> 
 #> $run_time
-#> [1] 0.01614738
+#> [1] 0.01673627
 ```
 
 ## Other Correlations
@@ -275,7 +293,7 @@ r_5
 #> y 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02553201
+#> [1] 0.02741623
 ```
 
 ``` r
@@ -296,7 +314,7 @@ r_6
 #> s3 0.0000000 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02152324
+#> [1] 0.02279949
 ```
 
 ## Code of Conduct

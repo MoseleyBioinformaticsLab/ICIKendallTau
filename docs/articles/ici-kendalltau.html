@@ -8,8 +8,8 @@
 <title>Information-Content-Informed Kendall Tau Correlation • ICIKendallTau</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Information-Content-Informed Kendall Tau Correlation">
 </head>
 <body>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.20</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -351,13 +351,13 @@ use the double merge-sort algorithm, translating {scipy::
 <span>  <span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span>,</span>
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Unit: milliseconds</span></span>
-<span><span class="co">#&gt;                           expr       min        lq      mean   median        uq</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 12.075425 12.633106 13.571587 13.56399 14.058722</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")  1.832641  1.869308  2.119921  1.90372  2.337056</span></span>
-<span><span class="co">#&gt;        max neval</span></span>
-<span><span class="co">#&gt;  15.526695     5</span></span>
-<span><span class="co">#&gt;   2.656881     5</span></span></code></pre></div>
+<span><span class="co">#&gt; Unit: microseconds</span></span>
+<span><span class="co">#&gt;                           expr       min        lq       mean    median</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 13613.829 13906.519 14821.4904 15096.115</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   397.004   398.884   482.7644   463.207</span></span>
+<span><span class="co">#&gt;         uq       max neval</span></span>
+<span><span class="co">#&gt;  15156.399 16334.590     5</span></span>
+<span><span class="co">#&gt;    489.835   664.892     5</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="../reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>

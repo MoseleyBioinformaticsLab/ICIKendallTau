@@ -8,8 +8,8 @@
 <title>Calculates information-content-informed Kendall-tau • ICIKendallTau</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Calculates information-content-informed Kendall-tau">
 <meta name="description" content="Provides functions for calculating information-content-informed Kendall-tau. This version of Kendall-tau allows for the inclusion of missing values.">
 <meta property="og:description" content="Provides functions for calculating information-content-informed Kendall-tau. This version of Kendall-tau allows for the inclusion of missing values.">
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ICIKendallTau</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.20</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,19 +62,38 @@
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>This package has an <a href="https://doi.org/10.1101/2022.02.24.481854" class="external-link">associated preprint on bioRxiv</a>, please cite it if you use the package in your own work.</p>
-<blockquote>
-<p>Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed Kendall-tau Correlation Methodology: Interpreting Missing Values as Useful Information.” <em>bioRxiv</em>. <a href="doi:10.1101/2022.02.24.481854" class="uri">doi:10.1101/2022.02.24.481854</a></p>
-</blockquote>
+<p>This package has an <a href="https://doi.org/10.3390/metabo16040245" class="external-link">associated manuscript</a>, please cite it if you use the package in your own work.</p>
+<p>Flight RM, Bhatt PS, Moseley HNB (2025). “Information-Content-Informed Kendall-Tau Correlation Methodology: Interpreting Missing Values in Metabolomics as Potentially Useful Information” Metabolites 2026, 16(4), 245; <a href="https://doi.org/10.3390/metabo16040245" class="external-link uri">https://doi.org/10.3390/metabo16040245</a></p>
+<p>You can also access it by doing:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"ICIKendallTau"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; To cite package 'ICIKendallTau' in publications use:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Flight RM, Bhatt PS, Moseley HN (2025). "Information-Content-Informed</span></span>
+<span><span class="co">#&gt;   Kendall-tau Correlation Methodology: Interpreting Missing Values as</span></span>
+<span><span class="co">#&gt;   Useful Information." _bioRxiv_. doi:10.1101/2022.02.24.481854</span></span>
+<span><span class="co">#&gt;   &lt;https://doi.org/10.1101/2022.02.24.481854&gt;,</span></span>
+<span><span class="co">#&gt;   &lt;https://doi.org/10.1101/2022.02.24.481854&gt;.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; A BibTeX entry for LaTeX users is</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   @Article{,</span></span>
+<span><span class="co">#&gt;     title = {Information-Content-Informed Kendall-tau Correlation Methodology: Interpreting Missing Values as Useful Information},</span></span>
+<span><span class="co">#&gt;     author = {Robert M Flight and Praneeth S Bhatt and Hunter NB Moseley},</span></span>
+<span><span class="co">#&gt;     year = {2025},</span></span>
+<span><span class="co">#&gt;     url = {https://doi.org/10.1101/2022.02.24.481854},</span></span>
+<span><span class="co">#&gt;     doi = {10.1101/2022.02.24.481854},</span></span>
+<span><span class="co">#&gt;     journal = {bioRxiv},</span></span>
+<span><span class="co">#&gt;   }</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the current version of ICIKendallTau via GitHub:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"MoseleyBioinformaticsLab/ICIKendallTau"</span><span class="op">)</span></span></code></pre></div>
 <p>You can also install Windows or Mac binaries using our r-universe:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    moseleybioinformaticslab <span class="op">=</span> <span class="st">'https://moseleybioinformaticslab.r-universe.dev'</span>,</span>
 <span>    CRAN <span class="op">=</span> <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span>
@@ -105,7 +124,7 @@
 <code>ici_kt</code>: the C++ workhorse, actually calculating a correlation between an X and Y.
 <ul>
 <li>The option <code>perspective</code> will control how the <code>NA</code> values influence ties.</li>
-<li>When comparing samples, you likely want to use <code>perspective = "global"</code>.</li>
+<li>When comparing <strong>multiple</strong> samples, you likely want to use <code>perspective = "global"</code>.</li>
 </ul>
 </li>
 <li>
@@ -129,7 +148,7 @@
 </h2>
 <p>The most common case is a large matrix of independent samples (columns) and measured features in each of the samples (i.e. gene expression).</p>
 <p>Here we will make some artificial data to show how the correlation changes as we introduce missingness.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://moseleybioinformaticslab.github.io/ICIKendallTau/">ICIKendallTau</a></span><span class="op">)</span></span>
 <span></span>
@@ -144,7 +163,7 @@
 <span><span class="co">#&gt; s1  1  1</span></span>
 <span><span class="co">#&gt; s2  1  1</span></span></code></pre></div>
 <p>Now we introduce some missing values at the low end of each one. We will just do the simplest thing and introduce <code>NA</code> values in the bottom set.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s3</span> <span class="op">=</span> <span class="va">s1</span></span>
 <span><span class="va">s3</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">50</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="cn">NA</span></span>
 <span></span>
@@ -162,7 +181,7 @@
 <h2 id="is-it-fast">Is It Fast?<a class="anchor" aria-label="anchor" href="#is-it-fast"></a>
 </h2>
 <p>The C++ code implementation (thanks {Rcpp}!) is based on the SciPy implementation, which uses two merge sorts of the ranks of each vector, and then looks for differences between them. This is the fastest method we know of, and has a complexity of O(nlogn). The naive way of computing it, which explicitly examines all of the pairs, has a complexity of n^2. Our implementation was compared to the {pcaPP::cov.fk} function, and the use of {Rcpp} and our inefficient copying of vectors makes ours 3X slower than that one. Which honestly isn’t too bad.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span>
@@ -177,18 +196,22 @@
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Unit: microseconds</span></span>
-<span><span class="co">#&gt;                           expr       min        lq      mean    median        uq       max neval</span></span>
-<span><span class="co">#&gt;  cor(x, y, method = "kendall") 12020.945 12227.957 12778.679 12241.762 13459.533 13943.197     5</span></span>
-<span><span class="co">#&gt;         ici_kt(x, y, "global")   331.001   346.866   456.299   361.061   401.216   841.351     5</span></span>
-<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 18462.550 18468.493 20342.581 19215.913 22400.049 23165.899     5</span></span></code></pre></div>
+<span><span class="co">#&gt;                           expr       min        lq       mean    median</span></span>
+<span><span class="co">#&gt;  cor(x, y, method = "kendall") 11631.473 11822.618 12600.2322 12032.079</span></span>
+<span><span class="co">#&gt;         ici_kt(x, y, "global")   314.755   325.395   392.5708   352.068</span></span>
+<span><span class="co">#&gt;       ici_kt(x2, y2, "global") 18236.787 18476.817 19817.4358 19341.954</span></span>
+<span><span class="co">#&gt;         uq       max neval</span></span>
+<span><span class="co">#&gt;  12775.969 14739.022     5</span></span>
+<span><span class="co">#&gt;    370.027   600.609     5</span></span>
+<span><span class="co">#&gt;  21466.571 21565.050     5</span></span></code></pre></div>
 <p>In the case of 40,000 features, the average time on a modern CPU is 14 milliseconds.</p>
 <p>Of course, if you want to use it to calculate Kendall-tau-b without incorporating missingness, it can do that just fine as well.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k_tau</span> <span class="op">=</span> <span class="fu"><a href="reference/ici_kt.html">ici_kt</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="st">"global"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">k_tau</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"kendall"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>We also provide the <code>kt_fast</code> function, if you want something that treats <code>NA</code> values similarly to <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">stats::cor</a></code>.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k_tau_fast</span> <span class="op">=</span> <span class="fu"><a href="reference/kt_fast.html">kt_fast</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
 <span><span class="va">k_tau_fast</span></span>
 <span><span class="co">#&gt; $tau</span></span>
@@ -202,7 +225,7 @@
 <span><span class="co">#&gt; y 0.8716723 0.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $run_time</span></span>
-<span><span class="co">#&gt; [1] 0.02020574</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.0185883</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="p-values">P-Values<a class="anchor" aria-label="anchor" href="#p-values"></a>
@@ -213,7 +236,7 @@
 <h2 id="parallelism">Parallelism<a class="anchor" aria-label="anchor" href="#parallelism"></a>
 </h2>
 <p>If you have {future} and the {furrr} packages installed, then it is also possible to split up the a set of matrix comparisons across compute resources for any multiprocessing engine registered with {future}.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DavisVaughan/furrr" class="external-link">furrr</a></span><span class="op">)</span></span>
 <span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multicore</span>, workers <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">r_3</span> <span class="op">=</span> <span class="fu"><a href="reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="va">matrix_2</span><span class="op">)</span></span></code></pre></div>
@@ -222,7 +245,7 @@
 <h2 id="many-many-comparisons">Many Many Comparisons<a class="anchor" aria-label="anchor" href="#many-many-comparisons"></a>
 </h2>
 <p>In the case of hundreds of thousands of comparisons to be done, the result matrices can become very, very large, and require lots of memory for storage. They are also inefficient, as both the lower and upper triangular components are stored. An alternative storage format is as a <code>data.frame</code>, where there is a single row for each comparison performed. This is actually how the results are stored internally, and then they are converted to a matrix form if requested (the default). To keep the <code>data.frame</code> output, add the argument <code>return_matrix=FALSE</code> to the call of <code>ici_kendalltau</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r_4</span> <span class="op">=</span> <span class="fu"><a href="reference/ici_kendalltau.html">ici_kendalltau</a></span><span class="op">(</span><span class="va">matrix_2</span>, return_matrix <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">r_4</span></span>
 <span><span class="co">#&gt; $cor</span></span>
@@ -232,13 +255,13 @@
 <span><span class="co">#&gt; 3 s4 s4    0 1.0000000      0 1.000000        0.950 1.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $run_time</span></span>
-<span><span class="co">#&gt; [1] 0.01733327</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.01673627</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="other-correlations">Other Correlations<a class="anchor" aria-label="anchor" href="#other-correlations"></a>
 </h2>
 <p><code>ici_kendalltau</code> and <code>ici_kt</code> calculate the p-value of the correlation as part of the overall calculation. <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">stats::cor</a></code> does not, and <code><a href="https://rdrr.io/r/stats/cor.test.html" class="external-link">stats::cor.test</a></code> can only calculate the p-value for a single comparison of two vectors. It is sometimes advantageous to obtain p-values for a large number of correlations. We provide <code>cor_fast</code>, which works analogously to <code>kt_fast</code>, with the ability to choose <code>pearson</code> or <code>spearman</code> as the method. Note that if a matrix is provided, the columns must be named.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r_5</span> <span class="op">=</span> <span class="fu"><a href="reference/cor_fast.html">cor_fast</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span></span>
 <span><span class="va">r_5</span></span>
 <span><span class="co">#&gt; $rho</span></span>
@@ -252,8 +275,8 @@
 <span><span class="co">#&gt; y 0.8199608 0.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $run_time</span></span>
-<span><span class="co">#&gt; [1] 0.02877402</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<span><span class="co">#&gt; [1] 0.02741623</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m_3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">m_3</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"s3"</span><span class="op">)</span></span>
 <span><span class="va">r_6</span> <span class="op">=</span> <span class="fu"><a href="reference/cor_fast.html">cor_fast</a></span><span class="op">(</span><span class="va">m_3</span><span class="op">)</span></span>
@@ -271,7 +294,7 @@
 <span><span class="co">#&gt; s3 0.0000000 0.8199608 0.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $run_time</span></span>
-<span><span class="co">#&gt; [1] 0.02604246</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.02279949</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
@@ -321,6 +344,8 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://moseleybioinformaticslab.r-universe.dev" class="external-link"><img src="https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau" alt="ICIKendallTau status badge"></a></li>
+<li><a href="https://doi.org/10.3390/metabo16040245" class="external-link"><img src="resources/manuscript_badge.svg" alt="Manuscript"></a></li>
+<li><a href="/../actions/workflows/covr2gh.yaml"><img src="/../covr2gh-storage/badges/main/coverage_badge.svg" alt="covr2gh coverage"></a></li>
 </ul>
 </div>
 

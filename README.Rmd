@@ -35,7 +35,8 @@ Metabolites 2026, 16(4), 245; https://doi.org/10.3390/metabo16040245
 
 You can also access it by doing:
 
-```r
+```{r}
+#| label: citation
 citation("ICIKendallTau")
 ```
 
