@@ -6,10 +6,10 @@
 <!-- badges: start -->
 
 [![ICIKendallTau status
-badge](https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau)](https://moseleybioinformaticslab.r-universe.dev)
-[![Manuscript](resources/manuscript_badge.svg)](https://doi.org/10.3390/metabo16040245)
+badge](https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau)](https://moseleybioinformaticslab.r-universe.dev/ICIKendallTau)
+[![Manuscript](https://raw.githubusercontent.com/MoseleyBioinformaticsLab/ICIKendallTau/refs/heads/main/resources/manuscript_badge.svg)](https://doi.org/10.3390/metabo16040245)
 [![covr2gh
-coverage](/../covr2gh-storage/badges/main/coverage_badge.svg)](/../actions/workflows/covr2gh.yaml)
+coverage](https://raw.githubusercontent.com/MoseleyBioinformaticsLab/ICIKendallTau/refs/heads/covr2gh-storage/badges/main/coverage_badge.svg)](https://github.com/MoseleyBioinformaticsLab/ICIKendallTau/actions/workflows/covr2gh.yaml)
 <!-- badges: end -->
 
 You can see the pkgdown site
@@ -32,21 +32,18 @@ You can also access it by doing:
 citation("ICIKendallTau")
 #> To cite package 'ICIKendallTau' in publications use:
 #> 
-#>   Flight RM, Bhatt PS, Moseley HN (2025). "Information-Content-Informed
-#>   Kendall-tau Correlation Methodology: Interpreting Missing Values as
-#>   Useful Information." _bioRxiv_. doi:10.1101/2022.02.24.481854
-#>   <https://doi.org/10.1101/2022.02.24.481854>,
-#>   <https://doi.org/10.1101/2022.02.24.481854>.
+#>   Flight RM, Bhatt PS, Moseley HNB (2026). "Information-Content-Informed Kendall-Tau Correlation Methodology: Interpreting Missing Values in Metabolomics as Potentially Useful Information."
+#>   _Metabolites_. doi:10.3390/metabo16040245 <https://doi.org/10.3390/metabo16040245>, <https://doi.org/10.3390/metabo16040245>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Article{,
-#>     title = {Information-Content-Informed Kendall-tau Correlation Methodology: Interpreting Missing Values as Useful Information},
-#>     author = {Robert M Flight and Praneeth S Bhatt and Hunter NB Moseley},
-#>     year = {2025},
-#>     url = {https://doi.org/10.1101/2022.02.24.481854},
-#>     doi = {10.1101/2022.02.24.481854},
-#>     journal = {bioRxiv},
+#>     title = {Information-Content-Informed Kendall-Tau Correlation Methodology: Interpreting Missing Values in Metabolomics as Potentially Useful Information},
+#>     author = {Robert M Flight and Praneeth S Bhatt and Hunter N B Moseley},
+#>     year = {2026},
+#>     url = {https://doi.org/10.3390/metabo16040245},
+#>     doi = {10.3390/metabo16040245},
+#>     journal = {Metabolites},
 #>   }
 ```
 
@@ -181,14 +178,10 @@ microbenchmark(
   times = 5
 )
 #> Unit: microseconds
-#>                           expr       min        lq       mean    median
-#>  cor(x, y, method = "kendall") 11631.473 11822.618 12600.2322 12032.079
-#>         ici_kt(x, y, "global")   314.755   325.395   392.5708   352.068
-#>       ici_kt(x2, y2, "global") 18236.787 18476.817 19817.4358 19341.954
-#>         uq       max neval
-#>  12775.969 14739.022     5
-#>    370.027   600.609     5
-#>  21466.571 21565.050     5
+#>                           expr       min        lq       mean    median        uq       max neval
+#>  cor(x, y, method = "kendall") 11910.897 12017.544 12480.5180 12154.643 12286.861 14032.645     5
+#>         ici_kt(x, y, "global")   327.413   330.407   400.3128   352.697   354.136   636.911     5
+#>       ici_kt(x2, y2, "global") 17850.197 17990.981 19479.2330 18326.398 20642.544 22586.045     5
 ```
 
 In the case of 40,000 features, the average time on a modern CPU is 14
@@ -220,7 +213,7 @@ k_tau_fast
 #> y 0.8716723 0.0000000
 #> 
 #> $run_time
-#> [1] 0.0185883
+#> [1] 0.02066278
 ```
 
 ## P-Values
@@ -265,7 +258,7 @@ r_4
 #> 3 s4 s4    0 1.0000000      0 1.000000        0.950 1.0000000
 #> 
 #> $run_time
-#> [1] 0.01673627
+#> [1] 0.02062392
 ```
 
 ## Other Correlations
@@ -293,7 +286,7 @@ r_5
 #> y 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02741623
+#> [1] 0.02933168
 ```
 
 ``` r
@@ -314,7 +307,7 @@ r_6
 #> s3 0.0000000 0.8199608 0.0000000
 #> 
 #> $run_time
-#> [1] 0.02279949
+#> [1] 0.03141665
 ```
 
 ## Code of Conduct

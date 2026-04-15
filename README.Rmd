@@ -18,9 +18,9 @@ knitr::opts_chunk$set(
 # ICIKendallTau
 
 <!-- badges: start -->
-[![ICIKendallTau status badge](https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau)](https://moseleybioinformaticslab.r-universe.dev)
-[![Manuscript](resources/manuscript_badge.svg)](https://doi.org/10.3390/metabo16040245)
-[![covr2gh coverage](/../covr2gh-storage/badges/main/coverage_badge.svg)](/../actions/workflows/covr2gh.yaml)
+[![ICIKendallTau status badge](https://moseleybioinformaticslab.r-universe.dev/badges/ICIKendallTau)](https://moseleybioinformaticslab.r-universe.dev/ICIKendallTau)
+[![Manuscript](https://raw.githubusercontent.com/MoseleyBioinformaticsLab/ICIKendallTau/refs/heads/main/resources/manuscript_badge.svg)](https://doi.org/10.3390/metabo16040245)
+[![covr2gh coverage](https://raw.githubusercontent.com/MoseleyBioinformaticsLab/ICIKendallTau/refs/heads/covr2gh-storage/badges/main/coverage_badge.svg)](https://github.com/MoseleyBioinformaticsLab/ICIKendallTau/actions/workflows/covr2gh.yaml)
 <!-- badges: end -->
 
 You can see the pkgdown site [here](https://moseleybioinformaticslab.github.io/ICIKendallTau/).
