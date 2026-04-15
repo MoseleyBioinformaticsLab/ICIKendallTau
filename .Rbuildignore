@@ -16,3 +16,5 @@
 ^draft_vignettes\.Rmd$
 ^.*\.log$
 ^other_stuff$
+^resources$
+^storage$
